@@ -1,0 +1,59 @@
+# Heist Royale Project Rules
+
+## General Guidelines
+- The project is a Phaser 3 game built with **Vite** for development.
+- Always use **ES modules** (`import`/`export`) syntax.
+- Code should be modular, well-commented, and organized into scenes.
+- Keep placeholder graphics simple at first (Phaser shapes or free sprites).
+- Ensure all code runs without errors and works in the browser with `npm run dev`.
+
+## Project Structure
+- `index.html` → basic HTML shell, loads `/src/main.js`.
+- `src/main.js` → Phaser Game configuration, launches StartScene.
+- `src/scenes/` → all game scenes stored here.
+  - `StartScene.js` → title + start instructions.
+  - `GameScene.js` → main game logic (player, vault, guard).
+  - `EndScene.js` → win/lose screen.
+- `assets/` → store images, sprites, and sound files when added later.
+
+## Scenes
+1. **StartScene**
+   - Show "Heist Royale" title and "Press SPACE to Start".
+   - On SPACE key → load GameScene.
+
+2. **GameScene**
+   - Player:
+     - Controlled with WASD/Arrow keys.
+     - Confined within world bounds.
+   - Vault:
+     - Interactable object.
+     - When player overlaps + presses SPACE → vault cracked → WIN.
+   - Guard:
+     - Patrols back and forth.
+     - If player comes within detection range, guard chases them.
+     - If guard touches player → LOSE.
+
+3. **EndScene**
+   - Display WIN/LOSE result from GameScene.
+   - Show "Press SPACE to Restart".
+   - On SPACE key → go back to StartScene.
+
+## Development Rules
+- Use Phaser 3 **Arcade Physics** for movement and collision.
+- AI should be simple (patrol + chase) in the first version.
+- Always separate game logic into methods for readability.
+- Favor **constants/config variables** for values like speed, patrol distance, detection range.
+- Never hardcode assets inline → preload them in `preload()`.
+
+## Future Features (Phase 2+)
+- Replace "Vault Cracked!" text with an actual lock-picking mini-game.
+- Add a shrinking safe-zone mechanic like Battle Royale.
+- Introduce collectibles (keys, gadgets).
+- Add cosmetics, XP, and progression system.
+- Later: transition to multiplayer with Colyseus.
+
+---
+description:
+globs:
+alwaysApply: true
+---

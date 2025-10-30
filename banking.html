@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banking - Casino Max</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 20, 147, 0.1) 0%, transparent 70%);
+            color: white;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-20px) translateY(-10px); }
+            50% { transform: translateX(20px) translateY(10px); }
+            75% { transform: translateX(-10px) translateY(20px); }
+        }
+
+        .banking-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .banking-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .banking-title {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            text-shadow: 
+                0 0 20px rgba(255, 107, 157, 0.5),
+                0 0 40px rgba(196, 69, 105, 0.3),
+                0 0 60px rgba(248, 181, 0, 0.2);
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        @keyframes dreamyGlow {
+            0%, 100% { 
+                background-position: 0% 50%;
+                transform: scale(1);
+            }
+            25% { 
+                background-position: 100% 50%;
+                transform: scale(1.02);
+            }
+            50% { 
+                background-position: 200% 50%;
+                transform: scale(1);
+            }
+            75% { 
+                background-position: 300% 50%;
+                transform: scale(1.02);
+            }
+        }
+
+        .banking-subtitle {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1px;
+        }
+
+        .balance-card {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            border: 3px solid transparent;
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            border-radius: 25px;
+            padding: 3px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .balance-amount {
+            font-size: 4rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .balance-label {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+        }
+
+        .banking-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .action-card {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039);
+            background-size: 400% 400%;
+            border-radius: 20px;
+            padding: 2px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .action-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .action-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .action-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .action-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .action-btn {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+        }
+
+        .transaction-history {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .transaction-history::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039);
+            background-size: 400% 400%;
+            border-radius: 20px;
+            padding: 2px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            margin-bottom: 15px;
+        }
+
+        .transaction-info h4 {
+            margin-bottom: 5px;
+            color: #ff6b9d;
+        }
+
+        .transaction-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .transaction-amount {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .amount-positive {
+            color: #27ae60;
+        }
+
+        .amount-negative {
+            color: #e74c3c;
+        }
+
+        .back-to-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            z-index: 1000;
+        }
+
+        .back-to-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 107, 157, 0.3);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            border: 3px solid transparent;
+            border-radius: 25px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039);
+            background-size: 400% 400%;
+            border-radius: 25px;
+            padding: 3px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff6b9d;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .banking-container {
+                padding: 20px 10px;
+            }
+            
+            .banking-title {
+                font-size: 2rem;
+            }
+            
+            .banking-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-to-home">← Back to Home</a>
+    
+    <div class="banking-container">
+        <div class="banking-header">
+            <h1 class="banking-title">BANKING</h1>
+            <p class="banking-subtitle">Manage your funds securely</p>
+        </div>
+
+        <div class="balance-card">
+            <div class="balance-amount" id="currentBalance">$0.00</div>
+            <div class="balance-label">Current Balance</div>
+        </div>
+
+        <div class="banking-actions">
+            <div class="action-card" onclick="openDepositModal()">
+                <div class="action-icon">💰</div>
+                <div class="action-title">Deposit</div>
+                <div class="action-description">Add funds to your account using various payment methods</div>
+                <button class="action-btn">Deposit Now</button>
+            </div>
+
+            <div class="action-card" onclick="openWithdrawModal()">
+                <div class="action-icon">💸</div>
+                <div class="action-title">Withdraw</div>
+                <div class="action-description">Withdraw your winnings to your bank account or e-wallet</div>
+                <button class="action-btn">Withdraw Now</button>
+            </div>
+
+            <div class="action-card" onclick="openTransferModal()">
+                <div class="action-icon">🔄</div>
+                <div class="action-title">Transfer</div>
+                <div class="action-description">Transfer funds between your accounts or to other players</div>
+                <button class="action-btn">Transfer Now</button>
+            </div>
+        </div>
+
+        <div class="transaction-history">
+            <h3 class="section-title">Transaction History</h3>
+            <div id="transactionList">
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <h4>Welcome Bonus</h4>
+                        <p>Account registration bonus</p>
+                    </div>
+                    <div class="transaction-amount amount-positive">+$100.00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div id="depositModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('depositModal')">&times;</button>
+            <div class="modal-header">
+                <h3 class="modal-title">Deposit Funds</h3>
+            </div>
+            <form id="depositForm">
+                <div class="form-group">
+                    <label for="depositAmount">Amount</label>
+                    <input type="number" id="depositAmount" placeholder="Enter amount" min="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="depositMethod">Payment Method</label>
+                    <select id="depositMethod" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="credit-card">Credit Card</option>
+                        <option value="debit-card">Debit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="crypto">Cryptocurrency</option>
+                        <option value="bank-transfer">Bank Transfer</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('depositModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Deposit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Withdraw Modal -->
+    <div id="withdrawModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('withdrawModal')">&times;</button>
+            <div class="modal-header">
+                <h3 class="modal-title">Withdraw Funds</h3>
+            </div>
+            <form id="withdrawForm">
+                <div class="form-group">
+                    <label for="withdrawAmount">Amount</label>
+                    <input type="number" id="withdrawAmount" placeholder="Enter amount" min="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="withdrawMethod">Withdrawal Method</label>
+                    <select id="withdrawMethod" required>
+                        <option value="">Select Withdrawal Method</option>
+                        <option value="bank-account">Bank Account</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="crypto">Cryptocurrency</option>
+                        <option value="check">Check</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('withdrawModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Withdraw</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div id="transferModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('transferModal')">&times;</button>
+            <div class="modal-header">
+                <h3 class="modal-title">Transfer Funds</h3>
+            </div>
+            <form id="transferForm">
+                <div class="form-group">
+                    <label for="transferAmount">Amount</label>
+                    <input type="number" id="transferAmount" placeholder="Enter amount" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label for="transferTo">Transfer To</label>
+                    <input type="email" id="transferTo" placeholder="Enter recipient email" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('transferModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Transfer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Initialize banking page
+        window.addEventListener('load', function() {
+            updateBalance();
+            loadTransactions();
+        });
+
+        // Update balance display
+        function updateBalance() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const balance = user.balance || 0;
+            document.getElementById('currentBalance').textContent = `$${balance.toFixed(2)}`;
+        }
+
+        // Load transaction history
+        function loadTransactions() {
+            const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+            const transactionList = document.getElementById('transactionList');
+            
+            if (transactions.length === 0) {
+                transactionList.innerHTML = '<div class="transaction-item"><div class="transaction-info"><h4>No transactions yet</h4><p>Your transaction history will appear here</p></div></div>';
+                return;
+            }
+
+            transactionList.innerHTML = transactions.map(transaction => `
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <h4>${transaction.type}</h4>
+                        <p>${transaction.description} • ${new Date(transaction.date).toLocaleDateString()}</p>
+                    </div>
+                    <div class="transaction-amount ${transaction.amount > 0 ? 'amount-positive' : 'amount-negative'}">
+                        ${transaction.amount > 0 ? '+' : ''}$${transaction.amount.toFixed(2)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Modal functions
+        function openDepositModal() {
+            document.getElementById('depositModal').style.display = 'block';
+        }
+
+        function openWithdrawModal() {
+            document.getElementById('withdrawModal').style.display = 'block';
+        }
+
+        function openTransferModal() {
+            document.getElementById('transferModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        });
+
+        // Form submissions
+        document.getElementById('depositForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const method = document.getElementById('depositMethod').value;
+            
+            if (amount < 10) {
+                alert('Minimum deposit amount is $10');
+                return;
+            }
+            
+            processTransaction('Deposit', `Deposit via ${method}`, amount);
+            closeModal('depositModal');
+        });
+
+        document.getElementById('withdrawForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+            const method = document.getElementById('withdrawMethod').value;
+            
+            if (amount < 10) {
+                alert('Minimum withdrawal amount is $10');
+                return;
+            }
+            
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (amount > user.balance) {
+                alert('Insufficient funds');
+                return;
+            }
+            
+            processTransaction('Withdrawal', `Withdrawal via ${method}`, -amount);
+            closeModal('withdrawModal');
+        });
+
+        document.getElementById('transferForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+            const recipient = document.getElementById('transferTo').value;
+            
+            if (amount < 1) {
+                alert('Minimum transfer amount is $1');
+                return;
+            }
+            
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (amount > user.balance) {
+                alert('Insufficient funds');
+                return;
+            }
+            
+            processTransaction('Transfer', `Transfer to ${recipient}`, -amount);
+            closeModal('transferModal');
+        });
+
+        // Process transaction
+        function processTransaction(type, description, amount) {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            user.balance = (user.balance || 0) + amount;
+            localStorage.setItem('user', JSON.stringify(user));
+            
+            const transaction = {
+                id: Date.now(),
+                type: type,
+                description: description,
+                amount: amount,
+                date: new Date().toISOString()
+            };
+            
+            const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+            transactions.unshift(transaction);
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+            
+            updateBalance();
+            loadTransactions();
+            
+            alert(`${type} successful! New balance: $${user.balance.toFixed(2)}`);
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

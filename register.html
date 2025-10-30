@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Casino Max</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 20, 147, 0.1) 0%, transparent 70%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-20px) translateY(-10px); }
+            50% { transform: translateX(20px) translateY(10px); }
+            75% { transform: translateX(-10px) translateY(20px); }
+        }
+
+        .register-container {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            border: 3px solid transparent;
+            border-radius: 25px;
+            padding: 50px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.8),
+                inset 0 3px 6px rgba(255, 255, 255, 0.1),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(138, 43, 226, 0.3),
+                0 0 60px rgba(255, 20, 147, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            border-radius: 25px;
+            padding: 3px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes dreamyGlow {
+            0%, 100% { 
+                background-position: 0% 50%;
+                transform: scale(1);
+            }
+            25% { 
+                background-position: 100% 50%;
+                transform: scale(1.02);
+            }
+            50% { 
+                background-position: 200% 50%;
+                transform: scale(1);
+            }
+            75% { 
+                background-position: 300% 50%;
+                transform: scale(1.02);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            text-shadow: 
+                0 0 20px rgba(255, 107, 157, 0.5),
+                0 0 40px rgba(196, 69, 105, 0.3),
+                0 0 60px rgba(248, 181, 0, 0.2);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            flex: 1;
+        }
+
+        .form-group.full-width {
+            flex: none;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff6b9d;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group input::placeholder, .form-group select::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039);
+            background-size: 400% 400%;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .register-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+        }
+
+        .register-btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 157, 0.5), transparent);
+        }
+
+        .divider span {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            padding: 0 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .login-link a {
+            color: #ff6b9d;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-link a:hover {
+            color: #f8b500;
+            text-shadow: 0 0 10px rgba(248, 181, 0, 0.5);
+        }
+
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-to-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 107, 157, 0.3);
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #6bff6b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .password-strength {
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+
+        .strength-weak { color: #ff6b6b; }
+        .strength-medium { color: #f8b500; }
+        .strength-strong { color: #6bff6b; }
+
+        @media (max-width: 768px) {
+            .register-container {
+                margin: 20px;
+                padding: 30px;
+            }
+            
+            .logo h1 {
+                font-size: 2.5rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-to-home">← Back to Home</a>
+    
+    <div class="register-container">
+        <div class="logo">
+            <h1>CASINO MAX</h1>
+            <p>Join the Ultimate Gaming Experience</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="registerForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" placeholder="Enter first name" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" placeholder="Enter last name" required>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                <div class="password-strength" id="passwordStrength"></div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="country">Country</label>
+                    <select id="country" name="country" required>
+                        <option value="">Select Country</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="UK">United Kingdom</option>
+                        <option value="AU">Australia</option>
+                        <option value="DE">Germany</option>
+                        <option value="FR">France</option>
+                        <option value="IT">Italy</option>
+                        <option value="ES">Spain</option>
+                        <option value="JP">Japan</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="currency">Preferred Currency</label>
+                    <select id="currency" name="currency" required>
+                        <option value="">Select Currency</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="CAD">CAD (C$)</option>
+                        <option value="AUD">AUD (A$)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group full-width">
+                <label for="dateOfBirth">Date of Birth</label>
+                <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+            </div>
+
+            <button type="submit" class="register-btn">Create Account</button>
+        </form>
+
+        <div class="divider">
+            <span>Already have an account?</span>
+        </div>
+
+        <div class="login-link">
+            <a href="login.html">Sign In Here</a>
+        </div>
+    </div>
+
+    <script src="security.js"></script>
+    <script src="visitor-tracking.js"></script>
+    <script>
+        // Password strength checker
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strengthDiv = document.getElementById('passwordStrength');
+            
+            const validation = SecurityUtils.validatePassword(password);
+            
+            if (validation.strength === 'weak') {
+                strengthDiv.className = 'password-strength strength-weak';
+                strengthDiv.textContent = 'Weak password';
+            } else if (validation.strength === 'medium') {
+                strengthDiv.className = 'password-strength strength-medium';
+                strengthDiv.textContent = 'Medium strength';
+            } else if (validation.strength === 'strong') {
+                strengthDiv.className = 'password-strength strength-strong';
+                strengthDiv.textContent = 'Strong password';
+            } else {
+                strengthDiv.className = 'password-strength strength-strong';
+                strengthDiv.textContent = 'Very strong password';
+            }
+        });
+
+        // Registration form handling
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const userData = Object.fromEntries(formData);
+            
+            // Hide previous messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Validate email
+            if (!SecurityUtils.validateEmail(userData.email)) {
+                showMessage('error', 'Please enter a valid email address.');
+                return;
+            }
+            
+            // Validate password strength
+            const passwordValidation = SecurityUtils.validatePassword(userData.password);
+            if (!passwordValidation.isValid) {
+                showMessage('error', 'Password must be at least 8 characters long and contain uppercase, lowercase, and numbers.');
+                return;
+            }
+            
+            // Validate passwords match
+            if (userData.password !== userData.confirmPassword) {
+                showMessage('error', 'Passwords do not match');
+                return;
+            }
+            
+            // Validate age (must be 18+)
+            const birthDate = new Date(userData.dateOfBirth);
+            const today = new Date();
+            const age = today.getFullYear() - birthDate.getFullYear();
+            const monthDiff = today.getMonth() - birthDate.getMonth();
+            
+            if (age < 18 || (age === 18 && monthDiff < 0)) {
+                showMessage('error', 'You must be 18 or older to register');
+                return;
+            }
+            
+            // Rate limiting check
+            if (!SecurityUtils.rateLimit(`register_${userData.email}`, 3, 60 * 60 * 1000)) {
+                showMessage('error', 'Too many registration attempts. Please try again in an hour.');
+                return;
+            }
+            
+            try {
+                const response = await registerUser(userData);
+                
+                if (response.success) {
+                    // Log successful registration
+                    SecurityUtils.logSecurityEvent('registration_success', { email: userData.email });
+                    
+                    showMessage('success', 'Account created successfully! Redirecting to login...');
+                    
+                    // Redirect to login page
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    // Log failed registration
+                    SecurityUtils.logSecurityEvent('registration_failed', { email: userData.email, reason: response.message });
+                    
+                    showMessage('error', response.message || 'Registration failed. Please try again.');
+                }
+            } catch (error) {
+                SecurityUtils.logSecurityEvent('registration_error', { email: userData.email, error: error.message });
+                showMessage('error', 'An error occurred. Please try again.');
+                console.error('Registration error:', error);
+            }
+        });
+
+        // Simulate registration API
+        async function registerUser(userData) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            
+            // Check if user already exists
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const existingUser = users.find(u => u.email === userData.email);
+            
+            if (existingUser) {
+                return {
+                    success: false,
+                    message: 'An account with this email already exists'
+                };
+            }
+            
+            // Create new user with hashed password
+            const newUser = {
+                id: Date.now().toString(),
+                firstName: SecurityUtils.sanitizeInput(userData.firstName),
+                lastName: SecurityUtils.sanitizeInput(userData.lastName),
+                email: userData.email.toLowerCase(),
+                password: SecurityUtils.hashPassword(userData.password),
+                country: userData.country,
+                currency: userData.currency,
+                dateOfBirth: userData.dateOfBirth,
+                balance: 1000, // Welcome bonus
+                createdAt: new Date().toISOString(),
+                isActive: true
+            };
+            
+            // Save user to localStorage
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            return {
+                success: true,
+                user: newUser
+            };
+        }
+
+        // Show message function
+        function showMessage(type, message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            if (type === 'error') {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            } else {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        // Check if user is already logged in
+        window.addEventListener('load', function() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                window.location.href = 'index.html';
+            }
+        });
+    </script>
+</body>
+</html>

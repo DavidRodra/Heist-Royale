@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Database - Casino Max</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            border: 2px solid rgba(255, 107, 157, 0.3);
+        }
+        h1 {
+            color: #ff6b9d;
+            margin-bottom: 20px;
+        }
+        button {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+        }
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #6bff6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reset Database</h1>
+        <p>This will clear all existing data and reinitialize the database with the correct password hashes.</p>
+        
+        <button onclick="resetDatabase()">Reset Database</button>
+        <button onclick="goToLogin()">Go to Login</button>
+        
+        <div id="message" class="message" style="display: none;">
+            Database reset successfully! You can now login with the demo accounts.
+        </div>
+    </div>
+
+    <script src="database-init.js"></script>
+    <script>
+        function resetDatabase() {
+            // Clear all existing data
+            localStorage.clear();
+            
+            // Reinitialize database
+            new DatabaseInit();
+            
+            // Show success message
+            document.getElementById('message').style.display = 'block';
+            
+            console.log('Database reset completed');
+        }
+        
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+

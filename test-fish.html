@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fish Test</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #001122;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        .game-area {
+            width: 400px;
+            height: 300px;
+            background: linear-gradient(180deg, #001122 0%, #003366 50%, #001122 100%);
+            border: 2px solid #00bcd4;
+            position: relative;
+            margin: 20px 0;
+        }
+        .fish {
+            position: absolute;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .test-button {
+            background: #00bcd4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fish Game Test</h1>
+    <div class="game-area" id="game-area">
+        <!-- Fish will appear here -->
+    </div>
+    
+    <button class="test-button" onclick="addFish()">Add Fish</button>
+    <button class="test-button" onclick="startSpawning()">Start Spawning</button>
+    <button class="test-button" onclick="clearFish()">Clear Fish</button>
+    
+    <div id="status">Ready</div>
+
+    <script>
+        let gameState = {
+            fish: [],
+            gameRunning: true
+        };
+
+        function addFish() {
+            const gameArea = document.getElementById('game-area');
+            const fish = document.createElement('div');
+            fish.className = 'fish';
+            fish.textContent = '🐟';
+            fish.style.left = Math.random() * 350 + 'px';
+            fish.style.top = Math.random() * 250 + 'px';
+            fish.style.color = '#ff6b6b';
+            
+            fish.addEventListener('click', function() {
+                this.remove();
+                gameState.fish = gameState.fish.filter(f => f !== fish);
+                updateStatus('Fish clicked and removed!');
+            });
+            
+            gameArea.appendChild(fish);
+            gameState.fish.push(fish);
+            updateStatus(`Fish added! Total: ${gameState.fish.length}`);
+        }
+
+        function startSpawning() {
+            if (gameState.gameRunning) {
+                setInterval(() => {
+                    if (gameState.gameRunning) {
+                        addFish();
+                    }
+                }, 2000);
+                updateStatus('Spawning started!');
+            }
+        }
+
+        function clearFish() {
+            gameState.fish.forEach(fish => {
+                if (fish.parentNode) {
+                    fish.parentNode.removeChild(fish);
+                }
+            });
+            gameState.fish = [];
+            updateStatus('All fish cleared!');
+        }
+
+        function updateStatus(message) {
+            document.getElementById('status').textContent = message;
+        }
+
+        // Add initial fish
+        setTimeout(() => {
+            addFish();
+        }, 1000);
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Casino Max</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 20, 147, 0.1) 0%, transparent 70%);
+            color: white;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-20px) translateY(-10px); }
+            50% { transform: translateX(20px) translateY(10px); }
+            75% { transform: translateX(-10px) translateY(20px); }
+        }
+
+        .header {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            padding: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            letter-spacing: 2px;
+        }
+
+        @keyframes dreamyGlow {
+            0%, 100% { 
+                background-position: 0% 50%;
+                transform: scale(1);
+            }
+            25% { 
+                background-position: 100% 50%;
+                transform: scale(1.02);
+            }
+            50% { 
+                background-position: 200% 50%;
+                transform: scale(1);
+            }
+            75% { 
+                background-position: 300% 50%;
+                transform: scale(1.02);
+            }
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .balance {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .user-menu {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 15px;
+            padding: 15px;
+            min-width: 200px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 1000;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 5px;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 107, 157, 0.2);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .welcome-section h1 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+        }
+
+        .welcome-section p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039);
+            background-size: 400% 400%;
+            border-radius: 20px;
+            padding: 2px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .games-section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039);
+            background-size: 400% 400%;
+            border-radius: 20px;
+            padding: 2px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .game-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .game-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .play-btn {
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .play-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+        }
+
+        .logout-btn {
+            background: linear-gradient(45deg, #ff4757, #ff6b6b);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 71, 87, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .welcome-section h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .games-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">CASINO MAX</div>
+            <div class="user-info">
+                <div class="balance" id="userBalance">$0</div>
+                <div class="user-menu">
+                    <div class="user-avatar" id="userAvatar" onclick="toggleDropdown()">U</div>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <div class="dropdown-item" onclick="viewProfile()">Profile</div>
+                        <div class="dropdown-item" onclick="viewHistory()">Game History</div>
+                        <div class="dropdown-item" onclick="viewSettings()">Settings</div>
+                        <div class="dropdown-item" onclick="logout()">Logout</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="welcome-section">
+            <h1 id="welcomeMessage">Welcome Back!</h1>
+            <p>Ready to experience the ultimate gaming adventure?</p>
+        </section>
+
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" id="currentBalance">$0</div>
+                <div class="stat-label">Current Balance</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🎮</div>
+                <div class="stat-value" id="gamesPlayed">0</div>
+                <div class="stat-label">Games Played</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏆</div>
+                <div class="stat-value" id="totalWins">$0</div>
+                <div class="stat-label">Total Wins</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" id="level">1</div>
+                <div class="stat-label">Player Level</div>
+            </div>
+        </section>
+
+        <section class="games-section">
+            <h2 class="section-title">Available Games</h2>
+            <div class="games-grid">
+                <div class="game-card" onclick="playGame('book-of-ra')">
+                    <div class="game-icon">📖</div>
+                    <div class="game-title">Book of Ra</div>
+                    <div class="game-description">Ancient Egyptian slot adventure with mystical treasures and golden rewards.</div>
+                    <button class="play-btn">Play Now</button>
+                </div>
+                <div class="game-card" onclick="playGame('blackjack')">
+                    <div class="game-icon">🃏</div>
+                    <div class="game-title">Blackjack</div>
+                    <div class="game-description">Classic card game where skill meets luck. Beat the dealer to win big!</div>
+                    <button class="play-btn">Play Now</button>
+                </div>
+                <div class="game-card" onclick="playGame('ocean-hunter')">
+                    <div class="game-icon">🐠</div>
+                    <div class="game-title">Ocean Hunter</div>
+                    <div class="game-description">Dive deep into the ocean and hunt for treasures with your cannon.</div>
+                    <button class="play-btn">Play Now</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="security.js"></script>
+    <script src="visitor-tracking.js"></script>
+    <script>
+        let currentUser = null;
+
+        // Initialize dashboard
+        window.addEventListener('load', function() {
+            // Check if user is logged in
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            currentUser = JSON.parse(user);
+            updateDashboard();
+        });
+
+        // Update dashboard with user data
+        function updateDashboard() {
+            if (!currentUser) return;
+            
+            // Update welcome message
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${currentUser.name || currentUser.email}!`;
+            
+            // Update balance
+            const balance = currentUser.balance || 1000;
+            document.getElementById('userBalance').textContent = `$${balance}`;
+            document.getElementById('currentBalance').textContent = `$${balance}`;
+            
+            // Update user avatar
+            const avatar = document.getElementById('userAvatar');
+            const name = currentUser.name || currentUser.email;
+            avatar.textContent = name.charAt(0).toUpperCase();
+            
+            // Update stats (you can expand this with real data)
+            document.getElementById('gamesPlayed').textContent = currentUser.gamesPlayed || 0;
+            document.getElementById('totalWins').textContent = `$${currentUser.totalWins || 0}`;
+            document.getElementById('level').textContent = currentUser.level || 1;
+        }
+
+        // Toggle dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('dropdownMenu');
+            const avatar = document.getElementById('userAvatar');
+            
+            if (!dropdown.contains(e.target) && !avatar.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Navigation functions
+        function viewProfile() {
+            alert('Profile page coming soon!');
+            toggleDropdown();
+        }
+
+        function viewHistory() {
+            alert('Game history page coming soon!');
+            toggleDropdown();
+        }
+
+        function viewSettings() {
+            alert('Settings page coming soon!');
+            toggleDropdown();
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Log security event
+                if (typeof SecurityUtils !== 'undefined') {
+                    SecurityUtils.logSecurityEvent('logout', { userId: currentUser?.id });
+                }
+                
+                localStorage.removeItem('token');
+                localStorage.removeItem('user');
+                window.location.href = 'login.html';
+            }
+            toggleDropdown();
+        }
+
+        // Play game function
+        function playGame(gameType) {
+            switch(gameType) {
+                case 'book-of-ra':
+                    window.location.href = 'book-of-ra-game.html';
+                    break;
+                case 'blackjack':
+                    window.location.href = 'blackjack-game.html';
+                    break;
+                case 'ocean-hunter':
+                    window.location.href = 'fish-game.html';
+                    break;
+                default:
+                    alert('Game not available yet!');
+            }
+        }
+
+        // Update balance when returning from games
+        function updateBalance(newBalance) {
+            currentUser.balance = newBalance;
+            localStorage.setItem('user', JSON.stringify(currentUser));
+            updateDashboard();
+        }
+
+        // Listen for balance updates from games
+        window.addEventListener('storage', function(e) {
+            if (e.key === 'user') {
+                currentUser = JSON.parse(e.newValue);
+                updateDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Hunter - CasinoMax</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* Fish Game Specific Styles */
+        .game-container {
+            min-height: 100vh;
+            background: linear-gradient(180deg, #001122 0%, #003366 50%, #001122 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00bcd4 0%, #4fc3f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+            text-shadow: 0 0 30px rgba(0, 188, 212, 0.5);
+        }
+
+        .game-subtitle {
+            font-size: 1.2rem;
+            color: #b0bec5;
+            margin: 10px 0 0 0;
+        }
+
+        .game-interface {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(0, 188, 212, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: rgba(0, 188, 212, 0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 188, 212, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .game-area {
+            position: relative;
+            height: 400px;
+            background: linear-gradient(180deg, #001122 0%, #003366 50%, #001122 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid rgba(0, 191, 255, 0.2);
+            margin-bottom: 20px;
+            cursor: crosshair;
+        }
+
+        /* Simple Cannon Turrets */
+        .cannon-turret {
+            position: absolute;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .cannon-turret.top-left {
+            top: 15px;
+            left: 15px;
+        }
+
+        .cannon-turret.top-right {
+            top: 15px;
+            right: 15px;
+        }
+
+        .cannon-turret.bottom-left {
+            bottom: 15px;
+            left: 15px;
+        }
+
+        .cannon-turret.bottom-right {
+            bottom: 15px;
+            right: 15px;
+        }
+
+        .cannon-base {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #2c3e50 100%);
+            border-radius: 50%;
+            border: 3px solid #1a252f;
+            box-shadow: 
+                0 0 10px rgba(0, 0, 0, 0.5),
+                inset 0 2px 5px rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .cannon-barrel {
+            width: 4px;
+            height: 35px;
+            background: linear-gradient(180deg, #34495e 0%, #2c3e50 50%, #1a252f 100%);
+            border-radius: 2px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center bottom;
+            transform: translate(-50%, -100%);
+            box-shadow: 
+                0 0 5px rgba(0, 0, 0, 0.7),
+                inset 0 1px 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .cannon-muzzle {
+            width: 8px;
+            height: 8px;
+            background: radial-gradient(circle, #ff6b35 0%, #ff8c42 50%, #e74c3c 100%);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -100%);
+            opacity: 0;
+            transition: opacity 0.1s ease;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.8);
+        }
+
+        /* Cannon firing animation */
+        .cannon-turret.firing .cannon-barrel {
+            animation: cannonRecoil 0.2s ease-out;
+        }
+
+        .cannon-turret.firing .cannon-muzzle {
+            opacity: 1;
+            animation: muzzleFlash 0.15s ease-out;
+        }
+
+        .cannon-turret.firing .cannon-base {
+            animation: cannonShake 0.2s ease-out;
+        }
+
+        @keyframes cannonRecoil {
+            0% { transform: translate(-50%, -100%) scaleY(1); }
+            50% { transform: translate(-50%, -100%) scaleY(0.8) translateY(2px); }
+            100% { transform: translate(-50%, -100%) scaleY(1); }
+        }
+
+        @keyframes cannonShake {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(-1px, 1px); }
+            50% { transform: translate(1px, -1px); }
+            75% { transform: translate(-1px, -1px); }
+        }
+
+        @keyframes muzzleFlash {
+            0% { 
+                opacity: 0;
+                transform: translate(-50%, -100%) scale(0.5);
+            }
+            50% { 
+                opacity: 1;
+                transform: translate(-50%, -100%) scale(1.5);
+            }
+            100% { 
+                opacity: 0;
+                transform: translate(-50%, -100%) scale(1);
+            }
+        }
+
+        .fish {
+            position: absolute;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .fish:hover {
+            transform: scale(1.1);
+        }
+
+        .fish.small {
+            font-size: 1.5rem;
+            color: #ff6b6b;
+        }
+
+        .fish.medium {
+            font-size: 2rem;
+            color: #4ecdc4;
+        }
+
+        .fish.large {
+            font-size: 2.5rem;
+            color: #45b7d1;
+        }
+
+        .fish.boss {
+            font-size: 3rem;
+            color: #ffd93d;
+            animation: bossGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes bossGlow {
+            from { text-shadow: 0 0 10px rgba(255, 217, 61, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 217, 61, 0.8), 0 0 30px rgba(255, 217, 61, 0.6); }
+        }
+
+        .bullet {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ff6b35;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.8);
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        .explosion {
+            position: absolute;
+            font-size: 2rem;
+            z-index: 20;
+            pointer-events: none;
+            animation: explode 0.5s ease-out forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        .score-popup {
+            position: absolute;
+            color: #00ff00;
+            font-weight: bold;
+            font-size: 1.2rem;
+            z-index: 25;
+            pointer-events: none;
+            animation: scoreFloat 1s ease-out forwards;
+        }
+
+        @keyframes scoreFloat {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .weapon-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .weapon-btn {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            border: 2px solid #34495e;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .weapon-btn:hover {
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            transform: translateY(-2px);
+        }
+
+        .weapon-btn.active {
+            background: linear-gradient(135deg, #00bcd4 0%, #4fc3f7 100%);
+            border-color: #00bcd4;
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.3);
+        }
+
+        .shoot-btn {
+            background: linear-gradient(135deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .shoot-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+        }
+
+        .shoot-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .wave-indicator {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #00bcd4;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">
+        <i class="fas fa-arrow-left"></i> Back to Casino
+    </button>
+
+    <div class="game-container">
+        <div class="wave-indicator" id="wave-indicator">Wave 1</div>
+
+        <div class="game-header">
+            <h1 class="game-title">Ocean Hunter</h1>
+            <p class="game-subtitle">Shoot the Fish, Win Big!</p>
+        </div>
+
+        <div class="game-interface">
+            <div class="game-stats">
+                <div class="stat-item">
+                    <i class="fas fa-coins"></i> Balance: $<span id="balance">1000</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-bullseye"></i> Score: <span id="score">0</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-fire"></i> Bullets: <span id="bullets">50</span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-trophy"></i> Level: <span id="level">1</span>
+                </div>
+            </div>
+
+            <div class="game-area" id="game-area">
+                <!-- Simple Cannon Turrets -->
+                <div class="cannon-turret top-left" id="cannon-tl">
+                    <div class="cannon-base"></div>
+                    <div class="cannon-barrel"></div>
+                    <div class="cannon-muzzle"></div>
+                </div>
+                <div class="cannon-turret top-right" id="cannon-tr">
+                    <div class="cannon-base"></div>
+                    <div class="cannon-barrel"></div>
+                    <div class="cannon-muzzle"></div>
+                </div>
+                <div class="cannon-turret bottom-left" id="cannon-bl">
+                    <div class="cannon-base"></div>
+                    <div class="cannon-barrel"></div>
+                    <div class="cannon-muzzle"></div>
+                </div>
+                <div class="cannon-turret bottom-right" id="cannon-br">
+                    <div class="cannon-base"></div>
+                    <div class="cannon-barrel"></div>
+                    <div class="cannon-muzzle"></div>
+                </div>
+                
+                <div class="bubbles" id="bubbles"></div>
+            </div>
+
+            <div class="controls">
+                <div class="weapon-controls">
+                    <button class="weapon-btn active" onclick="selectWeapon('basic')" data-weapon="basic">
+                        <i class="fas fa-circle"></i> Basic ($1)
+                    </button>
+                    <button class="weapon-btn" onclick="selectWeapon('rapid')" data-weapon="rapid">
+                        <i class="fas fa-bolt"></i> Rapid ($3)
+                    </button>
+                    <button class="weapon-btn" onclick="selectWeapon('explosive')" data-weapon="explosive">
+                        <i class="fas fa-bomb"></i> Explosive ($5)
+                    </button>
+                    <button class="weapon-btn" onclick="selectWeapon('laser')" data-weapon="laser">
+                        <i class="fas fa-bolt"></i> Laser ($10)
+                    </button>
+                </div>
+
+                <button class="shoot-btn" id="shoot-btn" onclick="shoot()">
+                    <i class="fas fa-crosshairs"></i> SHOOT
+                </button>
+                
+                <button class="weapon-btn" onclick="spawnFish()" style="background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);">
+                    <i class="fas fa-fish"></i> Spawn Fish
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Game State
+        let gameState = {
+            balance: 1000,
+            score: 0,
+            bulletCount: 50,
+            level: 1,
+            wave: 1,
+            currentWeapon: 'basic',
+            isShooting: false,
+            fish: [],
+            bullets: [],
+            gameRunning: true
+        };
+
+        // Weapon configurations
+        const weapons = {
+            basic: { cost: 1, damage: 1, speed: 5, color: '#ffff00' },
+            rapid: { cost: 3, damage: 1, speed: 8, color: '#00ff00' },
+            explosive: { cost: 5, damage: 3, speed: 3, color: '#ff6b35' },
+            laser: { cost: 10, damage: 5, speed: 10, color: '#ff00ff' }
+        };
+
+        // Fish types
+        const fishTypes = [
+            { emoji: '🐟', size: 'small', points: 10, speed: 2, health: 1 },
+            { emoji: '🐠', size: 'small', points: 15, speed: 3, health: 1 },
+            { emoji: '🦈', size: 'medium', points: 50, speed: 1, health: 2 },
+            { emoji: '🐙', size: 'medium', points: 75, speed: 1.5, health: 2 },
+            { emoji: '🐋', size: 'large', points: 200, speed: 0.5, health: 5 },
+            { emoji: '🦑', size: 'large', points: 150, speed: 1, health: 4 },
+            { emoji: '🐡', size: 'boss', points: 500, speed: 0.3, health: 10 }
+        ];
+
+        // Initialize game
+        function initGame() {
+            console.log('Initializing Ocean Hunter game...');
+            updateDisplay();
+            createBubbles();
+            setupGameAreaClick();
+            gameLoop();
+            
+            // Start spawning fish immediately
+            setTimeout(() => {
+                console.log('Starting fish spawning...');
+                spawnFish();
+            }, 1000);
+            
+            console.log('Fish game initialized');
+        }
+
+        // Setup game area click for shooting
+        function setupGameAreaClick() {
+            const gameArea = document.getElementById('game-area');
+            
+            // Click to shoot
+            gameArea.addEventListener('click', function(e) {
+                if (e.target.classList.contains('fish')) return; // Don't shoot if clicking fish directly
+                shootAtPosition(e.offsetX, e.offsetY);
+            });
+        }
+
+        // Shoot at specific position
+        function shootAtPosition(x, y) {
+            if (gameState.bulletCount <= 0 || gameState.isShooting) return;
+            
+            const weapon = weapons[gameState.currentWeapon];
+            if (gameState.balance < weapon.cost) {
+                showMessage('Not enough balance!');
+                return;
+            }
+            
+            gameState.balance -= weapon.cost;
+            gameState.bulletCount--;
+            gameState.isShooting = true;
+            
+            // Fire cannons
+            fireCannons();
+            
+            // Create bullet
+            const gameArea = document.getElementById('game-area');
+            const bullet = document.createElement('div');
+            bullet.className = 'bullet';
+            bullet.style.backgroundColor = weapon.color;
+            bullet.style.left = x + 'px';
+            bullet.style.top = y + 'px';
+            
+            gameArea.appendChild(bullet);
+            gameState.bullets.push(bullet);
+            
+            // Animate bullet
+            setTimeout(() => {
+                if (bullet.parentNode) {
+                    bullet.parentNode.removeChild(bullet);
+                }
+                gameState.bullets = gameState.bullets.filter(b => b !== bullet);
+                gameState.isShooting = false;
+            }, 500);
+            
+            // Check for hits
+            checkHitsAtPosition(bullet, weapon, x, y);
+            
+            updateDisplay();
+        }
+
+        // Check for hits at position
+        function checkHitsAtPosition(bullet, weapon, x, y) {
+            const hitRadius = 50; // Hit detection radius
+            
+            gameState.fish.forEach(fish => {
+                const fishRect = fish.getBoundingClientRect();
+                const gameAreaRect = document.getElementById('game-area').getBoundingClientRect();
+                const fishX = fishRect.left - gameAreaRect.left + fishRect.width / 2;
+                const fishY = fishRect.top - gameAreaRect.top + fishRect.height / 2;
+                
+                const distance = Math.sqrt((x - fishX) ** 2 + (y - fishY) ** 2);
+                
+                if (distance <= hitRadius) {
+                    hitFish(fish, weapon);
+                }
+            });
+        }
+
+        // Create bubbles
+        function createBubbles() {
+            const bubblesContainer = document.getElementById('bubbles');
+            setInterval(() => {
+                const bubble = document.createElement('div');
+                bubble.style.position = 'absolute';
+                bubble.style.width = Math.random() * 10 + 5 + 'px';
+                bubble.style.height = bubble.style.width;
+                bubble.style.background = 'rgba(255, 255, 255, 0.1)';
+                bubble.style.borderRadius = '50%';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.bottom = '-10px';
+                bubble.style.animation = 'bubbleFloat 3s linear forwards';
+                
+                bubblesContainer.appendChild(bubble);
+                
+                setTimeout(() => {
+                    if (bubble.parentNode) {
+                        bubble.parentNode.removeChild(bubble);
+                    }
+                }, 3000);
+            }, 500);
+        }
+
+        // Spawn fish
+        function spawnFish() {
+            if (!gameState.gameRunning) return;
+            
+            const gameArea = document.getElementById('game-area');
+            const fishType = fishTypes[Math.floor(Math.random() * fishTypes.length)];
+            
+            console.log('Spawning fish:', fishType.emoji, fishType.size);
+            
+            const fish = document.createElement('div');
+            fish.className = `fish ${fishType.size}`;
+            fish.textContent = fishType.emoji;
+            
+            // Set up fish styling
+            fish.style.position = 'absolute';
+            fish.style.left = '-80px';
+            fish.style.top = (Math.random() * (gameArea.offsetHeight - 80)) + 'px';
+            fish.style.fontSize = fishType.size === 'small' ? '2rem' : 
+                                 fishType.size === 'medium' ? '2.5rem' : 
+                                 fishType.size === 'large' ? '3rem' : '3.5rem';
+            fish.style.cursor = 'pointer';
+            fish.style.zIndex = '5';
+            fish.style.color = fishType.size === 'boss' ? '#ffd93d' : 
+                              fishType.size === 'large' ? '#45b7d1' :
+                              fishType.size === 'medium' ? '#4ecdc4' : '#ff6b6b';
+            fish.style.textShadow = '0 0 10px rgba(255, 255, 255, 0.5)';
+            fish.style.userSelect = 'none';
+            fish.style.pointerEvents = 'auto';
+            
+            // Store fish data
+            fish.fishData = {
+                ...fishType,
+                x: -80,
+                y: parseInt(fish.style.top),
+                health: fishType.health,
+                maxHealth: fishType.health
+            };
+            
+            // Add click handler for direct fish shooting
+            fish.addEventListener('click', function(e) {
+                e.stopPropagation();
+                console.log('Fish clicked:', fishType.emoji);
+                shootAtFish(fish);
+            });
+            
+            // Add hover effect
+            fish.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1)';
+            });
+            
+            fish.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+            
+            gameArea.appendChild(fish);
+            gameState.fish.push(fish);
+            
+            console.log('Fish added to DOM, total fish:', gameState.fish.length);
+            
+            // Animate fish movement
+            const moveDuration = (12 - fishType.speed * 2) * 1000; // Slower movement
+            fish.style.transition = `left ${moveDuration}ms linear`;
+            
+            // Use requestAnimationFrame to ensure smooth animation
+            requestAnimationFrame(() => {
+                fish.style.left = '100%';
+            });
+            
+            // Remove fish when it reaches the end
+            setTimeout(() => {
+                if (fish.parentNode) {
+                    fish.parentNode.removeChild(fish);
+                    gameState.fish = gameState.fish.filter(f => f !== fish);
+                    console.log('Fish removed, remaining:', gameState.fish.length);
+                }
+            }, moveDuration);
+            
+            // Spawn next fish
+            const nextSpawn = Math.random() * 2000 + 1500; // More frequent spawning
+            setTimeout(spawnFish, nextSpawn);
+        }
+
+        // Shoot at specific fish
+        function shootAtFish(targetFish) {
+            if (gameState.bulletCount <= 0 || gameState.isShooting) return;
+            
+            const weapon = weapons[gameState.currentWeapon];
+            if (gameState.balance < weapon.cost) {
+                showMessage('Not enough balance!');
+                return;
+            }
+            
+            gameState.balance -= weapon.cost;
+            gameState.bulletCount--;
+            gameState.isShooting = true;
+            
+            // Fire cannons
+            fireCannons();
+            
+            // Create bullet
+            const gameArea = document.getElementById('game-area');
+            const bullet = document.createElement('div');
+            bullet.className = 'bullet';
+            bullet.style.backgroundColor = weapon.color;
+            
+            const fishRect = targetFish.getBoundingClientRect();
+            const gameRect = gameArea.getBoundingClientRect();
+            bullet.style.left = (fishRect.left - gameRect.left + fishRect.width / 2) + 'px';
+            bullet.style.top = (fishRect.top - gameRect.top + fishRect.height / 2) + 'px';
+            
+            gameArea.appendChild(bullet);
+            gameState.bullets.push(bullet);
+            
+            // Animate bullet
+            setTimeout(() => {
+                if (bullet.parentNode) {
+                    bullet.parentNode.removeChild(bullet);
+                }
+                gameState.bullets = gameState.bullets.filter(b => b !== bullet);
+                gameState.isShooting = false;
+            }, 500);
+            
+            // Show explosion
+            const fishRect2 = targetFish.getBoundingClientRect();
+            const gameAreaRect = document.getElementById('game-area').getBoundingClientRect();
+            showExplosion(fishRect2.left - gameAreaRect.left, fishRect2.top - gameAreaRect.top);
+            
+            if (targetFish.fishData.health <= 0) {
+                // Fish killed
+                const points = targetFish.fishData.points;
+                gameState.score += points;
+                gameState.balance += Math.floor(points / 10);
+                
+                showScorePopup(fishRect2.left - gameAreaRect.left, fishRect2.top - gameAreaRect.top, points);
+                
+                // Remove fish
+                if (targetFish.parentNode) {
+                    targetFish.parentNode.removeChild(targetFish);
+                }
+                gameState.fish = gameState.fish.filter(f => f !== targetFish);
+            } else {
+                // Fish damaged but not killed
+                targetFish.style.opacity = '0.7';
+                setTimeout(() => {
+                    targetFish.style.opacity = '1';
+                }, 200);
+            }
+            
+            updateDisplay();
+        }
+
+        // Hit fish
+        function hitFish(fish, weapon) {
+            fish.fishData.health -= weapon.damage;
+            
+            // Show explosion
+            const fishRect = fish.getBoundingClientRect();
+            const gameAreaRect = document.getElementById('game-area').getBoundingClientRect();
+            showExplosion(fishRect.left - gameAreaRect.left, fishRect.top - gameAreaRect.top);
+            
+            if (fish.fishData.health <= 0) {
+                // Fish killed
+                const points = fish.fishData.points;
+                gameState.score += points;
+                gameState.balance += Math.floor(points / 10);
+                
+                showScorePopup(fishRect.left - gameAreaRect.left, fishRect.top - gameAreaRect.top, points);
+                
+                // Remove fish
+                if (fish.parentNode) {
+                    fish.parentNode.removeChild(fish);
+                }
+                gameState.fish = gameState.fish.filter(f => f !== fish);
+            } else {
+                // Fish damaged but not killed
+                fish.style.opacity = '0.7';
+                setTimeout(() => {
+                    fish.style.opacity = '1';
+                }, 200);
+            }
+        }
+
+        // Select weapon
+        function selectWeapon(weaponType) {
+            if (gameState.balance < weapons[weaponType].cost) {
+                showMessage('Not enough balance!');
+                return;
+            }
+            
+            gameState.currentWeapon = weaponType;
+            
+            // Update UI
+            document.querySelectorAll('.weapon-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-weapon="${weaponType}"]`).classList.add('active');
+            
+            updateDisplay();
+        }
+
+        // Shoot
+        function shoot() {
+            if (gameState.bulletCount <= 0 || gameState.isShooting) return;
+            
+            const weapon = weapons[gameState.currentWeapon];
+            if (gameState.balance < weapon.cost) {
+                showMessage('Not enough balance!');
+                return;
+            }
+            
+            gameState.balance -= weapon.cost;
+            gameState.bulletCount--;
+            gameState.isShooting = true;
+            
+            // Fire cannons
+            fireCannons();
+            
+            // Create bullet
+            const gameArea = document.getElementById('game-area');
+            const bullet = document.createElement('div');
+            bullet.className = 'bullet';
+            bullet.style.backgroundColor = weapon.color;
+            
+            // Random position
+            const randomX = Math.random() * (gameArea.offsetWidth - 100) + 50;
+            const randomY = Math.random() * (gameArea.offsetHeight - 100) + 50;
+            bullet.style.left = randomX + 'px';
+            bullet.style.top = randomY + 'px';
+            
+            gameArea.appendChild(bullet);
+            gameState.bullets.push(bullet);
+            
+            // Animate bullet
+            setTimeout(() => {
+                if (bullet.parentNode) {
+                    bullet.parentNode.removeChild(bullet);
+                }
+                gameState.bullets = gameState.bullets.filter(b => b !== bullet);
+                gameState.isShooting = false;
+            }, 500);
+            
+            // Check for hits
+            checkHits(bullet, weapon);
+            
+            updateDisplay();
+        }
+
+        // Check for hits
+        function checkHits(bullet, weapon) {
+            const bulletRect = bullet.getBoundingClientRect();
+            const gameAreaRect = document.getElementById('game-area').getBoundingClientRect();
+            
+            gameState.fish.forEach(fish => {
+                const fishRect = fish.getBoundingClientRect();
+                
+                if (bulletRect.left < fishRect.right && 
+                    bulletRect.right > fishRect.left && 
+                    bulletRect.top < fishRect.bottom && 
+                    bulletRect.bottom > fishRect.top) {
+                    
+                    // Hit!
+                    fish.fishData.health -= weapon.damage;
+                    
+                    // Show explosion
+                    showExplosion(fishRect.left - gameAreaRect.left, fishRect.top - gameAreaRect.top);
+                    
+                    if (fish.fishData.health <= 0) {
+                        // Fish killed
+                        const points = fish.fishData.points;
+                        gameState.score += points;
+                        gameState.balance += Math.floor(points / 10);
+                        
+                        showScorePopup(fishRect.left - gameAreaRect.left, fishRect.top - gameAreaRect.top, points);
+                        
+                        // Remove fish
+                        if (fish.parentNode) {
+                            fish.parentNode.removeChild(fish);
+                        }
+                        gameState.fish = gameState.fish.filter(f => f !== fish);
+                    }
+                }
+            });
+        }
+
+        // Show explosion effect
+        function showExplosion(x, y) {
+            const gameArea = document.getElementById('game-area');
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.textContent = '💥';
+            explosion.style.left = x + 'px';
+            explosion.style.top = y + 'px';
+            
+            gameArea.appendChild(explosion);
+            
+            setTimeout(() => {
+                if (explosion.parentNode) {
+                    explosion.parentNode.removeChild(explosion);
+                }
+            }, 500);
+        }
+
+        // Show score popup
+        function showScorePopup(x, y, points) {
+            const gameArea = document.getElementById('game-area');
+            const popup = document.createElement('div');
+            popup.className = 'score-popup';
+            popup.textContent = `+${points}`;
+            popup.style.left = x + 'px';
+            popup.style.top = y + 'px';
+            
+            gameArea.appendChild(popup);
+            
+            setTimeout(() => {
+                if (popup.parentNode) {
+                    popup.parentNode.removeChild(popup);
+                }
+            }, 1000);
+        }
+
+        // Fire cannons
+        function fireCannons() {
+            const cannonIds = ['cannon-tl', 'cannon-tr', 'cannon-bl', 'cannon-br'];
+            
+            cannonIds.forEach((cannonId, index) => {
+                setTimeout(() => {
+                    const cannonElement = document.getElementById(cannonId);
+                    if (cannonElement) {
+                        cannonElement.classList.add('firing');
+                        setTimeout(() => {
+                            cannonElement.classList.remove('firing');
+                        }, 200);
+                    }
+                }, index * 100);
+            });
+        }
+
+        // Show message
+        function showMessage(message) {
+            const gameArea = document.getElementById('game-area');
+            const messageDiv = document.createElement('div');
+            messageDiv.style.position = 'absolute';
+            messageDiv.style.top = '50%';
+            messageDiv.style.left = '50%';
+            messageDiv.style.transform = 'translate(-50%, -50%)';
+            messageDiv.style.color = '#ff6b6b';
+            messageDiv.style.fontSize = '1.5rem';
+            messageDiv.style.fontWeight = 'bold';
+            messageDiv.style.zIndex = '25';
+            messageDiv.textContent = message;
+            
+            gameArea.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 2000);
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('balance').textContent = gameState.balance;
+            document.getElementById('score').textContent = gameState.score;
+            document.getElementById('bullets').textContent = gameState.bulletCount;
+            document.getElementById('level').textContent = gameState.level;
+            document.getElementById('wave-indicator').textContent = `Wave ${gameState.wave}`;
+        }
+
+        // Game loop
+        function gameLoop() {
+            if (!gameState.gameRunning) return;
+            
+            // Level up logic
+            if (gameState.score > gameState.level * 1000) {
+                gameState.level++;
+                gameState.bulletCount += 20;
+                showMessage(`Level Up! +20 Bullets`);
+            }
+            
+            // Wave progression
+            if (gameState.score > gameState.wave * 5000) {
+                gameState.wave++;
+                showMessage(`Wave ${gameState.wave} - More Fish Coming!`);
+            }
+            
+            updateDisplay();
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Go back to casino
+        function goBack() {
+            gameState.gameRunning = false;
+            window.location.href = 'index.html';
+        }
+
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book of Ra - Professional Slot Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 20, 147, 0.1) 0%, transparent 70%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><polygon points="50,10 60,40 90,40 70,60 80,90 50,70 20,90 30,60 10,40 40,40" fill="rgba(255,215,0,0.05)"/></svg>');
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-20px) translateY(-10px); }
+            50% { transform: translateX(20px) translateY(10px); }
+            75% { transform: translateX(-10px) translateY(20px); }
+        }
+
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Egyptian Background Elements */
+        .egyptian-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .pyramid {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 80px solid rgba(139, 69, 19, 0.3);
+        }
+
+        .pyramid-1 {
+            top: 60%;
+            left: 10%;
+            transform: rotate(-15deg);
+        }
+
+        .pyramid-2 {
+            top: 70%;
+            right: 15%;
+            transform: rotate(15deg);
+        }
+
+        .pyramid-3 {
+            top: 65%;
+            left: 5%;
+            transform: rotate(-10deg);
+            border-bottom: 60px solid rgba(160, 82, 45, 0.2);
+        }
+
+        .pyramid-4 {
+            top: 75%;
+            right: 8%;
+            transform: rotate(10deg);
+            border-bottom: 60px solid rgba(160, 82, 45, 0.2);
+        }
+
+        .golden-column {
+            position: absolute;
+            width: 40px;
+            height: 300px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 50%, #ffd700 100%);
+            border-radius: 20px;
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.5),
+                inset 0 2px 4px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .column-left {
+            left: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .column-right {
+            right: 50px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .column-capital {
+            position: absolute;
+            top: -20px;
+            left: -10px;
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 30px 30px 0 0;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .column-base {
+            position: absolute;
+            bottom: -20px;
+            left: -10px;
+            width: 60px;
+            height: 40px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 5rem;
+            font-family: 'Arial', sans-serif;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            text-shadow: 
+                0 0 20px rgba(255, 107, 157, 0.5),
+                0 0 40px rgba(196, 69, 105, 0.3),
+                0 0 60px rgba(248, 181, 0, 0.2);
+            margin-bottom: 15px;
+            letter-spacing: 3px;
+            position: relative;
+        }
+
+        .header h1::before {
+            content: 'BOOK OF RA';
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            filter: blur(2px);
+            opacity: 0.7;
+            z-index: -1;
+        }
+
+        @keyframes dreamyGlow {
+            0%, 100% { 
+                background-position: 0% 50%;
+                transform: scale(1);
+            }
+            25% { 
+                background-position: 100% 50%;
+                transform: scale(1.02);
+            }
+            50% { 
+                background-position: 200% 50%;
+                transform: scale(1);
+            }
+            75% { 
+                background-position: 300% 50%;
+                transform: scale(1.02);
+            }
+        }
+
+        .header p {
+            font-size: 1.4rem;
+            font-weight: 300;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(255, 107, 157, 0.4);
+            letter-spacing: 2px;
+            margin-top: 10px;
+        }
+
+        .slot-machine {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            border: 3px solid transparent;
+            border-radius: 25px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.8),
+                inset 0 3px 6px rgba(255, 255, 255, 0.1),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(138, 43, 226, 0.3),
+                0 0 60px rgba(255, 20, 147, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slot-machine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            border-radius: 25px;
+            padding: 3px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        .slot-machine::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 107, 157, 0.1) 50%, transparent 70%);
+            border-radius: 15px;
+            animation: slotShine 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .slot-machine::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 215, 0, 0.1) 50%, transparent 70%);
+            animation: slotShine 4s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes slotShine {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
+
+        .canvas-container {
+            position: relative;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        #gameCanvas {
+            border: 4px solid #8b4513;
+            border-radius: 15px;
+            box-shadow: 
+                0 10px 20px rgba(0, 0, 0, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            background: linear-gradient(145deg, #f8f8f8 0%, #e8e8e8 100%);
+        }
+
+        .controls {
+            margin: 30px 0;
+            text-align: center;
+            background: linear-gradient(145deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 
+                0 10px 20px rgba(0, 0, 0, 0.3),
+                inset 0 2px 4px rgba(255, 255, 255, 0.1);
+            border: 2px solid #ffd700;
+        }
+
+        .bet-controls {
+            margin-bottom: 20px;
+        }
+
+        .bet-controls h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .bet-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .bet-btn {
+            background: linear-gradient(145deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bet-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .bet-btn:hover::before {
+            left: 100%;
+        }
+
+        .bet-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .bet-btn.active {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(255, 215, 0, 0.4);
+        }
+
+        .game-controls {
+            margin: 20px 0;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            min-width: 80px;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(145deg, #34495e 0%, #2c3e50 100%);
+            transform: translateY(-2px);
+        }
+
+        .control-btn.active {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+        }
+
+        .spin-controls {
+            margin-top: 20px;
+        }
+
+        .spin-info {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #ffd700;
+        }
+
+        .spin-info span {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+
+        .spin-btn {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            border: none;
+            color: #1a1a2e;
+            padding: 20px 40px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.5rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            box-shadow: 0 8px 16px rgba(255, 215, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .spin-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .spin-btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .spin-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(255, 215, 0, 0.4);
+        }
+
+        .spin-btn:disabled {
+            background: #666;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .game-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .info-card {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ffd700, #ff6b35, #ffd700);
+            background-size: 200% 100%;
+            animation: cardGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes cardGlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .info-card h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .info-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .win-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            padding: 30px 50px;
+            border-radius: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(255, 215, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+            transition: all 0.5s ease;
+        }
+
+        .win-message.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(145deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 100;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content h2 {
+            color: #ffd700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .paytable-row, .stat-row, .setting-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .paytable-row:last-child, .stat-row:last-child, .setting-row:last-child {
+            border-bottom: none;
+        }
+
+        .modal-content button {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            border: none;
+            color: #1a1a2e;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            transform: translateY(-2px);
+        }
+
+        .settings input[type="checkbox"] {
+            transform: scale(1.5);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .bet-buttons {
+                gap: 5px;
+            }
+            
+            .bet-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            
+            .spin-btn {
+                padding: 15px 30px;
+                font-size: 1.2rem;
+            }
+            
+            .game-info {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .control-row {
+                gap: 5px;
+            }
+
+            .control-btn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                min-width: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <!-- Egyptian Background -->
+    <div class="egyptian-background">
+        <div class="pyramid pyramid-1"></div>
+        <div class="pyramid pyramid-2"></div>
+        <div class="pyramid pyramid-3"></div>
+        <div class="pyramid pyramid-4"></div>
+        
+        <div class="golden-column column-left">
+            <div class="column-capital"></div>
+            <div class="column-base"></div>
+        </div>
+        <div class="golden-column column-right">
+            <div class="column-capital"></div>
+            <div class="column-base"></div>
+        </div>
+    </div>
+    
+    <button class="back-btn" onclick="goBack()">← Back to Casino</button>
+
+    <div class="game-container">
+        <div class="header">
+            <h1>📖 Book of Ra</h1>
+            <p>Ancient Egyptian Slot Adventure</p>
+        </div>
+
+        <div class="slot-machine">
+            <div class="canvas-container">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+            </div>
+
+            <div class="controls">
+                <div class="bet-controls">
+                    <h3>Choose Your Bet</h3>
+                    <div class="bet-buttons">
+                        <button class="bet-btn" onclick="setBet(1)">$1</button>
+                        <button class="bet-btn" onclick="setBet(5)">$5</button>
+                        <button class="bet-btn active" onclick="setBet(10)">$10</button>
+                        <button class="bet-btn" onclick="setBet(25)">$25</button>
+                        <button class="bet-btn" onclick="setBet(50)">$50</button>
+                        <button class="bet-btn" onclick="setBet(100)">$100</button>
+                        <button class="bet-btn" onclick="setBet(200)">$200</button>
+                        <button class="bet-btn" onclick="setBet(500)">$500</button>
+                    </div>
+                </div>
+                
+                <div class="game-controls">
+                    <div class="control-row">
+                        <button class="control-btn" id="autoPlayBtn" onclick="toggleAutoPlay()">AUTOPLAY</button>
+                        <button class="control-btn" id="turboBtn" onclick="toggleTurbo()">TURBO</button>
+                        <button class="control-btn" onclick="togglePaytable()">PAYTABLE</button>
+                        <button class="control-btn" onclick="toggleSettings()">SETTINGS</button>
+                    </div>
+                    <div class="control-row">
+                        <button class="control-btn" onclick="maxBet()">MAX BET</button>
+                        <button class="control-btn" onclick="doubleBet()">2X BET</button>
+                        <button class="control-btn" onclick="halfBet()">1/2 BET</button>
+                        <button class="control-btn" onclick="showStatistics()">STATS</button>
+                    </div>
+                </div>
+                
+                <div class="spin-controls">
+                    <button class="spin-btn" id="spinBtn" onclick="spin()">SPIN</button>
+                    <div class="spin-info">
+                        <span id="autoPlayCount">Auto: 0</span>
+                        <span id="freeSpinsCount">Free Spins: 0</span>
+                        <span id="multiplierCount">Multiplier: 1x</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="info-card">
+                <h3>Balance</h3>
+                <div class="value" id="balance">$1000</div>
+            </div>
+            <div class="info-card">
+                <h3>Current Bet</h3>
+                <div class="value" id="currentBet">$10</div>
+            </div>
+            <div class="info-card">
+                <h3>Last Win</h3>
+                <div class="value" id="lastWin">$0</div>
+            </div>
+            <div class="info-card">
+                <h3>Total Wins</h3>
+                <div class="value" id="totalWins">$0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="win-message" id="winMessage"></div>
+
+    <script>
+        console.log('Book of Ra HTML5 Canvas game loading...');
+        
+        // Professional Game State
+        let gameState = {
+            balance: 1000,
+            currentBet: 10,
+            lastWin: 0,
+            totalWins: 0,
+            isSpinning: false,
+            autoPlay: false,
+            autoPlayCount: 0,
+            turboMode: false,
+            soundEnabled: true,
+            showPaytable: false,
+            freeSpins: 0,
+            multiplier: 1,
+            totalSpins: 0,
+            totalWagered: 0,
+            rtp: 96.5, // Return to Player percentage
+            volatility: 'medium', // low, medium, high
+            symbols: [
+                { name: 'Book of Ra', multiplier: 5, isWild: true, isScatter: true, color: '#ffd700', symbol: 'book', weight: 1 },
+                { name: 'Anubis', multiplier: 100, color: '#8b4513', symbol: 'anubis', weight: 1 },
+                { name: 'Ra', multiplier: 50, color: '#ff6b35', symbol: 'ra', weight: 2 },
+                { name: 'Scarab', multiplier: 25, color: '#32cd32', symbol: 'scarab', weight: 3 },
+                { name: 'Pharaoh', multiplier: 15, color: '#ffd700', symbol: 'pharaoh', weight: 4 },
+                { name: 'Hieroglyph', multiplier: 10, color: '#4169e1', symbol: 'hieroglyph', weight: 5 },
+                { name: 'Ace', multiplier: 5, color: '#ff69b4', symbol: 'ace', weight: 8 },
+                { name: 'King', multiplier: 4, color: '#ff69b4', symbol: 'king', weight: 10 },
+                { name: 'Queen', multiplier: 3, color: '#ff69b4', symbol: 'queen', weight: 12 },
+                { name: 'Jack', multiplier: 2, color: '#ff69b4', symbol: 'jack', weight: 15 }
+            ],
+            reels: [],
+            spinningReels: [false, false, false, false, false],
+            particles: [],
+            spinSpeeds: [0, 0, 0, 0, 0],
+            spinPositions: [0, 0, 0, 0, 0],
+            bonusRound: false,
+            jackpot: 10000,
+            achievements: [],
+            statistics: {
+                biggestWin: 0,
+                totalSpins: 0,
+                totalWagered: 0,
+                averageBet: 0,
+                winRate: 0
+            }
+        };
+
+        // Canvas setup
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const reelWidth = 120;
+        const reelHeight = 300;
+        const reelSpacing = 20;
+        const startX = (canvas.width - (5 * reelWidth + 4 * reelSpacing)) / 2;
+        const startY = (canvas.height - reelHeight) / 2;
+
+        // Professional symbol drawing functions
+        function drawBookOfRa(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Book cover with gradient
+            const gradient = ctx.createLinearGradient(-size/2, -size/2, size/2, size/2);
+            gradient.addColorStop(0, '#8b4513');
+            gradient.addColorStop(1, '#a0522d');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(-size/2, -size/2, size, size);
+            
+            // Gold border
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(-size/2, -size/2, size, size);
+            
+            // Book pages
+            ctx.fillStyle = '#f5f5dc';
+            ctx.fillRect(-size/2 + 8, -size/2 + 8, size - 16, size - 16);
+            
+            // Book spine
+            ctx.fillStyle = '#654321';
+            ctx.fillRect(-size/2 + 2, -size/2 + 8, 4, size - 16);
+            
+            // Hieroglyphic symbols
+            ctx.fillStyle = '#8b4513';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('◊', -8, -8);
+            ctx.fillText('▲', 8, -8);
+            ctx.fillText('●', 0, 8);
+            
+            ctx.restore();
+        }
+
+        function drawAnubis(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Background circle
+            const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size/2);
+            gradient.addColorStop(0, '#ffd700');
+            gradient.addColorStop(1, '#8b4513');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, size/2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Head (jackal) with gradient
+            const headGradient = ctx.createLinearGradient(-size/3, -size/4, size/3, size/4);
+            headGradient.addColorStop(0, '#654321');
+            headGradient.addColorStop(1, '#8b4513');
+            ctx.fillStyle = headGradient;
+            ctx.beginPath();
+            ctx.ellipse(0, -size/6, size/3, size/5, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Ears
+            ctx.fillStyle = '#654321';
+            ctx.beginPath();
+            ctx.ellipse(-size/5, -size/4, size/10, size/8, -0.3, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.ellipse(size/5, -size/4, size/10, size/8, 0.3, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Eyes
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(-size/12, -size/8, size/20, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(size/12, -size/8, size/20, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Ankh cross
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, -size/4);
+            ctx.lineTo(0, size/6);
+            ctx.moveTo(-size/10, -size/6);
+            ctx.lineTo(size/10, -size/6);
+            ctx.stroke();
+            
+            // Gold border
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function drawRa(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Background circle
+            const bgGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size/2);
+            bgGradient.addColorStop(0, '#ffd700');
+            bgGradient.addColorStop(1, '#ff6b35');
+            ctx.fillStyle = bgGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, size/2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Sun disk with gradient
+            const sunGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size/3);
+            sunGradient.addColorStop(0, '#ffed4e');
+            sunGradient.addColorStop(1, '#ff6b35');
+            ctx.fillStyle = sunGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, size/3, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Sun rays with gradient
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 6;
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 5;
+            for (let i = 0; i < 12; i++) {
+                const angle = (i * Math.PI) / 6;
+                const startX = Math.cos(angle) * size/3;
+                const startY = Math.sin(angle) * size/3;
+                const endX = Math.cos(angle) * size/2.2;
+                const endY = Math.sin(angle) * size/2.2;
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+            }
+            ctx.shadowBlur = 0;
+            
+            // Eye of Ra
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(0, 0, size/10, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Gold border
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function drawScarab(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Background circle
+            const bgGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size/2);
+            bgGradient.addColorStop(0, '#ffd700');
+            bgGradient.addColorStop(1, '#32cd32');
+            ctx.fillStyle = bgGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, size/2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Scarab body with gradient
+            const bodyGradient = ctx.createLinearGradient(-size/3, -size/4, size/3, size/4);
+            bodyGradient.addColorStop(0, '#228b22');
+            bodyGradient.addColorStop(1, '#32cd32');
+            ctx.fillStyle = bodyGradient;
+            ctx.beginPath();
+            ctx.ellipse(0, 0, size/3, size/4, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Head
+            ctx.fillStyle = '#1e7e1e';
+            ctx.beginPath();
+            ctx.ellipse(0, -size/6, size/6, size/8, 0, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Antennae
+            ctx.strokeStyle = '#1e7e1e';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(-size/8, -size/4);
+            ctx.lineTo(-size/6, -size/3);
+            ctx.moveTo(size/8, -size/4);
+            ctx.lineTo(size/6, -size/3);
+            ctx.stroke();
+            
+            // Wing patterns
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 3;
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                ctx.arc(-size/6 + i * size/12, 0, size/12, 0, Math.PI);
+                ctx.stroke();
+            }
+            
+            // Gold border
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function drawPharaoh(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Background circle
+            const bgGradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size/2);
+            bgGradient.addColorStop(0, '#ffd700');
+            bgGradient.addColorStop(1, '#ff6b35');
+            ctx.fillStyle = bgGradient;
+            ctx.beginPath();
+            ctx.arc(0, 0, size/2, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Crown with gradient
+            const crownGradient = ctx.createLinearGradient(-size/3, -size/2, size/3, -size/4);
+            crownGradient.addColorStop(0, '#ffd700');
+            crownGradient.addColorStop(1, '#ffed4e');
+            ctx.fillStyle = crownGradient;
+            ctx.fillRect(-size/3, -size/2, size * 2/3, size/4);
+            
+            // Crown details
+            ctx.fillStyle = '#ff6b35';
+            for (let i = 0; i < 5; i++) {
+                ctx.fillRect(-size/3 + i * size/12, -size/2, size/20, size/6);
+            }
+            
+            // Face
+            ctx.fillStyle = '#fdbcb4';
+            ctx.beginPath();
+            ctx.arc(0, -size/8, size/4, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Eyes
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(-size/12, -size/6, size/20, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(size/12, -size/6, size/20, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Body
+            ctx.fillStyle = '#4169e1';
+            ctx.fillRect(-size/4, size/8, size/2, size/2);
+            
+            // Ankh
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.moveTo(0, size/4);
+            ctx.lineTo(0, size/2);
+            ctx.moveTo(-size/12, size/3);
+            ctx.lineTo(size/12, size/3);
+            ctx.stroke();
+            
+            // Gold border
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            ctx.restore();
+        }
+
+        function drawHieroglyph(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Card background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(-size/2, -size/2, size, size);
+            
+            // Card border
+            ctx.strokeStyle = '#4169e1';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(-size/2, -size/2, size, size);
+            
+            // Hieroglyphic symbols
+            ctx.fillStyle = '#4169e1';
+            ctx.font = 'bold 20px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Draw multiple hieroglyphic symbols
+            const symbols = ['◊', '▲', '●'];
+            for (let i = 0; i < 3; i++) {
+                ctx.fillText(symbols[i], (i - 1) * size/4, 0);
+            }
+            
+            ctx.restore();
+        }
+
+        function drawAce(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Card background with gradient
+            const cardGradient = ctx.createLinearGradient(-size/2, -size/2, size/2, size/2);
+            cardGradient.addColorStop(0, '#ffffff');
+            cardGradient.addColorStop(1, '#f8f8f8');
+            ctx.fillStyle = cardGradient;
+            ctx.fillRect(-size/2, -size/2, size, size);
+            
+            // Card border
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-size/2, -size/2, size, size);
+            
+            // Inner border
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-size/2 + 3, -size/2 + 3, size - 6, size - 6);
+            
+            // Large Ace symbol in center
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 40px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('A', 0, 0);
+            
+            // Heart suit symbol
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('♥', 0, -size/4);
+            
+            // Corner symbols
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('A', -size/3, -size/3);
+            ctx.fillText('♥', -size/3 + 8, -size/3 + 8);
+            
+            // Rotated corner
+            ctx.save();
+            ctx.translate(size/3, size/3);
+            ctx.rotate(Math.PI);
+            ctx.fillText('A', 0, 0);
+            ctx.fillText('♥', 8, 8);
+            ctx.restore();
+            
+            ctx.restore();
+        }
+
+        function drawKing(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Card background with gradient
+            const cardGradient = ctx.createLinearGradient(-size/2, -size/2, size/2, size/2);
+            cardGradient.addColorStop(0, '#ffffff');
+            cardGradient.addColorStop(1, '#f8f8f8');
+            ctx.fillStyle = cardGradient;
+            ctx.fillRect(-size/2, -size/2, size, size);
+            
+            // Card border
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-size/2, -size/2, size, size);
+            
+            // Inner border
+            ctx.strokeStyle = '#0000ff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-size/2 + 3, -size/2 + 3, size - 6, size - 6);
+            
+            // Large King symbol in center
+            ctx.fillStyle = '#0000ff';
+            ctx.font = 'bold 36px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('K', 0, 0);
+            
+            // Spade suit symbol
+            ctx.fillStyle = '#0000ff';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('♠', 0, -size/4);
+            
+            // Corner symbols
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('K', -size/3, -size/3);
+            ctx.fillText('♠', -size/3 + 8, -size/3 + 8);
+            
+            // Rotated corner
+            ctx.save();
+            ctx.translate(size/3, size/3);
+            ctx.rotate(Math.PI);
+            ctx.fillText('K', 0, 0);
+            ctx.fillText('♠', 8, 8);
+            ctx.restore();
+            
+            ctx.restore();
+        }
+
+        function drawQueen(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Card background with gradient
+            const cardGradient = ctx.createLinearGradient(-size/2, -size/2, size/2, size/2);
+            cardGradient.addColorStop(0, '#ffffff');
+            cardGradient.addColorStop(1, '#f8f8f8');
+            ctx.fillStyle = cardGradient;
+            ctx.fillRect(-size/2, -size/2, size, size);
+            
+            // Card border
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-size/2, -size/2, size, size);
+            
+            // Inner border
+            ctx.strokeStyle = '#008000';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-size/2 + 3, -size/2 + 3, size - 6, size - 6);
+            
+            // Large Queen symbol in center
+            ctx.fillStyle = '#008000';
+            ctx.font = 'bold 36px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Q', 0, 0);
+            
+            // Club suit symbol
+            ctx.fillStyle = '#008000';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('♣', 0, -size/4);
+            
+            // Corner symbols
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('Q', -size/3, -size/3);
+            ctx.fillText('♣', -size/3 + 8, -size/3 + 8);
+            
+            // Rotated corner
+            ctx.save();
+            ctx.translate(size/3, size/3);
+            ctx.rotate(Math.PI);
+            ctx.fillText('Q', 0, 0);
+            ctx.fillText('♣', 8, 8);
+            ctx.restore();
+            
+            ctx.restore();
+        }
+
+        function drawJack(ctx, x, y, size) {
+            ctx.save();
+            ctx.translate(x, y);
+            
+            // Card background with gradient
+            const cardGradient = ctx.createLinearGradient(-size/2, -size/2, size/2, size/2);
+            cardGradient.addColorStop(0, '#ffffff');
+            cardGradient.addColorStop(1, '#f8f8f8');
+            ctx.fillStyle = cardGradient;
+            ctx.fillRect(-size/2, -size/2, size, size);
+            
+            // Card border
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(-size/2, -size/2, size, size);
+            
+            // Inner border
+            ctx.strokeStyle = '#ff0000';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-size/2 + 3, -size/2 + 3, size - 6, size - 6);
+            
+            // Large Jack symbol in center
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 36px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('J', 0, 0);
+            
+            // Diamond suit symbol
+            ctx.fillStyle = '#ff0000';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('♦', 0, -size/4);
+            
+            // Corner symbols
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('J', -size/3, -size/3);
+            ctx.fillText('♦', -size/3 + 8, -size/3 + 8);
+            
+            // Rotated corner
+            ctx.save();
+            ctx.translate(size/3, size/3);
+            ctx.rotate(Math.PI);
+            ctx.fillText('J', 0, 0);
+            ctx.fillText('♦', 8, 8);
+            ctx.restore();
+            
+            ctx.restore();
+        }
+
+        // Draw symbol based on type
+        function drawSymbol(ctx, symbol, x, y, size) {
+            switch(symbol) {
+                case 'book':
+                    drawBookOfRa(ctx, x, y, size);
+                    break;
+                case 'anubis':
+                    drawAnubis(ctx, x, y, size);
+                    break;
+                case 'ra':
+                    drawRa(ctx, x, y, size);
+                    break;
+                case 'scarab':
+                    drawScarab(ctx, x, y, size);
+                    break;
+                case 'pharaoh':
+                    drawPharaoh(ctx, x, y, size);
+                    break;
+                case 'hieroglyph':
+                    drawHieroglyph(ctx, x, y, size);
+                    break;
+                case 'ace':
+                    drawAce(ctx, x, y, size);
+                    break;
+                case 'king':
+                    drawKing(ctx, x, y, size);
+                    break;
+                case 'queen':
+                    drawQueen(ctx, x, y, size);
+                    break;
+                case 'jack':
+                    drawJack(ctx, x, y, size);
+                    break;
+            }
+        }
+
+        // Initialize game
+        function initGame() {
+            console.log('Initializing HTML5 Canvas game...');
+            try {
+                generateReels();
+                drawGame();
+                updateDisplay();
+                initParticles();
+                console.log('Game initialized successfully');
+            } catch (error) {
+                console.error('Error initializing game:', error);
+            }
+        }
+
+        // Generate initial reels with weighted probability
+        function generateReels() {
+            console.log('Generating reels...');
+            gameState.reels = [];
+            for (let i = 0; i < 5; i++) {
+                const reel = [];
+                for (let j = 0; j < 3; j++) {
+                    const randomSymbol = getWeightedSymbol();
+                    reel.push(randomSymbol);
+                }
+                gameState.reels.push(reel);
+            }
+            console.log('Reels generated');
+        }
+
+        // Get symbol based on weight (RTP balancing)
+        function getWeightedSymbol() {
+            const totalWeight = gameState.symbols.reduce((sum, symbol) => sum + symbol.weight, 0);
+            let random = Math.random() * totalWeight;
+            
+            for (let symbol of gameState.symbols) {
+                random -= symbol.weight;
+                if (random <= 0) {
+                    return symbol;
+                }
+            }
+            return gameState.symbols[gameState.symbols.length - 1];
+        }
+
+        // Draw the game
+        function drawGame() {
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background
+            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            gradient.addColorStop(0, '#0f0f23');
+            gradient.addColorStop(0.5, '#1a1a2e');
+            gradient.addColorStop(1, '#16213e');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw reels
+            for (let i = 0; i < 5; i++) {
+                const x = startX + i * (reelWidth + reelSpacing);
+                const y = startY;
+                
+                // Draw reel background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(x, y, reelWidth, reelHeight);
+                
+                // Draw reel border
+                ctx.strokeStyle = '#8b4513';
+                ctx.lineWidth = 3;
+                ctx.strokeRect(x, y, reelWidth, reelHeight);
+                
+                // Draw symbols with proper spinning animation
+                if (gameState.spinningReels[i]) {
+                    // Draw spinning reel with continuous symbol movement
+                    ctx.save();
+                    ctx.translate(x + reelWidth / 2, y + reelHeight / 2);
+                    
+                    // Create clipping mask for the reel
+                    ctx.beginPath();
+                    ctx.rect(-reelWidth / 2, -reelHeight / 2, reelWidth, reelHeight);
+                    ctx.clip();
+                    
+                    // Draw multiple symbols moving vertically
+                    const symbolHeight = reelHeight / 3;
+                    const totalSymbols = 6; // Number of symbols to show during spin
+                    
+                    for (let k = 0; k < totalSymbols; k++) {
+                        // Start from top of the reel area
+                        const symbolY = (k * symbolHeight) - (reelHeight / 2) + gameState.spinPositions[i];
+                        
+                        // Only draw symbols that are visible in the reel area
+                        if (symbolY > -reelHeight / 2 - symbolHeight && symbolY < reelHeight / 2 + symbolHeight) {
+                            const randomSymbol = gameState.symbols[Math.floor(Math.random() * gameState.symbols.length)];
+                            
+                            // Add motion blur effect
+                            ctx.save();
+                            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+                            ctx.shadowBlur = 6;
+                            ctx.globalAlpha = 0.8;
+                            
+                            drawSymbol(ctx, randomSymbol.symbol, 0, symbolY, 50);
+                            ctx.restore();
+                        }
+                    }
+                    
+                    ctx.restore();
+                } else {
+                    // Draw normal static symbols
+                    for (let j = 0; j < 3; j++) {
+                        const symbolY = y + j * (reelHeight / 3) + (reelHeight / 6);
+                        const symbol = gameState.reels[i][j];
+                        drawSymbol(ctx, symbol.symbol, x + reelWidth / 2, symbolY, 60);
+                    }
+                }
+            }
+            
+            // Draw paylines
+            drawPaylines();
+        }
+
+        // Draw paylines
+        function drawPaylines() {
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.6)';
+            ctx.lineWidth = 3;
+            ctx.setLineDash([8, 4]);
+            
+            // Top line
+            ctx.beginPath();
+            ctx.moveTo(startX + reelWidth / 2, startY + reelHeight / 6);
+            ctx.lineTo(startX + 4 * (reelWidth + reelSpacing) + reelWidth / 2, startY + reelHeight / 6);
+            ctx.stroke();
+            
+            // Middle line
+            ctx.beginPath();
+            ctx.moveTo(startX + reelWidth / 2, startY + reelHeight / 2);
+            ctx.lineTo(startX + 4 * (reelWidth + reelSpacing) + reelWidth / 2, startY + reelHeight / 2);
+            ctx.stroke();
+            
+            // Bottom line
+            ctx.beginPath();
+            ctx.moveTo(startX + reelWidth / 2, startY + 5 * reelHeight / 6);
+            ctx.lineTo(startX + 4 * (reelWidth + reelSpacing) + reelWidth / 2, startY + 5 * reelHeight / 6);
+            ctx.stroke();
+            
+            ctx.setLineDash([]);
+        }
+
+        // Set bet amount
+        function setBet(amount) {
+            console.log('Setting bet to:', amount);
+            if (gameState.isSpinning) return;
+            
+            gameState.currentBet = amount;
+            
+            // Update bet buttons
+            document.querySelectorAll('.bet-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateDisplay();
+        }
+
+        // Spin reels
+        function spin() {
+            console.log('Spin button clicked');
+            if (gameState.isSpinning || gameState.balance < gameState.currentBet) {
+                if (gameState.balance < gameState.currentBet) {
+                    showMessage('Not enough balance!');
+                }
+                return;
+            }
+
+            console.log('Starting spin...');
+            gameState.isSpinning = true;
+            gameState.balance -= gameState.currentBet;
+            
+            // Update statistics
+            gameState.statistics.totalSpins++;
+            gameState.statistics.totalWagered += gameState.currentBet;
+            gameState.statistics.averageBet = gameState.statistics.totalWagered / gameState.statistics.totalSpins;
+            
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = true;
+            spinBtn.textContent = 'SPINNING...';
+
+            // Start spinning animation
+            startSpinning();
+        }
+
+        // Start spinning animation
+        function startSpinning() {
+            gameState.spinningReels = [true, true, true, true, true];
+            gameState.spinSpeeds = [35, 35, 35, 35, 35]; // Increased speed for faster spinning
+            gameState.spinPositions = [0, 0, 0, 0, 0];
+            animateSpinning();
+        }
+
+        // Animate spinning
+        function animateSpinning() {
+            if (gameState.isSpinning) {
+                let allStopped = true;
+                
+                // Update spin positions with proper reel movement
+                for (let i = 0; i < 5; i++) {
+                    if (gameState.spinningReels[i]) {
+                        allStopped = false;
+                        
+                        // Move symbols down (like real slot reels)
+                        gameState.spinPositions[i] += gameState.spinSpeeds[i];
+                        
+                        // Reset position when it goes beyond one symbol height
+                        const symbolHeight = 300 / 3; // reelHeight / 3
+                        if (gameState.spinPositions[i] >= symbolHeight) {
+                            gameState.spinPositions[i] = 0;
+                        }
+                        
+                        // Slow down gradually
+                        gameState.spinSpeeds[i] *= 0.975; // Faster deceleration
+                        
+                        // Stop when speed is very low
+                        if (gameState.spinSpeeds[i] < 0.5) {
+                            gameState.spinningReels[i] = false;
+                            gameState.spinPositions[i] = 0;
+                        }
+                    }
+                }
+                
+                // If all reels stopped, end spinning
+                if (allStopped) {
+                    gameState.isSpinning = false;
+                    checkWins();
+                    updateDisplay();
+                    
+                    const spinBtn = document.getElementById('spinBtn');
+                    spinBtn.disabled = false;
+                    spinBtn.textContent = 'SPIN';
+                }
+                
+                drawGame();
+                
+                if (gameState.isSpinning) {
+                    requestAnimationFrame(animateSpinning);
+                }
+            }
+        }
+
+        // Stop spinning and check for wins
+        function stopSpinning() {
+            console.log('Stopping spin...');
+            gameState.isSpinning = false;
+            gameState.spinningReels = [false, false, false, false, false];
+            
+            // Generate new reels
+            generateReels();
+            
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = false;
+            spinBtn.textContent = 'SPIN';
+
+            // Draw final state
+            drawGame();
+            
+            // Check for wins
+            checkWins();
+            updateDisplay();
+        }
+
+        // Check for winning combinations
+        function checkWins() {
+            console.log('Checking wins...');
+            const winAmount = calculateWin();
+            
+            if (winAmount > 0) {
+                gameState.lastWin = winAmount;
+                gameState.totalWins += winAmount;
+                gameState.balance += winAmount;
+                
+                // Update statistics
+                if (winAmount > gameState.statistics.biggestWin) {
+                    gameState.statistics.biggestWin = winAmount;
+                }
+                
+                // Calculate win rate
+                const totalWins = gameState.statistics.totalSpins > 0 ? 
+                    (gameState.totalWins / gameState.statistics.totalWagered) * 100 : 0;
+                gameState.statistics.winRate = Math.round(totalWins);
+                
+                showWinMessage(winAmount);
+                createWinParticles();
+                console.log('Win detected:', winAmount);
+            } else {
+                gameState.lastWin = 0;
+                console.log('No win');
+            }
+        }
+
+        // Calculate win amount - Realistic slot machine payouts
+        function calculateWin() {
+            let totalWin = 0;
+            
+            // Check each payline
+            for (let line = 0; line < 3; line++) {
+                const symbols = gameState.reels.map(reel => reel[line]);
+                
+                // Check for Book of Ra (wild) - only if 3+ in a row
+                const bookCount = symbols.filter(symbol => symbol.symbol === 'book').length;
+                if (bookCount >= 3) {
+                    totalWin += gameState.currentBet * (bookCount * 2);
+                    continue;
+                }
+
+                // Check for 5 of a kind (very rare)
+                const firstSymbol = symbols[0];
+                if (symbols.every(symbol => symbol.symbol === firstSymbol.symbol)) {
+                    totalWin += gameState.currentBet * firstSymbol.multiplier;
+                    continue;
+                }
+
+                // Check for 4 of a kind (rare)
+                const symbolCounts = {};
+                symbols.forEach(symbol => {
+                    symbolCounts[symbol.symbol] = (symbolCounts[symbol.symbol] || 0) + 1;
+                });
+
+                for (const [symbolType, count] of Object.entries(symbolCounts)) {
+                    if (count >= 4) {
+                        const symbol = gameState.symbols.find(s => s.symbol === symbolType);
+                        totalWin += gameState.currentBet * symbol.multiplier * 0.6;
+                        break;
+                    }
+                }
+
+                // Check for 3 of a kind (common but low payout)
+                for (const [symbolType, count] of Object.entries(symbolCounts)) {
+                    if (count >= 3) {
+                        const symbol = gameState.symbols.find(s => s.symbol === symbolType);
+                        // Only pay for high-value symbols on 3 of a kind
+                        if (symbol.multiplier >= 10) {
+                            totalWin += gameState.currentBet * symbol.multiplier * 0.3;
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            return totalWin;
+        }
+
+        // Create win particles
+        function createWinParticles() {
+            for (let i = 0; i < 50; i++) {
+                gameState.particles.push({
+                    x: canvas.width / 2,
+                    y: canvas.height / 2,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    life: 1,
+                    decay: 0.02,
+                    color: `hsl(${Math.random() * 60 + 30}, 100%, 50%)`
+                });
+            }
+        }
+
+        // Update particles
+        function updateParticles() {
+            for (let i = gameState.particles.length - 1; i >= 0; i--) {
+                const particle = gameState.particles[i];
+                particle.x += particle.vx;
+                particle.y += particle.vy;
+                particle.life -= particle.decay;
+                
+                if (particle.life <= 0) {
+                    gameState.particles.splice(i, 1);
+                }
+            }
+        }
+
+        // Draw particles
+        function drawParticles() {
+            gameState.particles.forEach(particle => {
+                ctx.save();
+                ctx.globalAlpha = particle.life;
+                ctx.fillStyle = particle.color;
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+
+        // Initialize background particles
+        function initParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = '2px';
+                particle.style.height = '2px';
+                particle.style.background = 'rgba(255, 215, 0, 0.5)';
+                particle.style.borderRadius = '50%';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animation = `float ${Math.random() * 3 + 2}s ease-in-out infinite`;
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Show win message
+        function showWinMessage(amount) {
+            const winMessage = document.getElementById('winMessage');
+            winMessage.textContent = `🎉 You won $${amount}! 🎉`;
+            winMessage.classList.add('show');
+            
+            setTimeout(() => {
+                winMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Show message
+        function showMessage(message) {
+            const winMessage = document.getElementById('winMessage');
+            winMessage.textContent = message;
+            winMessage.classList.add('show');
+            
+            setTimeout(() => {
+                winMessage.classList.remove('show');
+            }, 2000);
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('balance').textContent = `$${gameState.balance}`;
+            document.getElementById('currentBet').textContent = `$${gameState.currentBet}`;
+            document.getElementById('lastWin').textContent = `$${gameState.lastWin}`;
+            document.getElementById('totalWins').textContent = `$${gameState.totalWins}`;
+        }
+
+        // Professional Game Functions
+        function toggleAutoPlay() {
+            gameState.autoPlay = !gameState.autoPlay;
+            const btn = document.getElementById('autoPlayBtn');
+            if (gameState.autoPlay) {
+                btn.classList.add('active');
+                btn.textContent = 'STOP AUTO';
+                startAutoPlay();
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = 'AUTOPLAY';
+            }
+        }
+
+        function startAutoPlay() {
+            if (gameState.autoPlay && gameState.balance >= gameState.currentBet) {
+                spin();
+                gameState.autoPlayCount++;
+                updateAutoPlayDisplay();
+                
+                if (gameState.autoPlayCount < 100) { // Max 100 auto spins
+                    const delay = gameState.turboMode ? 500 : 2000;
+                    setTimeout(startAutoPlay, delay);
+                } else {
+                    toggleAutoPlay();
+                }
+            } else {
+                toggleAutoPlay();
+            }
+        }
+
+        function toggleTurbo() {
+            gameState.turboMode = !gameState.turboMode;
+            const btn = document.getElementById('turboBtn');
+            if (gameState.turboMode) {
+                btn.classList.add('active');
+                btn.textContent = 'TURBO ON';
+            } else {
+                btn.classList.remove('active');
+                btn.textContent = 'TURBO';
+            }
+        }
+
+        function togglePaytable() {
+            gameState.showPaytable = !gameState.showPaytable;
+            if (gameState.showPaytable) {
+                showPaytableModal();
+            } else {
+                hidePaytableModal();
+            }
+        }
+
+        function toggleSettings() {
+            showSettingsModal();
+        }
+
+        function maxBet() {
+            if (gameState.balance >= 500) {
+                setBet(500);
+            } else {
+                setBet(Math.floor(gameState.balance / 10) * 10);
+            }
+        }
+
+        function doubleBet() {
+            const newBet = gameState.currentBet * 2;
+            if (newBet <= 500 && gameState.balance >= newBet) {
+                setBet(newBet);
+            }
+        }
+
+        function halfBet() {
+            const newBet = Math.max(1, Math.floor(gameState.currentBet / 2));
+            setBet(newBet);
+        }
+
+        function showStatistics() {
+            showStatsModal();
+        }
+
+        function updateAutoPlayDisplay() {
+            document.getElementById('autoPlayCount').textContent = `Auto: ${gameState.autoPlayCount}`;
+        }
+
+        function updateFreeSpinsDisplay() {
+            document.getElementById('freeSpinsCount').textContent = `Free Spins: ${gameState.freeSpins}`;
+        }
+
+        function updateMultiplierDisplay() {
+            document.getElementById('multiplierCount').textContent = `Multiplier: ${gameState.multiplier}x`;
+        }
+
+        function showPaytableModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2>PAYTABLE</h2>
+                    <div class="paytable">
+                        <div class="paytable-row">
+                            <span>Book of Ra (Wild)</span>
+                            <span>5x bet</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span>Anubis (5x)</span>
+                            <span>500x bet</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span>Ra (5x)</span>
+                            <span>250x bet</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span>Scarab (5x)</span>
+                            <span>125x bet</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span>Pharaoh (5x)</span>
+                            <span>75x bet</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span>Hieroglyph (5x)</span>
+                            <span>50x bet</span>
+                        </div>
+                        <div class="paytable-row">
+                            <span>3+ Scatters</span>
+                            <span>Free Spins</span>
+                        </div>
+                    </div>
+                    <button onclick="hidePaytableModal()">CLOSE</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function hidePaytableModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) modal.remove();
+            gameState.showPaytable = false;
+        }
+
+        function showSettingsModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2>SETTINGS</h2>
+                    <div class="settings">
+                        <div class="setting-row">
+                            <label>Sound Effects:</label>
+                            <input type="checkbox" ${gameState.soundEnabled ? 'checked' : ''} onchange="toggleSound()">
+                        </div>
+                        <div class="setting-row">
+                            <label>RTP: ${gameState.rtp}%</label>
+                        </div>
+                        <div class="setting-row">
+                            <label>Volatility: ${gameState.volatility.toUpperCase()}</label>
+                        </div>
+                    </div>
+                    <button onclick="hideSettingsModal()">CLOSE</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function hideSettingsModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) modal.remove();
+        }
+
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+        }
+
+        function showStatsModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2>STATISTICS</h2>
+                    <div class="stats">
+                        <div class="stat-row">
+                            <span>Total Spins:</span>
+                            <span>${gameState.statistics.totalSpins}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Total Wagered:</span>
+                            <span>$${gameState.statistics.totalWagered}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Biggest Win:</span>
+                            <span>$${gameState.statistics.biggestWin}</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Win Rate:</span>
+                            <span>${gameState.statistics.winRate}%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span>Average Bet:</span>
+                            <span>$${gameState.statistics.averageBet}</span>
+                        </div>
+                    </div>
+                    <button onclick="hideStatsModal()">CLOSE</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function hideStatsModal() {
+            const modal = document.querySelector('.modal');
+            if (modal) modal.remove();
+        }
+
+        // Go back to main page
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Animation loop
+        function animate() {
+            updateParticles();
+            drawGame();
+            drawParticles();
+            requestAnimationFrame(animate);
+        }
+
+        // Initialize game when page loads
+        window.addEventListener('load', function() {
+            console.log('Page loaded, initializing HTML5 Canvas game...');
+            initGame();
+            animate();
+        });
+
+        // Also try to initialize immediately
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing HTML5 Canvas game...');
+            initGame();
+            animate();
+        });
+
+        console.log('Book of Ra HTML5 Canvas script loaded successfully');
+    </script>
+
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+    </style>
+</body>
+</html>

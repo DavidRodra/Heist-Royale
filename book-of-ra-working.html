@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book of Ra - Working Version</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .slot-machine {
+            background: linear-gradient(145deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .reels-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .reel {
+            width: 100px;
+            height: 120px;
+            background: linear-gradient(145deg, #f4f4f4 0%, #e0e0e0 100%);
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        .bet-controls {
+            margin-bottom: 15px;
+        }
+
+        .bet-btn {
+            background: linear-gradient(145deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .bet-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .bet-btn.active {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+        }
+
+        .spin-btn {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            border: none;
+            color: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .spin-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .spin-btn:disabled {
+            background: #666;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .game-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .info-card h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .info-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .win-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .win-message.show {
+            opacity: 1;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(145deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .reels-container {
+                gap: 5px;
+            }
+            
+            .reel {
+                width: 70px;
+                height: 90px;
+                font-size: 2rem;
+            }
+            
+            .bet-controls {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+
+    <div class="game-container">
+        <div class="header">
+            <h1>📖 Book of Ra</h1>
+            <p>Ancient Egyptian Slot Adventure</p>
+        </div>
+
+        <div class="slot-machine">
+            <div class="reels-container">
+                <div class="reel" id="reel1">📖</div>
+                <div class="reel" id="reel2">🐺</div>
+                <div class="reel" id="reel3">☀️</div>
+                <div class="reel" id="reel4">🪲</div>
+                <div class="reel" id="reel5">👑</div>
+            </div>
+
+            <div class="controls">
+                <div class="bet-controls">
+                    <span style="margin-right: 10px;">Bet:</span>
+                    <button class="bet-btn" onclick="setBet(1)">$1</button>
+                    <button class="bet-btn" onclick="setBet(5)">$5</button>
+                    <button class="bet-btn active" onclick="setBet(10)">$10</button>
+                    <button class="bet-btn" onclick="setBet(25)">$25</button>
+                    <button class="bet-btn" onclick="setBet(50)">$50</button>
+                </div>
+                <button class="spin-btn" id="spinBtn" onclick="spin()">SPIN</button>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="info-card">
+                <h3>Balance</h3>
+                <div class="value" id="balance">$1000</div>
+            </div>
+            <div class="info-card">
+                <h3>Current Bet</h3>
+                <div class="value" id="currentBet">$10</div>
+            </div>
+            <div class="info-card">
+                <h3>Last Win</h3>
+                <div class="value" id="lastWin">$0</div>
+            </div>
+            <div class="info-card">
+                <h3>Total Wins</h3>
+                <div class="value" id="totalWins">$0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="win-message" id="winMessage"></div>
+
+    <script>
+        console.log('Script loading...');
+        
+        // Game State
+        let gameState = {
+            balance: 1000,
+            currentBet: 10,
+            lastWin: 0,
+            totalWins: 0,
+            isSpinning: false,
+            symbols: [
+                { emoji: '📖', name: 'Book of Ra', multiplier: 5, isWild: true },
+                { emoji: '🐺', name: 'Anubis', multiplier: 100 },
+                { emoji: '☀️', name: 'Ra', multiplier: 50 },
+                { emoji: '🪲', name: 'Scarab', multiplier: 25 },
+                { emoji: '👑', name: 'Pharaoh', multiplier: 15 },
+                { emoji: '🔤', name: 'Hieroglyph', multiplier: 10 }
+            ]
+        };
+
+        console.log('Game state initialized');
+
+        // Initialize game
+        function initGame() {
+            console.log('Initializing game...');
+            generateReels();
+            updateDisplay();
+            console.log('Game initialized successfully');
+        }
+
+        // Generate initial reels
+        function generateReels() {
+            console.log('Generating reels...');
+            for (let i = 0; i < 5; i++) {
+                const randomSymbol = gameState.symbols[Math.floor(Math.random() * gameState.symbols.length)];
+                const reel = document.getElementById(`reel${i + 1}`);
+                if (reel) {
+                    reel.textContent = randomSymbol.emoji;
+                }
+            }
+            console.log('Reels generated');
+        }
+
+        // Set bet amount
+        function setBet(amount) {
+            console.log('Setting bet to:', amount);
+            if (gameState.isSpinning) return;
+            
+            gameState.currentBet = amount;
+            
+            // Update bet buttons
+            document.querySelectorAll('.bet-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateDisplay();
+        }
+
+        // Spin reels
+        function spin() {
+            console.log('Spin button clicked');
+            if (gameState.isSpinning || gameState.balance < gameState.currentBet) {
+                if (gameState.balance < gameState.currentBet) {
+                    showMessage('Not enough balance!');
+                }
+                return;
+            }
+
+            console.log('Starting spin...');
+            gameState.isSpinning = true;
+            gameState.balance -= gameState.currentBet;
+            
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = true;
+            spinBtn.textContent = 'SPINNING...';
+
+            // Generate new reels
+            generateReels();
+
+            // Stop spinning after delay
+            setTimeout(() => {
+                stopSpinning();
+            }, 1500);
+        }
+
+        // Stop spinning and check for wins
+        function stopSpinning() {
+            console.log('Stopping spin...');
+            gameState.isSpinning = false;
+            
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = false;
+            spinBtn.textContent = 'SPIN';
+
+            // Check for wins
+            checkWins();
+            updateDisplay();
+        }
+
+        // Check for winning combinations
+        function checkWins() {
+            console.log('Checking wins...');
+            const reels = [];
+            for (let i = 1; i <= 5; i++) {
+                const reel = document.getElementById(`reel${i}`);
+                if (reel) {
+                    reels.push(reel.textContent);
+                }
+            }
+
+            const winAmount = calculateWin(reels);
+            
+            if (winAmount > 0) {
+                gameState.lastWin = winAmount;
+                gameState.totalWins += winAmount;
+                gameState.balance += winAmount;
+                
+                showWinMessage(winAmount);
+                console.log('Win detected:', winAmount);
+            } else {
+                gameState.lastWin = 0;
+                console.log('No win');
+            }
+        }
+
+        // Calculate win amount
+        function calculateWin(symbols) {
+            // Check for Book of Ra (wild) - highest priority
+            const bookOfRa = symbols.find(symbol => symbol === '📖');
+            if (bookOfRa) {
+                return gameState.currentBet * 5;
+            }
+
+            // Check for 5 of a kind
+            const firstSymbol = symbols[0];
+            if (symbols.every(symbol => symbol === firstSymbol)) {
+                const symbolData = gameState.symbols.find(s => s.emoji === firstSymbol);
+                return gameState.currentBet * symbolData.multiplier;
+            }
+
+            // Check for 4 of a kind
+            const symbolCounts = {};
+            symbols.forEach(symbol => {
+                symbolCounts[symbol] = (symbolCounts[symbol] || 0) + 1;
+            });
+
+            for (const [emoji, count] of Object.entries(symbolCounts)) {
+                if (count >= 4) {
+                    const symbol = gameState.symbols.find(s => s.emoji === emoji);
+                    return gameState.currentBet * symbol.multiplier * 0.8;
+                }
+            }
+
+            // Check for 3 of a kind
+            for (const [emoji, count] of Object.entries(symbolCounts)) {
+                if (count >= 3) {
+                    const symbol = gameState.symbols.find(s => s.emoji === emoji);
+                    return gameState.currentBet * symbol.multiplier * 0.5;
+                }
+            }
+
+            return 0;
+        }
+
+        // Show win message
+        function showWinMessage(amount) {
+            const winMessage = document.getElementById('winMessage');
+            winMessage.textContent = `🎉 You won $${amount}! 🎉`;
+            winMessage.classList.add('show');
+            
+            setTimeout(() => {
+                winMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Show message
+        function showMessage(message) {
+            const winMessage = document.getElementById('winMessage');
+            winMessage.textContent = message;
+            winMessage.classList.add('show');
+            
+            setTimeout(() => {
+                winMessage.classList.remove('show');
+            }, 2000);
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('balance').textContent = `$${gameState.balance}`;
+            document.getElementById('currentBet').textContent = `$${gameState.currentBet}`;
+            document.getElementById('lastWin').textContent = `$${gameState.lastWin}`;
+            document.getElementById('totalWins').textContent = `$${gameState.totalWins}`;
+        }
+
+        // Go back to main page
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize game when page loads
+        window.addEventListener('load', function() {
+            console.log('Page loaded, initializing game...');
+            initGame();
+        });
+
+        console.log('Script loaded successfully');
+    </script>
+</body>
+</html>
+
+
+
+
+
+

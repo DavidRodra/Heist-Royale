@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book of Ra - Standalone</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+
+        .slot-machine {
+            background: linear-gradient(145deg, #8b4513 0%, #a0522d 50%, #8b4513 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .reels-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .reel {
+            width: 100px;
+            height: 120px;
+            background: linear-gradient(145deg, #f4f4f4 0%, #e0e0e0 100%);
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            margin: 20px 0;
+        }
+
+        .bet-controls {
+            margin-bottom: 15px;
+        }
+
+        .bet-btn {
+            background: linear-gradient(145deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .bet-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .bet-btn.active {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+        }
+
+        .spin-btn {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            border: none;
+            color: #1a1a2e;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .spin-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .spin-btn:disabled {
+            background: #666;
+            color: #999;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .game-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .info-card {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .info-card h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .info-card .value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .win-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .win-message.show {
+            opacity: 1;
+        }
+
+        .bonus-round {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .bonus-round.show {
+            opacity: 1;
+        }
+
+        .bonus-content {
+            background: linear-gradient(145deg, #2c3e50 0%, #34495e 100%);
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .bonus-title {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .bonus-description {
+            font-size: 1.2rem;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        .bonus-reels {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .bonus-reel {
+            width: 80px;
+            height: 100px;
+            background: linear-gradient(145deg, #f4f4f4 0%, #e0e0e0 100%);
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .bonus-reel:hover {
+            transform: scale(1.05);
+        }
+
+        .bonus-reel.selected {
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .bonus-symbol {
+            position: absolute;
+            width: 100%;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            top: 25px;
+        }
+
+        .bonus-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .bonus-btn {
+            background: linear-gradient(145deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .bonus-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .bonus-btn.primary {
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+        }
+
+        .multiplier-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #ff6b35 0%, #ff8c42 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .multiplier-display.show {
+            opacity: 1;
+        }
+
+        .free-spins-counter {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .free-spins-counter.show {
+            opacity: 1;
+        }
+
+        .jackpot-display {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            z-index: 100;
+            animation: jackpotPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes jackpotPulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+            }
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #ffd700 0%, #ffed4e 100%);
+            color: #1a1a2e;
+            padding: 20px 30px;
+            border-radius: 15px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
+            z-index: 1500;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .achievement-popup.show {
+            opacity: 1;
+        }
+
+        .reel-spinning {
+            animation: reelSpin 0.1s linear infinite;
+        }
+
+        @keyframes reelSpin {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-50px); }
+        }
+
+        .scatter-symbols {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .scatter-symbol {
+            position: absolute;
+            font-size: 2rem;
+            animation: scatterFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes scatterFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.7;
+            }
+            50% {
+                transform: translateY(-10px) rotate(5deg);
+                opacity: 1;
+            }
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(145deg, #ff6b35 0%, #ff8c42 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .reels-container {
+                gap: 5px;
+            }
+            
+            .reel {
+                width: 70px;
+                height: 90px;
+                font-size: 2rem;
+            }
+            
+            .bet-controls {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← Back</button>
+
+    <div class="game-container">
+        <div class="header">
+            <h1>📖 Book of Ra</h1>
+            <p>Ancient Egyptian Slot Adventure</p>
+        </div>
+
+        <div class="slot-machine">
+            <div class="reels-container">
+                <div class="reel" id="reel1">📖</div>
+                <div class="reel" id="reel2">🐺</div>
+                <div class="reel" id="reel3">☀️</div>
+                <div class="reel" id="reel4">🪲</div>
+                <div class="reel" id="reel5">👑</div>
+            </div>
+
+            <div class="controls">
+                <div class="bet-controls">
+                    <span style="margin-right: 10px;">Bet:</span>
+                    <button class="bet-btn" onclick="setBet(1)">$1</button>
+                    <button class="bet-btn" onclick="setBet(5)">$5</button>
+                    <button class="bet-btn active" onclick="setBet(10)">$10</button>
+                    <button class="bet-btn" onclick="setBet(25)">$25</button>
+                    <button class="bet-btn" onclick="setBet(50)">$50</button>
+                </div>
+                <button class="spin-btn" id="spinBtn" onclick="spin()">SPIN</button>
+            </div>
+        </div>
+
+        <div class="game-info">
+            <div class="info-card">
+                <h3>Balance</h3>
+                <div class="value" id="balance">$1000</div>
+            </div>
+            <div class="info-card">
+                <h3>Current Bet</h3>
+                <div class="value" id="currentBet">$10</div>
+            </div>
+            <div class="info-card">
+                <h3>Last Win</h3>
+                <div class="value" id="lastWin">$0</div>
+            </div>
+            <div class="info-card">
+                <h3>Total Wins</h3>
+                <div class="value" id="totalWins">$0</div>
+            </div>
+            <div class="info-card">
+                <h3>Free Spins</h3>
+                <div class="value" id="freeSpins">0</div>
+            </div>
+            <div class="info-card">
+                <h3>Multiplier</h3>
+                <div class="value" id="multiplier">1x</div>
+            </div>
+            <div class="info-card">
+                <h3>Level</h3>
+                <div class="value" id="level">1</div>
+            </div>
+            <div class="info-card">
+                <h3>XP</h3>
+                <div class="value" id="xp">0/100</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="win-message" id="winMessage"></div>
+    
+    <!-- Bonus Round Modal -->
+    <div class="bonus-round" id="bonusRound">
+        <div class="bonus-content">
+            <div class="bonus-title">🎉 BONUS ROUND! 🎉</div>
+            <div class="bonus-description">Choose 3 symbols to reveal your bonus prizes!</div>
+            <div class="bonus-reels" id="bonusReels">
+                <!-- Bonus reels will be generated here -->
+            </div>
+            <div class="bonus-buttons">
+                <button class="bonus-btn primary" onclick="startBonusRound()">Start Bonus</button>
+                <button class="bonus-btn" onclick="skipBonus()">Skip</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Special Displays -->
+    <div class="multiplier-display" id="multiplierDisplay">Multiplier: 1x</div>
+    <div class="free-spins-counter" id="freeSpinsCounter">Free Spins: 0</div>
+    <div class="jackpot-display" id="jackpotDisplay">Jackpot: $10,000</div>
+    <div class="achievement-popup" id="achievementPopup"></div>
+
+    <script>
+        console.log('Script loading...');
+        
+        // Enhanced Game State
+        let gameState = {
+            balance: 1000,
+            currentBet: 10,
+            lastWin: 0,
+            totalWins: 0,
+            isSpinning: false,
+            freeSpins: 0,
+            multiplier: 1,
+            level: 1,
+            xp: 0,
+            xpToNext: 100,
+            jackpot: 10000,
+            bonusRound: false,
+            bonusSymbols: [],
+            selectedBonusSymbols: [],
+            symbols: [
+                { emoji: '📖', name: 'Book of Ra', multiplier: 5, isWild: true, isScatter: true },
+                { emoji: '🐺', name: 'Anubis', multiplier: 100, isHighValue: true },
+                { emoji: '☀️', name: 'Ra', multiplier: 50, isHighValue: true },
+                { emoji: '🪲', name: 'Scarab', multiplier: 25 },
+                { emoji: '👑', name: 'Pharaoh', multiplier: 15 },
+                { emoji: '🔤', name: 'Hieroglyph', multiplier: 10 },
+                { emoji: '💎', name: 'Diamond', multiplier: 200, isRare: true },
+                { emoji: '🏺', name: 'Vase', multiplier: 75, isRare: true },
+                { emoji: '⚱️', name: 'Urn', multiplier: 60, isRare: true }
+            ],
+            achievements: [
+                { id: 'first_win', name: 'First Victory', description: 'Win your first spin!', unlocked: false, reward: 50 },
+                { id: 'big_winner', name: 'Big Winner', description: 'Win $500 in a single spin!', unlocked: false, reward: 100 },
+                { id: 'free_spin_master', name: 'Free Spin Master', description: 'Trigger 10 free spins!', unlocked: false, reward: 200 },
+                { id: 'jackpot_hunter', name: 'Jackpot Hunter', description: 'Hit the jackpot!', unlocked: false, reward: 1000 },
+                { id: 'level_5', name: 'Level 5', description: 'Reach level 5!', unlocked: false, reward: 500 },
+                { id: 'high_roller', name: 'High Roller', description: 'Bet $100 or more!', unlocked: false, reward: 300 }
+            ]
+        };
+
+        console.log('Game state initialized');
+
+        // Initialize game
+        function initGame() {
+            console.log('Initializing enhanced game...');
+            try {
+                generateReels();
+                updateDisplay();
+                updateSpecialDisplays();
+                console.log('Enhanced game initialized successfully');
+            } catch (error) {
+                console.error('Error initializing game:', error);
+            }
+        }
+
+        // Generate initial reels with weighted probabilities
+        function generateReels() {
+            console.log('Generating reels...');
+            for (let i = 0; i < 5; i++) {
+                const randomSymbol = getWeightedSymbol();
+                const reel = document.getElementById(`reel${i + 1}`);
+                if (reel) {
+                    reel.textContent = randomSymbol.emoji;
+                }
+            }
+            console.log('Reels generated');
+        }
+
+        // Get symbol with weighted probability
+        function getWeightedSymbol() {
+            const weights = gameState.symbols.map(symbol => {
+                if (symbol.isRare) return 0.05; // 5% chance
+                if (symbol.isHighValue) return 0.15; // 15% chance
+                if (symbol.isWild) return 0.1; // 10% chance
+                return 0.7 / (gameState.symbols.length - 3); // 70% for common symbols
+            });
+            
+            const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+            let random = Math.random() * totalWeight;
+            
+            for (let i = 0; i < gameState.symbols.length; i++) {
+                random -= weights[i];
+                if (random <= 0) {
+                    return gameState.symbols[i];
+                }
+            }
+            return gameState.symbols[0];
+        }
+
+        // Set bet amount with achievement check
+        function setBet(amount) {
+            console.log('Setting bet to:', amount);
+            if (gameState.isSpinning) return;
+            
+            gameState.currentBet = amount;
+            
+            // Update bet buttons
+            document.querySelectorAll('.bet-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Check for high roller achievement
+            if (amount >= 100) {
+                checkAchievement('high_roller');
+            }
+            
+            updateDisplay();
+        }
+
+        // Enhanced spin function
+        function spin() {
+            console.log('Spin button clicked');
+            try {
+                if (gameState.isSpinning || gameState.balance < gameState.currentBet) {
+                    if (gameState.balance < gameState.currentBet) {
+                        showMessage('Not enough balance!');
+                    }
+                    return;
+                }
+
+                // Use free spin if available
+                if (gameState.freeSpins > 0) {
+                    gameState.freeSpins--;
+                    updateSpecialDisplays();
+                } else {
+                    gameState.balance -= gameState.currentBet;
+                }
+
+                gameState.isSpinning = true;
+                
+                const spinBtn = document.getElementById('spinBtn');
+                spinBtn.disabled = true;
+                spinBtn.textContent = 'SPINNING...';
+
+                // Add spinning animation to reels
+                document.querySelectorAll('.reel').forEach(reel => {
+                    reel.classList.add('reel-spinning');
+                });
+
+                // Generate new reels
+                generateReels();
+
+                // Stop spinning after delay
+                setTimeout(() => {
+                    stopSpinning();
+                }, 2000);
+            } catch (error) {
+                console.error('Error in spin function:', error);
+                gameState.isSpinning = false;
+                const spinBtn = document.getElementById('spinBtn');
+                spinBtn.disabled = false;
+                spinBtn.textContent = 'SPIN';
+            }
+        }
+
+        // Enhanced stop spinning function
+        function stopSpinning() {
+            console.log('Stopping spin...');
+            gameState.isSpinning = false;
+            
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = false;
+            
+            if (gameState.freeSpins > 0) {
+                spinBtn.textContent = `FREE SPIN (${gameState.freeSpins})`;
+            } else {
+                spinBtn.textContent = 'SPIN';
+            }
+
+            // Remove spinning animation
+            document.querySelectorAll('.reel').forEach(reel => {
+                reel.classList.remove('reel-spinning');
+            });
+
+            // Check for wins and special features
+            checkWins();
+            checkScatters();
+            checkBonusRound();
+            checkAchievements();
+            updateDisplay();
+            updateSpecialDisplays();
+        }
+
+        // Enhanced win checking
+        function checkWins() {
+            console.log('Checking wins...');
+            const reels = [];
+            for (let i = 1; i <= 5; i++) {
+                const reel = document.getElementById(`reel${i}`);
+                if (reel) {
+                    reels.push(reel.textContent);
+                }
+            }
+
+            const winAmount = calculateWin(reels) * gameState.multiplier;
+            
+            if (winAmount > 0) {
+                gameState.lastWin = winAmount;
+                gameState.totalWins += winAmount;
+                gameState.balance += winAmount;
+                
+                // Add XP
+                addXP(Math.floor(winAmount / 10));
+                
+                showWinMessage(winAmount);
+                console.log('Win detected:', winAmount);
+                
+                // Check for big win achievement
+                if (winAmount >= 500) {
+                    checkAchievement('big_winner');
+                }
+            } else {
+                gameState.lastWin = 0;
+                console.log('No win');
+            }
+        }
+
+        // Enhanced win calculation
+        function calculateWin(symbols) {
+            // Check for Book of Ra (wild) - highest priority
+            const bookOfRa = symbols.find(symbol => symbol === '📖');
+            if (bookOfRa) {
+                return gameState.currentBet * 5;
+            }
+
+            // Check for 5 of a kind
+            const firstSymbol = symbols[0];
+            if (symbols.every(symbol => symbol === firstSymbol)) {
+                const symbolData = gameState.symbols.find(s => s.emoji === firstSymbol);
+                return gameState.currentBet * symbolData.multiplier;
+            }
+
+            // Check for 4 of a kind
+            const symbolCounts = {};
+            symbols.forEach(symbol => {
+                symbolCounts[symbol] = (symbolCounts[symbol] || 0) + 1;
+            });
+
+            for (const [emoji, count] of Object.entries(symbolCounts)) {
+                if (count >= 4) {
+                    const symbol = gameState.symbols.find(s => s.emoji === emoji);
+                    return gameState.currentBet * symbol.multiplier * 0.8;
+                }
+            }
+
+            // Check for 3 of a kind
+            for (const [emoji, count] of Object.entries(symbolCounts)) {
+                if (count >= 3) {
+                    const symbol = gameState.symbols.find(s => s.emoji === emoji);
+                    return gameState.currentBet * symbol.multiplier * 0.5;
+                }
+            }
+
+            return 0;
+        }
+
+        // Check for scatter symbols (Book of Ra)
+        function checkScatters() {
+            const allSymbols = [];
+            for (let i = 1; i <= 5; i++) {
+                const reel = document.getElementById(`reel${i}`);
+                if (reel) {
+                    allSymbols.push(reel.textContent);
+                }
+            }
+            
+            const scatterCount = allSymbols.filter(symbol => symbol === '📖').length;
+            
+            if (scatterCount >= 3) {
+                triggerFreeSpins(scatterCount);
+            }
+        }
+
+        // Trigger free spins
+        function triggerFreeSpins(scatterCount) {
+            const freeSpinsAwarded = scatterCount * 5; // 5 free spins per scatter
+            gameState.freeSpins += freeSpinsAwarded;
+            
+            showMessage(`🎉 ${scatterCount} Scatters! You won ${freeSpinsAwarded} free spins! 🎉`);
+            updateSpecialDisplays();
+            
+            // Check achievement
+            if (gameState.freeSpins >= 10) {
+                checkAchievement('free_spin_master');
+            }
+        }
+
+        // Check for bonus round trigger
+        function checkBonusRound() {
+            // 5% chance to trigger bonus round on any spin
+            if (Math.random() < 0.05 && !gameState.bonusRound) {
+                triggerBonusRound();
+            }
+        }
+
+        // Trigger bonus round
+        function triggerBonusRound() {
+            gameState.bonusRound = true;
+            document.getElementById('bonusRound').classList.add('show');
+            startBonusRound();
+        }
+
+        // Check for achievements
+        function checkAchievements() {
+            // First win
+            if (gameState.lastWin > 0) {
+                const firstWinAchievement = gameState.achievements.find(a => a.id === 'first_win');
+                if (firstWinAchievement && !firstWinAchievement.unlocked) {
+                    checkAchievement('first_win');
+                }
+            }
+        }
+
+        // Check specific achievement
+        function checkAchievement(achievementId) {
+            const achievement = gameState.achievements.find(a => a.id === achievementId);
+            if (achievement && !achievement.unlocked) {
+                achievement.unlocked = true;
+                gameState.balance += achievement.reward;
+                showAchievement(achievement);
+            }
+        }
+
+        // Show achievement popup
+        function showAchievement(achievement) {
+            const popup = document.getElementById('achievementPopup');
+            popup.innerHTML = `
+                <div>🏆 Achievement Unlocked! 🏆</div>
+                <div style="font-size: 1rem; margin-top: 10px;">${achievement.name}</div>
+                <div style="font-size: 0.9rem; margin-top: 5px;">+$${achievement.reward} Bonus!</div>
+            `;
+            popup.classList.add('show');
+            
+            setTimeout(() => {
+                popup.classList.remove('show');
+            }, 4000);
+        }
+
+        // Add XP and check for level up
+        function addXP(amount) {
+            gameState.xp += amount;
+            
+            if (gameState.xp >= gameState.xpToNext) {
+                levelUp();
+            }
+        }
+
+        // Level up
+        function levelUp() {
+            gameState.level++;
+            gameState.xp = 0;
+            gameState.xpToNext = gameState.level * 100;
+            gameState.multiplier = Math.min(gameState.level, 5); // Max 5x multiplier
+            
+            showMessage(`🎉 Level Up! You're now level ${gameState.level}! 🎉`);
+            
+            // Check level 5 achievement
+            if (gameState.level >= 5) {
+                checkAchievement('level_5');
+            }
+        }
+
+        // Bonus round functions
+        function startBonusRound() {
+            gameState.bonusSymbols = [];
+            gameState.selectedBonusSymbols = [];
+            
+            // Generate 9 bonus symbols
+            for (let i = 0; i < 9; i++) {
+                const symbol = getWeightedSymbol();
+                gameState.bonusSymbols.push(symbol);
+            }
+            
+            displayBonusReels();
+        }
+
+        function displayBonusReels() {
+            const bonusReels = document.getElementById('bonusReels');
+            bonusReels.innerHTML = '';
+            
+            gameState.bonusSymbols.forEach((symbol, index) => {
+                const reel = document.createElement('div');
+                reel.className = 'bonus-reel';
+                reel.onclick = () => selectBonusSymbol(index);
+                
+                const symbolDiv = document.createElement('div');
+                symbolDiv.className = 'bonus-symbol';
+                symbolDiv.textContent = symbol.emoji;
+                
+                reel.appendChild(symbolDiv);
+                bonusReels.appendChild(reel);
+            });
+        }
+
+        function selectBonusSymbol(index) {
+            if (gameState.selectedBonusSymbols.length >= 3) return;
+            
+            const symbol = gameState.bonusSymbols[index];
+            gameState.selectedBonusSymbols.push(symbol);
+            
+            // Highlight selected symbol
+            const reels = document.querySelectorAll('.bonus-reel');
+            reels[index].classList.add('selected');
+            
+            if (gameState.selectedBonusSymbols.length === 3) {
+                calculateBonusWin();
+            }
+        }
+
+        function calculateBonusWin() {
+            let bonusWin = 0;
+            gameState.selectedBonusSymbols.forEach(symbol => {
+                bonusWin += symbol.multiplier * gameState.currentBet;
+            });
+            
+            gameState.balance += bonusWin;
+            gameState.lastWin = bonusWin;
+            gameState.totalWins += bonusWin;
+            
+            showMessage(`🎉 Bonus Round Complete! You won $${bonusWin}! 🎉`);
+            
+            setTimeout(() => {
+                closeBonusRound();
+            }, 3000);
+        }
+
+        function closeBonusRound() {
+            gameState.bonusRound = false;
+            document.getElementById('bonusRound').classList.remove('show');
+            updateDisplay();
+            updateSpecialDisplays();
+        }
+
+        function skipBonus() {
+            closeBonusRound();
+        }
+
+        // Show win message with enhanced effects
+        function showWinMessage(amount) {
+            const winMessage = document.getElementById('winMessage');
+            
+            if (amount >= gameState.jackpot * 0.8) {
+                winMessage.innerHTML = `🎰 MEGA WIN! $${amount}! 🎰`;
+                winMessage.style.background = 'linear-gradient(145deg, #ff6b35 0%, #ffd700 100%)';
+            } else if (amount >= gameState.jackpot * 0.5) {
+                winMessage.innerHTML = `🎉 BIG WIN! $${amount}! 🎉`;
+                winMessage.style.background = 'linear-gradient(145deg, #ffd700 0%, #ffed4e 100%)';
+            } else {
+                winMessage.innerHTML = `🎉 You won $${amount}! 🎉`;
+                winMessage.style.background = 'linear-gradient(145deg, #ffd700 0%, #ffed4e 100%)';
+            }
+            
+            winMessage.classList.add('show');
+            
+            setTimeout(() => {
+                winMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Show message
+        function showMessage(message) {
+            const winMessage = document.getElementById('winMessage');
+            winMessage.innerHTML = message;
+            winMessage.style.background = 'linear-gradient(145deg, #ffd700 0%, #ffed4e 100%)';
+            winMessage.classList.add('show');
+            
+            setTimeout(() => {
+                winMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('balance').textContent = `$${gameState.balance}`;
+            document.getElementById('currentBet').textContent = `$${gameState.currentBet}`;
+            document.getElementById('lastWin').textContent = `$${gameState.lastWin}`;
+            document.getElementById('totalWins').textContent = `$${gameState.totalWins}`;
+            document.getElementById('freeSpins').textContent = gameState.freeSpins;
+            document.getElementById('multiplier').textContent = `${gameState.multiplier}x`;
+            document.getElementById('level').textContent = gameState.level;
+            document.getElementById('xp').textContent = `${gameState.xp}/${gameState.xpToNext}`;
+        }
+
+        // Update special displays
+        function updateSpecialDisplays() {
+            const multiplierDisplay = document.getElementById('multiplierDisplay');
+            const freeSpinsCounter = document.getElementById('freeSpinsCounter');
+            const jackpotDisplay = document.getElementById('jackpotDisplay');
+            
+            multiplierDisplay.textContent = `Multiplier: ${gameState.multiplier}x`;
+            multiplierDisplay.classList.toggle('show', gameState.multiplier > 1);
+            
+            freeSpinsCounter.textContent = `Free Spins: ${gameState.freeSpins}`;
+            freeSpinsCounter.classList.toggle('show', gameState.freeSpins > 0);
+            
+            jackpotDisplay.textContent = `Jackpot: $${gameState.jackpot.toLocaleString()}`;
+        }
+
+        // Go back to main page
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize game when page loads
+        window.addEventListener('load', function() {
+            console.log('Page loaded, initializing enhanced game...');
+            initGame();
+        });
+
+        // Also try to initialize immediately
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, initializing enhanced game...');
+            initGame();
+        });
+
+        console.log('Enhanced script loaded successfully');
+    </script>
+</body>
+</html>

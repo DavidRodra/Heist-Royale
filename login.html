@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Casino Max</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(138, 43, 226, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(75, 0, 130, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 20, 147, 0.1) 0%, transparent 70%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated background particles */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 107, 157, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(-20px) translateY(-10px); }
+            50% { transform: translateX(20px) translateY(10px); }
+            75% { transform: translateX(-10px) translateY(20px); }
+        }
+
+        .login-container {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #0f0f23 100%);
+            border: 3px solid transparent;
+            border-radius: 25px;
+            padding: 50px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.8),
+                inset 0 3px 6px rgba(255, 255, 255, 0.1),
+                inset 0 -3px 6px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(138, 43, 226, 0.3),
+                0 0 60px rgba(255, 20, 147, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            border-radius: 25px;
+            padding: 3px;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes dreamyGlow {
+            0%, 100% { 
+                background-position: 0% 50%;
+                transform: scale(1);
+            }
+            25% { 
+                background-position: 100% 50%;
+                transform: scale(1.02);
+            }
+            50% { 
+                background-position: 200% 50%;
+                transform: scale(1);
+            }
+            75% { 
+                background-position: 300% 50%;
+                transform: scale(1.02);
+            }
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039, #ff6b9d);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            text-shadow: 
+                0 0 20px rgba(255, 107, 157, 0.5),
+                0 0 40px rgba(196, 69, 105, 0.3),
+                0 0 60px rgba(248, 181, 0, 0.2);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .logo p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.8);
+            letter-spacing: 1px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ff6b9d;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255, 107, 157, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569, #f8b500, #e55039);
+            background-size: 400% 400%;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: dreamyGlow 4s ease-in-out infinite;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 157, 0.5), transparent);
+        }
+
+        .divider span {
+            background: linear-gradient(145deg, #0f0f23 0%, #1a1a2e 100%);
+            padding: 0 20px;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .demo-credentials {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .demo-credentials h4 {
+            color: #ff6b9d;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .demo-account {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .demo-account strong {
+            color: #f8b500;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .demo-account.admin {
+            border-color: #ff6b9d;
+            background: rgba(255, 107, 157, 0.1);
+        }
+
+        .demo-account.admin strong {
+            color: #ff6b9d;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .register-link a {
+            color: #ff6b9d;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .register-link a:hover {
+            color: #f8b500;
+            text-shadow: 0 0 10px rgba(248, 181, 0, 0.5);
+        }
+
+        .back-to-home {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: linear-gradient(45deg, #ff6b9d, #c44569);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-to-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 107, 157, 0.3);
+        }
+
+        .error-message {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            color: #6bff6b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                margin: 20px;
+                padding: 30px;
+            }
+            
+            .logo h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-to-home">← Back to Home</a>
+    
+    <div class="login-container">
+        <div class="logo">
+            <h1>CASINO MAX</h1>
+            <p>Welcome Back to the Ultimate Gaming Experience</p>
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="login-btn">Sign In</button>
+        </form>
+
+        <!-- Demo Credentials Section -->
+        <div class="demo-credentials">
+            <h4>Demo Accounts</h4>
+            <div class="demo-account">
+                <strong>VIP Customer:</strong><br>
+                Email: john.doe@email.com<br>
+                Password: customer123
+            </div>
+            <div class="demo-account">
+                <strong>Gold Customer:</strong><br>
+                Email: sarah.wilson@email.com<br>
+                Password: customer123
+            </div>
+            <div class="demo-account">
+                <strong>Bronze Customer:</strong><br>
+                Email: mike.chen@email.com<br>
+                Password: customer123
+            </div>
+            <div class="demo-account admin">
+                <strong>Admin:</strong><br>
+                Email: admin@casinomax.com<br>
+                Password: admin123
+            </div>
+        </div>
+
+        <div class="divider">
+            <span>New to Casino Max?</span>
+        </div>
+
+        <div class="register-link">
+            <a href="register.html">Create New Account</a>
+        </div>
+    </div>
+
+    <script src="security.js"></script>
+    <script src="visitor-tracking.js"></script>
+    <script>
+        // Login form handling
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Hide previous messages
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'none';
+            
+            // Rate limiting check
+            if (!SecurityUtils.rateLimit(`login_${email}`, 5, 15 * 60 * 1000)) {
+                showMessage('error', 'Too many login attempts. Please try again in 15 minutes.');
+                return;
+            }
+            
+            // Validate email
+            if (!SecurityUtils.validateEmail(email)) {
+                showMessage('error', 'Please enter a valid email address.');
+                return;
+            }
+            
+            try {
+                // Simulate API call
+                const response = await loginUser(email, password);
+                
+                if (response.success) {
+                    console.log('Login successful, storing data:', response);
+                    
+                    // Store user data in localStorage
+                    localStorage.setItem('user', JSON.stringify(response.user));
+                    localStorage.setItem('token', response.token);
+                    
+                    // Verify data was stored
+                    console.log('Stored user:', localStorage.getItem('user'));
+                    console.log('Stored token:', localStorage.getItem('token'));
+                    
+                    // Log successful login
+                    SecurityUtils.logSecurityEvent('login_success', { email: email });
+                    
+                    // Clear failed attempts
+                    localStorage.removeItem(`rate_limit_login_${email}`);
+                    
+                    // Show success message
+                    showMessage('success', 'Login successful! Redirecting...');
+                    
+                    // Redirect based on user type
+                    setTimeout(() => {
+                        console.log('Redirecting to:', email === 'admin@casinomax.com' ? 'admin.html' : 'index.html');
+                        if (email === 'admin@casinomax.com') {
+                            // Redirect admin to admin panel
+                            window.location.href = 'admin.html';
+                        } else {
+                            // Redirect regular users to main homepage
+                            window.location.href = 'index.html';
+                        }
+                    }, 1500);
+                } else {
+                    // Log failed login
+                    SecurityUtils.logSecurityEvent('login_failed', { email: email });
+                    
+                    showMessage('error', response.message || 'Login failed. Please try again.');
+                }
+            } catch (error) {
+                SecurityUtils.logSecurityEvent('login_error', { email: email, error: error.message });
+                showMessage('error', 'An error occurred. Please try again.');
+                console.error('Login error:', error);
+            }
+        });
+
+        // Setup admin account if it doesn't exist
+        function ensureAdminAccount() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const adminExists = users.some(user => user.email === 'admin@casinomax.com');
+            
+            if (!adminExists) {
+                const adminUser = {
+                    id: 'admin_001',
+                    name: 'Admin User',
+                    email: 'admin@casinomax.com',
+                    password: 'admin123', // Simple password for demo
+                    role: 'admin',
+                    balance: 0,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                };
+                
+                users.push(adminUser);
+                localStorage.setItem('users', JSON.stringify(users));
+            }
+        }
+
+        function setupDemoCustomers() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // Demo Customer 1 - High Roller
+            const customer1Exists = users.some(user => user.email === 'john.doe@email.com');
+            if (!customer1Exists) {
+                const customer1 = {
+                    id: 'customer_001',
+                    name: 'John Doe',
+                    email: 'john.doe@email.com',
+                    password: 'customer123',
+                    role: 'customer',
+                    balance: 0,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    level: 'VIP',
+                    totalWins: 12500,
+                    gamesPlayed: 45
+                };
+                users.push(customer1);
+            }
+
+            // Demo Customer 2 - Regular Player
+            const customer2Exists = users.some(user => user.email === 'sarah.wilson@email.com');
+            if (!customer2Exists) {
+                const customer2 = {
+                    id: 'customer_002',
+                    name: 'Sarah Wilson',
+                    email: 'sarah.wilson@email.com',
+                    password: 'customer123',
+                    role: 'customer',
+                    balance: 0,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    level: 'Gold',
+                    totalWins: 3200,
+                    gamesPlayed: 23
+                };
+                users.push(customer2);
+            }
+
+            // Demo Customer 3 - New Player
+            const customer3Exists = users.some(user => user.email === 'mike.chen@email.com');
+            if (!customer3Exists) {
+                const customer3 = {
+                    id: 'customer_003',
+                    name: 'Mike Chen',
+                    email: 'mike.chen@email.com',
+                    password: 'customer123',
+                    role: 'customer',
+                    balance: 0,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    level: 'Bronze',
+                    totalWins: 150,
+                    gamesPlayed: 5
+                };
+                users.push(customer3);
+            }
+
+            // Add our test accounts
+            const testAccounts = [
+                {
+                    id: 'test_001',
+                    name: 'Alice Johnson',
+                    email: 'alice@example.com',
+                    password: 'password123',
+                    role: 'customer',
+                    balance: 1500,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    level: 'Gold',
+                    totalWins: 2500,
+                    gamesPlayed: 15
+                },
+                {
+                    id: 'test_002',
+                    name: 'Bob Smith',
+                    email: 'bob@example.com',
+                    password: 'password123',
+                    role: 'customer',
+                    balance: 2000,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    level: 'Platinum',
+                    totalWins: 5000,
+                    gamesPlayed: 30
+                },
+                {
+                    id: 'test_003',
+                    name: 'Charlie Brown',
+                    email: 'charlie@example.com',
+                    password: 'password123',
+                    role: 'customer',
+                    balance: 3000,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    level: 'VIP',
+                    totalWins: 8000,
+                    gamesPlayed: 50
+                },
+                {
+                    id: 'test_004',
+                    name: 'Diana Prince',
+                    email: 'diana@example.com',
+                    password: 'password123',
+                    role: 'customer',
+                    balance: 2500,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    level: 'Gold',
+                    totalWins: 3500,
+                    gamesPlayed: 25
+                },
+                {
+                    id: 'test_005',
+                    name: 'Eve Wilson',
+                    email: 'eve@example.com',
+                    password: 'password123',
+                    role: 'customer',
+                    balance: 1800,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                    lastLogin: new Date().toISOString(),
+                    level: 'Silver',
+                    totalWins: 1200,
+                    gamesPlayed: 12
+                }
+            ];
+            
+            // Add test accounts if they don't exist
+            testAccounts.forEach(testAccount => {
+                const accountExists = users.some(user => user.email === testAccount.email);
+                if (!accountExists) {
+                    users.push(testAccount);
+                }
+            });
+
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        // Simulate login API
+        async function loginUser(email, password) {
+            // Ensure admin account and demo customers exist
+            ensureAdminAccount();
+            setupDemoCustomers();
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Check if user exists in localStorage (for demo purposes)
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email);
+            
+            if (user) {
+                // Check both hashed and plain text passwords for compatibility
+                const hashedPassword = SecurityUtils.hashPassword(password);
+                if (user.password === hashedPassword || user.password === password) {
+                    // If password is plain text, update it to hashed
+                    if (user.password === password) {
+                        user.password = hashedPassword;
+                        const users = JSON.parse(localStorage.getItem('users') || '[]');
+                        const userIndex = users.findIndex(u => u.id === user.id);
+                        if (userIndex !== -1) {
+                            users[userIndex].password = hashedPassword;
+                            localStorage.setItem('users', JSON.stringify(users));
+                        }
+                    }
+                    
+                    const token = SecurityUtils.generateToken(user.id, user.email);
+                    const userData = {
+                        id: user.id,
+                        email: user.email,
+                        name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email,
+                        balance: user.balance || 0,
+                        firstName: user.firstName || '',
+                        lastName: user.lastName || '',
+                        phone: user.phone || '',
+                        dateOfBirth: user.dateOfBirth || '',
+                        country: user.country || '',
+                        avatar: user.avatar || '',
+                        joinDate: user.createdAt || new Date().toISOString(),
+                        gamesPlayed: user.gamesPlayed || 0,
+                        gamesWon: user.gamesWon || 0
+                    };
+                    
+                    console.log('Returning user data:', userData);
+                    
+                    return {
+                        success: true,
+                        user: userData,
+                        token: token
+                    };
+                }
+            }
+            
+            return {
+                success: false,
+                message: 'Invalid email or password'
+            };
+        }
+
+        // Show message function
+        function showMessage(type, message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const successDiv = document.getElementById('successMessage');
+            
+            if (type === 'error') {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                successDiv.style.display = 'none';
+            } else {
+                successDiv.textContent = message;
+                successDiv.style.display = 'block';
+                errorDiv.style.display = 'none';
+            }
+        }
+
+        // Initialize demo accounts on page load
+        window.addEventListener('load', function() {
+            // Ensure admin account and demo customers exist
+            ensureAdminAccount();
+            setupDemoCustomers();
+            
+            // REMOVED: Automatic redirect for logged-in users
+            // Users can now stay on login page even if already logged in
+        });
+    </script>
+</body>
+</html>

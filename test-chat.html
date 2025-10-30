@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Toggle Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-content">
+            <h1>Chat Toggle Test</h1>
+            <button id="test-toggle">Toggle Chat</button>
+        </div>
+        
+        <div class="chat-sidebar" id="chat-sidebar">
+            <div class="chat-header">
+                <h3><i class="fas fa-comments"></i> Global Chat</h3>
+                <div class="chat-actions">
+                    <div class="online-count">1,247 online</div>
+                    <button class="btn btn-sm" id="chat-toggle" title="Hide/Show Chat">
+                        <i class="fas fa-eye-slash"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="chat-messages">
+                <div class="chat-message">
+                    <div class="message-avatar casino-king">C</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-user">CasinoKing</span>
+                            <span class="message-time">2:34 PM</span>
+                        </div>
+                        <div class="message-text">
+                            Just hit the jackpot on Mega Fortune! $15,240
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatToggle = document.getElementById('chat-toggle');
+            const chatSidebar = document.getElementById('chat-sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const testToggle = document.getElementById('test-toggle');
+            
+            let isChatVisible = true;
+            
+            chatToggle.onclick = function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                console.log('Chat toggle clicked, current state:', isChatVisible);
+                console.log('Chat sidebar classes before:', chatSidebar.className);
+                
+                isChatVisible = !isChatVisible;
+                
+                if (isChatVisible) {
+                    chatSidebar.classList.remove('hidden');
+                    mainContent.classList.remove('chat-hidden');
+                    chatToggle.innerHTML = '<i class="fas fa-eye-slash"></i>';
+                    chatToggle.title = 'Hide Chat';
+                    console.log('Chat shown - classes after:', chatSidebar.className);
+                } else {
+                    chatSidebar.classList.add('hidden');
+                    mainContent.classList.add('chat-hidden');
+                    chatToggle.innerHTML = '<i class="fas fa-eye"></i>';
+                    chatToggle.title = 'Show Chat';
+                    console.log('Chat hidden - classes after:', chatSidebar.className);
+                }
+            };
+            
+            testToggle.onclick = function() {
+                chatToggle.click();
+            };
+            
+            console.log('Test page loaded');
+        });
+    </script>
+</body>
+</html>
+
+

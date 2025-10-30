@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book of Ra - Simple Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            margin: 0;
+            padding: 20px;
+        }
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        .reels-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .reel {
+            width: 100px;
+            height: 120px;
+            background: #f4f4f4;
+            border: 3px solid #8b4513;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        .spin-btn {
+            background: #ffd700;
+            color: #1a1a2e;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .info {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+        .info-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>📖 Book of Ra - Test</h1>
+        
+        <div class="reels-container">
+            <div class="reel" id="reel1">📖</div>
+            <div class="reel" id="reel2">🐺</div>
+            <div class="reel" id="reel3">☀️</div>
+            <div class="reel" id="reel4">🪲</div>
+            <div class="reel" id="reel5">👑</div>
+        </div>
+        
+        <div class="controls">
+            <button class="spin-btn" onclick="spin()">SPIN</button>
+        </div>
+        
+        <div class="info">
+            <div class="info-card">
+                <h3>Balance</h3>
+                <div id="balance">$1000</div>
+            </div>
+            <div class="info-card">
+                <h3>Last Win</h3>
+                <div id="lastWin">$0</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let gameState = {
+            balance: 1000,
+            lastWin: 0,
+            isSpinning: false,
+            symbols: ['📖', '🐺', '☀️', '🪲', '👑', '🔤']
+        };
+
+        function spin() {
+            if (gameState.isSpinning) return;
+            
+            gameState.isSpinning = true;
+            gameState.balance -= 10;
+            
+            // Spin animation
+            for (let i = 1; i <= 5; i++) {
+                const reel = document.getElementById(`reel${i}`);
+                reel.textContent = gameState.symbols[Math.floor(Math.random() * gameState.symbols.length)];
+            }
+            
+            // Check for win
+            setTimeout(() => {
+                checkWin();
+                gameState.isSpinning = false;
+                updateDisplay();
+            }, 1000);
+        }
+
+        function checkWin() {
+            const reels = [];
+            for (let i = 1; i <= 5; i++) {
+                reels.push(document.getElementById(`reel${i}`).textContent);
+            }
+            
+            // Simple win check - 3+ of same symbol
+            const counts = {};
+            reels.forEach(symbol => {
+                counts[symbol] = (counts[symbol] || 0) + 1;
+            });
+            
+            let win = 0;
+            for (const [symbol, count] of Object.entries(counts)) {
+                if (count >= 3) {
+                    win = count * 10; // $10 per symbol
+                }
+            }
+            
+            if (win > 0) {
+                gameState.lastWin = win;
+                gameState.balance += win;
+                alert(`You won $${win}!`);
+            } else {
+                gameState.lastWin = 0;
+            }
+        }
+
+        function updateDisplay() {
+            document.getElementById('balance').textContent = `$${gameState.balance}`;
+            document.getElementById('lastWin').textContent = `$${gameState.lastWin}`;
+        }
+
+        // Initialize
+        updateDisplay();
+    </script>
+</body>
+</html>
+
+
+
+
+
+

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Games - CasinoMax</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <div class="logo-text">CasinoMax</div>
+            </div>
+            
+            <nav class="nav">
+                <a href="index.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showTournaments()">
+                    <i class="fas fa-trophy"></i>
+                    <span>Tournaments</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPromotions()">
+                    <i class="fas fa-gift"></i>
+                    <span>Promotions</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showProfile()">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </nav>
+            
+            <div class="user-profile" id="userProfile">
+                <div class="user-avatar" id="userAvatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Guest</div>
+                    <div class="user-balance" id="userBalance">$0.00</div>
+                </div>
+                <div class="user-actions">
+                    <button class="admin-btn" id="adminBtn" onclick="goToAdmin()" title="Admin Dashboard" style="display: none;">
+                        <i class="fas fa-chart-line"></i>
+                    </button>
+                    <button class="logout-btn" id="logoutBtn" onclick="logout()" title="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="auth-buttons" id="authButtons" style="display: none;">
+                <a href="login.html" class="btn btn-primary">Login</a>
+                <a href="register.html" class="btn btn-secondary">Register</a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1><i class="fas fa-gamepad"></i> All Games</h1>
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search games...">
+                </div>
+            </div>
+            
+            <!-- Genre Filter -->
+            <div class="genre-filter">
+                <div class="genre-tabs">
+                    <button class="genre-tab active" data-genre="all">
+                        <i class="fas fa-th"></i>
+                        <span>All Games</span>
+                    </button>
+                    <button class="genre-tab" data-genre="slots">
+                        <i class="fas fa-bolt"></i>
+                        <span>Slots</span>
+                    </button>
+                    <button class="genre-tab" data-genre="roulette">
+                        <i class="fas fa-circle"></i>
+                        <span>Roulette</span>
+                    </button>
+                    <button class="genre-tab" data-genre="blackjack">
+                        <i class="fas fa-spade"></i>
+                        <span>Blackjack</span>
+                    </button>
+                    <button class="genre-tab" data-genre="poker">
+                        <i class="fas fa-diamond"></i>
+                        <span>Poker</span>
+                    </button>
+                    <button class="genre-tab" data-genre="live">
+                        <i class="fas fa-video"></i>
+                        <span>Live Casino</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Games Grid -->
+            <div class="games-section">
+                <div class="section-header">
+                    <h2>Featured Games</h2>
+                    <div class="section-controls">
+                        <div class="slider-controls">
+                            <button class="slider-btn prev-btn" data-target="games-slider">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="slider-btn next-btn" data-target="games-slider">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="slider-container">
+                    <div class="games-grid-large" id="games-container">
+                        <div class="games-slider" id="games-slider">
+                    <!-- Game Card 1 -->
+                    <div class="game-card-large" data-genre="slots">
+                        <div class="game-image">
+                            <div class="game-thumbnail slots-thumbnail"></div>
+                            <div class="game-tag popular">Popular</div>
+                            <div class="game-favorite">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="game-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Mega Fortune</h3>
+                            <div class="game-provider">NetEnt</div>
+                            <div class="game-rtp">RTP 96.4%</div>
+                            <div class="game-jackpot">$2.4M Jackpot</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game Card 2 -->
+                    <div class="game-card-large" data-genre="roulette">
+                        <div class="game-image">
+                            <div class="game-thumbnail roulette-thumbnail"></div>
+                            <div class="game-tag hot">Hot</div>
+                            <div class="game-favorite">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="game-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Lightning Roulette</h3>
+                            <div class="game-provider">Evolution Gaming</div>
+                            <div class="game-rtp">RTP 97.1%</div>
+                            <div class="game-features">Live Dealer</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game Card 3 -->
+                    <div class="game-card-large" data-genre="blackjack" onclick="playGame('blackjack-game.html')">
+                        <div class="game-image">
+                            <div class="game-thumbnail blackjack-thumbnail"></div>
+                            <div class="game-tag new">Playable</div>
+                            <div class="game-tag classic">Classic</div>
+                            <div class="game-favorite">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="game-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Blackjack</h3>
+                            <div class="game-provider">CasinoMax</div>
+                            <div class="game-rtp">RTP 99.5%</div>
+                            <div class="game-features">Beat the dealer to 21!</div>
+                        </div>
+                    </div>
+                    <div class="game-card-large" data-genre="slots" onclick="playGame('book-of-ra-game.html')">
+                        <div class="game-image">
+                            <div class="game-thumbnail book-of-ra-thumbnail"></div>
+                            <div class="game-tag new">New</div>
+                            <div class="game-tag popular">Playable</div>
+                            <div class="game-favorite">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="game-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Book of Ra</h3>
+                            <div class="game-provider">Ancient Slots</div>
+                            <div class="game-rtp">RTP 96.5%</div>
+                            <div class="game-features">Ancient Egyptian Adventure!</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game Card 4 -->
+                    <div class="game-card-large" data-genre="slots">
+                        <div class="game-image">
+                            <div class="game-thumbnail dragon-thumbnail"></div>
+                            <div class="game-tag popular">Popular</div>
+                            <div class="game-favorite">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="game-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <h3>Dragon's Gold</h3>
+                            <div class="game-provider">Pragmatic Play</div>
+                            <div class="game-rtp">RTP 96.7%</div>
+                            <div class="game-jackpot">$1.2M Jackpot</div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Chat Sidebar -->
+        <div class="chat-sidebar" id="chat-sidebar">
+            <div class="chat-header">
+                <h3><i class="fas fa-comments"></i> Global Chat</h3>
+                <div class="chat-actions">
+                    <div class="online-count">1,247 online</div>
+                </div>
+            </div>
+            
+            <div class="chat-messages">
+                <div class="chat-message">
+                    <div class="message-avatar casino-king">C</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-user">CasinoKing</span>
+                            <span class="message-time">2:34 PM</span>
+                        </div>
+                        <div class="message-text">
+                            Just hit the jackpot on Mega Fortune! $15,240
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-message">
+                    <div class="message-avatar lucky-lady">L</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-user">LuckyLady</span>
+                            <span class="message-time">2:32 PM</span>
+                        </div>
+                        <div class="message-text">
+                            Anyone playing Lightning Roulette? 🔥
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-message">
+                    <div class="message-avatar big-winner">B</div>
+                    <div class="message-content">
+                        <div class="message-header">
+                            <span class="message-user">BigWinner</span>
+                            <span class="message-time">2:30 PM</span>
+                        </div>
+                        <div class="message-text">
+                            The new Blackjack Pro is amazing!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="chat-input">
+                    <input type="text" placeholder="Type a message...">
+                    <button class="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Chat Toggle Button (always visible) -->
+        <div class="floating-chat-toggle" id="floating-chat-toggle">
+            <button class="btn btn-primary" id="floating-chat-btn" title="Show/Hide Chat">
+                <i class="fas fa-comments"></i>
+            </button>
+        </div>
+        
+        <!-- Profile Section -->
+        <div class="section" id="profile-section" style="display: none; min-height: 500px; background: rgba(255, 255, 255, 0.02);">
+            <div class="section-header">
+                <h2><i class="fas fa-user"></i> My Profile</h2>
+                    <div class="profile-actions">
+                        <button class="btn btn-primary" onclick="editProfile()" id="editProfileBtn">
+                            <i class="fas fa-edit"></i> Edit Profile
+                        </button>
+                        <button class="btn btn-danger" onclick="clearUserDataAndReset()">
+                            <i class="fas fa-trash"></i> Reset Data
+                        </button>
+                    </div>
+            </div>
+            
+            <div class="profile-container">
+                <!-- Profile Overview -->
+                <div class="profile-overview">
+                    <div class="profile-avatar-section">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <button class="avatar-upload-btn" onclick="uploadAvatar()">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="profile-info">
+                        <h3 id="profileName">Guest User</h3>
+                        <p id="profileEmail">guest@example.com</p>
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Member Since</span>
+                                <span class="stat-value" id="memberSince">Today</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Total Games Played</span>
+                                <span class="stat-value" id="gamesPlayed">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Win Rate</span>
+                                <span class="stat-value" id="winRate">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Balance Section -->
+                <div class="balance-section">
+                    <div class="balance-card">
+                        <div class="balance-header">
+                            <h4><i class="fas fa-wallet"></i> Account Balance</h4>
+                            <div class="balance-amount" id="profileBalance">$0.00</div>
+                        </div>
+                        <div class="balance-actions">
+                            <button class="btn btn-success" onclick="addBalance()">
+                                <i class="fas fa-plus"></i> Add Funds
+                            </button>
+                            <button class="btn btn-secondary" onclick="withdrawBalance()">
+                                <i class="fas fa-minus"></i> Withdraw
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="balance-history">
+                        <h5>Recent Transactions</h5>
+                        <div class="transaction-list" id="transactionList">
+                            <div class="no-transactions">
+                                <i class="fas fa-receipt"></i>
+                                <p>No transactions yet</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Profile Details Form (Hidden by default) -->
+                <div class="profile-form" id="profileForm" style="display: none;">
+                    <h4>Edit Profile Information</h4>
+                    <form id="editProfileForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editFirstName">First Name</label>
+                                <input type="text" id="editFirstName" name="firstName" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editLastName">Last Name</label>
+                                <input type="text" id="editLastName" name="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editEmail">Email</label>
+                                <input type="email" id="editEmail" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="editPhone">Phone Number</label>
+                                <input type="tel" id="editPhone" name="phone">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="editDateOfBirth">Date of Birth</label>
+                                <input type="date" id="editDateOfBirth" name="dateOfBirth">
+                            </div>
+                            <div class="form-group">
+                                <label for="editCountry">Country</label>
+                                <select id="editCountry" name="country">
+                                    <option value="">Select Country</option>
+                                    <option value="US">United States</option>
+                                    <option value="CA">Canada</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="AU">Australia</option>
+                                    <option value="DE">Germany</option>
+                                    <option value="FR">France</option>
+                                    <option value="ES">Spain</option>
+                                    <option value="IT">Italy</option>
+                                    <option value="NL">Netherlands</option>
+                                    <option value="SE">Sweden</option>
+                                    <option value="NO">Norway</option>
+                                    <option value="DK">Denmark</option>
+                                    <option value="FI">Finland</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="cancelEditProfile()">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+    <script src="all-games.js"></script>
+    
+    <!-- Authentication initialization -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize authentication for all-games page
+            initializeAuth();
+            
+            // Update sidebar user info if logged in
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            const token = localStorage.getItem('token');
+            
+            if (token && user.email) {
+                // User is logged in, show user profile
+                showUserProfile(user);
+            } else {
+                // User is not logged in, show auth buttons
+                showAuthButtons();
+            }
+        });
+    </script>
+    
+    <!-- Debug script -->
+    <script>
+        console.log('All Games page HTML loaded');
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded for All Games page');
+            const gamesContainer = document.getElementById('games-container');
+            console.log('Games container found:', !!gamesContainer);
+            if (gamesContainer) {
+                console.log('Games container children:', gamesContainer.children.length);
+            }
+        });
+    </script>
+    
+    <!-- DIRECT CHAT TOGGLE FIX -->
+    <script>
+        // Direct chat toggle implementation - this will definitely work
+        setTimeout(function() {
+            console.log('Setting up DIRECT chat toggle...');
+            
+            const floatingToggle = document.getElementById('floating-chat-btn');
+            const chatSidebar = document.getElementById('chat-sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            if (chatSidebar && mainContent) {
+                console.log('All elements found for DIRECT chat toggle');
+                
+                let chatVisible = true;
+                
+                // Function to toggle chat
+                function toggleChat() {
+                    console.log('TOGGLE CHAT CALLED! State:', chatVisible);
+                    
+                    chatVisible = !chatVisible;
+                    
+                    if (chatVisible) {
+                        // Show chat
+                        chatSidebar.style.display = 'flex';
+                        chatSidebar.classList.remove('hidden');
+                        mainContent.classList.remove('chat-hidden');
+                        if (floatingToggle) {
+                            floatingToggle.innerHTML = '<i class="fas fa-comments"></i>';
+                            floatingToggle.title = 'Hide Chat';
+                        }
+                        console.log('DIRECT: Chat shown');
+                    } else {
+                        // Hide chat
+                        chatSidebar.style.display = 'none';
+                        chatSidebar.classList.add('hidden');
+                        mainContent.classList.add('chat-hidden');
+                        if (floatingToggle) {
+                            floatingToggle.innerHTML = '<i class="fas fa-eye"></i>';
+                            floatingToggle.title = 'Show Chat';
+                        }
+                        console.log('DIRECT: Chat hidden');
+                    }
+                }
+                
+                // Floating chat toggle (always visible)
+                if (floatingToggle) {
+                    floatingToggle.onclick = function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleChat();
+                    };
+                }
+                
+                console.log('DIRECT chat toggle setup complete!');
+            } else {
+                console.error('DIRECT: Elements not found!', {
+                    chatSidebar: !!chatSidebar,
+                    mainContent: !!mainContent,
+                    floatingToggle: !!floatingToggle
+                });
+            }
+        }, 2000);
+    </script>
+</body>
+</html>
