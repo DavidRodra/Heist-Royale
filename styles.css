@@ -1299,52 +1299,666 @@ body::before {
     }
 }
 
-@media (max-width: 520px) {
+/* Mobile Menu Button */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 2000;
+    background: var(--color-bg);
+    border: 1px solid rgba(64, 224, 208, 0.3);
+    border-radius: 10px;
+    padding: 12px;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 20px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-toggle:hover {
+    background: rgba(64, 224, 208, 0.1);
+    border-color: var(--accent-2);
+}
+
+.mobile-menu-toggle.active {
+    background: rgba(64, 224, 208, 0.2);
+}
+
+/* Mobile Bottom Navigation */
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: var(--color-bg);
+    border-top: 1px solid rgba(64, 224, 208, 0.2);
+    backdrop-filter: blur(10px);
+    z-index: 1500;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+    padding: 0;
+}
+
+.mobile-bottom-nav .nav-items {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+    padding: 8px 0;
+}
+
+.mobile-bottom-nav .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    min-height: 54px;
+    min-width: 60px;
+    border-radius: 12px;
+    margin: 0 4px;
+}
+
+.mobile-bottom-nav .nav-item i {
+    font-size: 22px;
+    margin: 0;
+    width: auto;
+}
+
+.mobile-bottom-nav .nav-item span {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.mobile-bottom-nav .nav-item.active {
+    color: var(--accent-2);
+    background: rgba(64, 224, 208, 0.15);
+    box-shadow: 0 0 15px rgba(64, 224, 208, 0.2);
+}
+
+.mobile-bottom-nav .nav-item:active {
+    transform: scale(0.95);
+}
+
+/* Mobile Sidebar Overlay */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1400;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    opacity: 1;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    /* Show mobile menu button */
+    .mobile-menu-toggle {
+        display: flex !important;
+        z-index: 2000 !important;
+    }
+    
+    /* Hide desktop sidebar by default on mobile - COMPLETE HIDE */
     .sidebar {
-        width: 60px;
+        position: fixed !important;
+        left: -280px !important;
+        width: 280px !important;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), left 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        z-index: 1500 !important;
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5) !important;
+        margin-left: 0 !important;
+        transform: translateX(-100%) !important;
+        visibility: hidden !important;
     }
     
-    .sidebar .nav-item span {
-        display: none;
+    .sidebar.mobile-open {
+        left: 0 !important;
+        transform: translateX(0) !important;
+        visibility: visible !important;
     }
     
+    .sidebar .nav-item span,
     .sidebar .logo-text {
-        display: none;
+        display: block !important;
     }
     
+    .sidebar .user-profile {
+        display: flex !important;
+    }
+    
+    /* Show overlay when sidebar is open */
+    .sidebar-overlay.active {
+        display: block !important;
+    }
+    
+    /* Show mobile bottom nav */
+    .mobile-bottom-nav {
+        display: block !important;
+    }
+    
+    /* Main content takes full width on mobile - CRITICAL OVERRIDES */
     .main-content {
-        margin-left: 60px;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 65px 15px 90px 15px !important;
+        position: relative !important;
+        left: 0 !important;
+        right: 0 !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
     }
     
+    /* Force override any desktop width calculations */
+    .app-container:has(.chat-sidebar.hidden) .main-content,
+    .app-container .main-content,
+    body .main-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+    
+    /* App container mobile */
+    .app-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Hide chat sidebar on mobile */
     .chat-sidebar {
-        display: none;
+        display: none !important;
+        width: 0 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
     }
     
+    /* Profile section mobile adjustments */
+    #profile-section {
+        left: 0 !important;
+        right: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        padding: 70px 15px 90px 15px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        position: fixed !important;
+    }
+    
+    /* Topbar mobile adjustments */
+    .topbar {
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
+        padding: 12px 15px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+    }
+    
+    .topbar .brand {
+        font-size: 16px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .topbar .balance {
+        font-size: 13px !important;
+        white-space: nowrap !important;
+        flex-shrink: 0 !important;
+    }
+    
+    /* Banners side by side on mobile - smaller size */
     .banners {
-        grid-template-columns: 1fr;
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 10px !important;
+        margin-bottom: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     
+    .banners .banner {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        max-width: 50% !important;
+        padding: 12px !important;
+        box-sizing: border-box !important;
+        margin: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+    }
+    
+    .banner h3,
+    .banner h2 {
+        font-size: 14px !important;
+        margin-bottom: 4px !important;
+        font-weight: 700 !important;
+        line-height: 1.2 !important;
+    }
+    
+    .banner-content p {
+        font-size: 10px !important;
+        margin: 4px 0 !important;
+        line-height: 1.3 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+    }
+    
+    .banner .banner-icon {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 16px !important;
+        margin-right: 10px !important;
+        flex-shrink: 0 !important;
+    }
+    
+    .banner-content {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+    
+    .banner-content .btn {
+        padding: 6px 12px !important;
+        font-size: 11px !important;
+        margin-top: 6px !important;
+        min-height: 32px !important;
+        white-space: nowrap !important;
+    }
+    
+    /* Games grid mobile */
     .games-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
     }
     
     .games-slider .game-card {
-        flex: 0 0 150px;
-        min-width: 150px;
+        flex: 0 0 140px;
+        min-width: 140px;
     }
     
+    .game-card {
+        min-height: 180px;
+    }
+    
+    .game-card img {
+        height: 120px;
+    }
+    
+    .game-card .game-title {
+        font-size: 13px;
+        padding: 8px;
+    }
+    
+    /* Section headers mobile */
+    .section-header {
+        margin-bottom: 15px !important;
+        padding: 0 !important;
+    }
+    
+    .section-header h2 {
+        font-size: 18px !important;
+        margin: 0 0 15px 0 !important;
+        padding: 0 !important;
+    }
+    
+    .section {
+        margin-bottom: 25px !important;
+        padding: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Recent Wins section mobile */
+    .recent-wins-section,
+    .section-content {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 15px !important;
+    }
+    
+    /* No games message mobile */
+    .no-games-message {
+        width: 100% !important;
+        padding: 30px 20px !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+    }
+    
+    .no-games-icon {
+        font-size: 3rem !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .no-games-message h3 {
+        font-size: 18px !important;
+        margin-bottom: 10px !important;
+    }
+    
+    .no-games-message p {
+        font-size: 14px !important;
+        line-height: 1.5 !important;
+        padding: 0 10px !important;
+    }
+    
+    /* Wins slider container mobile */
+    .wins-slider,
+    .games-slider {
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Slider container mobile */
     .slider-container {
-        margin: 0 -5px;
-        padding: 5px;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 10px 0 !important;
+        margin: 0 !important;
     }
     
     .slider-btn {
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        min-height: 40px;
     }
     
     .slider-controls {
+        gap: 12px;
+    }
+    
+    /* Buttons mobile - ensure touch targets are 44x44px minimum */
+    .btn, button {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 12px 20px;
+        font-size: 15px;
+    }
+    
+    .btn-sm {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 10px 16px;
+    }
+    
+    /* Forms mobile */
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    select,
+    textarea {
+        min-height: 44px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px 15px;
+    }
+    
+    /* Modals mobile */
+    .modal {
+        width: 95%;
+        max-width: 95%;
+        margin: 20px auto;
+        max-height: 90vh;
+    }
+    
+    .modal-header {
+        padding: 15px;
+    }
+    
+    .modal-body {
+        padding: 15px;
+    }
+    
+    .modal-footer {
+        padding: 15px;
+        flex-direction: column;
         gap: 10px;
+    }
+    
+    /* Transaction history modal mobile */
+    .transaction-history-modal {
+        width: 95% !important;
+        max-width: 95% !important;
+        margin: 20px auto !important;
+    }
+    
+    /* Chat toggle button mobile */
+    .floating-chat-toggle {
+        bottom: 90px !important;
+        right: 15px !important;
+        width: 56px;
+        height: 56px;
+    }
+    
+    /* User profile section mobile */
+    .user-profile {
+        padding: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .user-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    /* Account actions mobile */
+    .actions-card {
+        padding: 15px;
+    }
+    
+    .actions-card button {
+        padding: 15px;
+        min-height: 60px;
+    }
+    
+    /* Stats grid mobile */
+    .profile-stats-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 20px;
+        min-height: auto;
+    }
+    
+    /* Community mobile */
+    .community-container {
+        grid-template-columns: 1fr !important;
+        gap: 20px;
+    }
+    
+    /* Search bar mobile */
+    .search-bar {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    /* Page header mobile */
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .page-header h1 {
+        font-size: 22px;
+    }
+    
+    /* Profile overview mobile */
+    .profile-overview {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .balance-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .balance-actions {
+        flex-direction: column;
+    }
+    
+    /* Font size adjustments for mobile readability */
+    body {
+        font-size: 15px;
+    }
+    
+    h1 { font-size: 24px; }
+    h2 { font-size: 20px; }
+    h3 { font-size: 18px; }
+    h4 { font-size: 16px; }
+    
+    /* Ensure no horizontal scroll - AGGRESSIVE */
+    html, body {
+        overflow-x: hidden !important;
+        max-width: 100vw !important;
+        position: relative !important;
+    }
+    
+    * {
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Prevent any element from causing overflow */
+    img, video, iframe {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    
+    /* Force container constraints */
+    .app-container {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* Ensure body doesn't allow horizontal scroll */
+    body {
+        overflow-x: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 520px) {
+    /* Extra small devices */
+    .main-content {
+        padding: 70px 10px 90px 10px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+    }
+    
+    #profile-section {
+        padding: 70px 10px 90px 10px !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+    }
+    
+    .sidebar {
+        left: -280px !important;
+        width: 280px !important;
+    }
+    
+    .games-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    
+    .games-slider .game-card {
+        flex: 0 0 130px;
+        min-width: 130px;
+    }
+    
+    .banner {
+        padding: 10px !important;
+    }
+    
+    .banner h3,
+    .banner h2 {
+        font-size: 13px !important;
+    }
+    
+    .banner-content p {
+        font-size: 9px !important;
+    }
+    
+    .banner .banner-icon {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 14px !important;
+        margin-right: 8px !important;
+    }
+    
+    .banner-content .btn {
+        padding: 5px 10px !important;
+        font-size: 10px !important;
+        min-height: 28px !important;
+    }
+    
+    .section-header h2 {
+        font-size: 18px;
+    }
+    
+    .mobile-bottom-nav .nav-item span {
+        font-size: 10px;
+    }
+    
+    .mobile-bottom-nav .nav-item i {
+        font-size: 20px;
     }
 }
 
