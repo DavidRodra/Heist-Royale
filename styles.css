@@ -362,6 +362,7 @@ body::before {
     flex: 1;
     margin-left: 200px;
     padding: 20px;
+    padding-top: 20px;
     background: var(--color-bg);
     position: relative;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -374,6 +375,12 @@ body::before {
     margin-right: 300px; /* reserve space for fixed chat */
     padding-right: 0;
     order: 2;
+}
+
+/* Remove top padding when showing community/favorites sections */
+.main-content:has(#community-section:not([style*="display: none"])),
+.main-content:has(#favorites-section:not([style*="display: none"])) {
+    padding-top: 0 !important;
 }
 
 /* Simple fix: When chat is hidden, main content should fill the space */
@@ -3673,6 +3680,12 @@ input:checked + .toggle-slider:before {
 
 
 /* Favorites and Community Sections */
+#favorites-section,
+#community-section {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
 .no-favorites-message,
 .no-favorites-icon {
     text-align: center;
