@@ -1819,29 +1819,87 @@ function showOnlyHome() {
 }
 
 function showOnlyCommunity() {
+    console.log('=== showOnlyCommunity called ===');
+    
+    // Hide profile section
+    const profileSection = document.getElementById('profile-section');
+    if (profileSection) {
+        profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; position: fixed !important; top: -9999px !important; left: -9999px !important; z-index: -9999 !important; pointer-events: none !important;';
+        profileSection.setAttribute('hidden', 'true');
+    }
+    
+    // Hide all other sections (favorites, etc.)
     hideAllSections();
+    
+    // Hide ALL home content (topbar, banners, sections)
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+        const children = mainContent.children;
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            // Hide everything that's NOT the community section
+            if (!child.id || child.id !== 'community-section') {
+                child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+            }
+        }
+    }
+    
+    // Show community section
     const communitySection = document.getElementById('community-section');
     if (communitySection) {
-        communitySection.style.display = 'block';
-        communitySection.style.visibility = 'visible';
-        communitySection.style.opacity = '1';
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            // Mobile: full width
+            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important;';
+        } else {
+            // Desktop: normal display
+            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+        }
+        console.log('Community section shown');
     } else {
-        // Section will be created by showCommunity() - don't call it here to avoid infinite loop
-        // Just return and let showCommunity handle creation
         console.log('Community section does not exist yet - will be created by showCommunity()');
     }
 }
 
 function showOnlyFavorites() {
+    console.log('=== showOnlyFavorites called ===');
+    
+    // Hide profile section
+    const profileSection = document.getElementById('profile-section');
+    if (profileSection) {
+        profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; position: fixed !important; top: -9999px !important; left: -9999px !important; z-index: -9999 !important; pointer-events: none !important;';
+        profileSection.setAttribute('hidden', 'true');
+    }
+    
+    // Hide all other sections (community, etc.)
     hideAllSections();
+    
+    // Hide ALL home content (topbar, banners, sections)
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+        const children = mainContent.children;
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            // Hide everything that's NOT the favorites section
+            if (!child.id || child.id !== 'favorites-section') {
+                child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+            }
+        }
+    }
+    
+    // Show favorites section
     const favoritesSection = document.getElementById('favorites-section');
     if (favoritesSection) {
-        favoritesSection.style.display = 'block';
-        favoritesSection.style.visibility = 'visible';
-        favoritesSection.style.opacity = '1';
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            // Mobile: full width
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important;';
+        } else {
+            // Desktop: normal display
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+        }
+        console.log('Favorites section shown');
     } else {
-        // Section will be created by showFavorites() - don't call it here to avoid infinite loop
-        // Just return and let showFavorites handle creation
         console.log('Favorites section does not exist yet - will be created by showFavorites()');
     }
 }
@@ -2009,8 +2067,13 @@ function showPromotions() {
 function showFavorites() {
     // Create favorites content if it doesn't exist FIRST (before calling showOnlyFavorites)
     const mainContent = document.querySelector('.main-content');
+    if (!mainContent) {
+        console.error('Main content not found!');
+        return;
+    }
+    
     let favoritesSection = document.getElementById('favorites-section');
-    if (!favoritesSection && mainContent) {
+    if (!favoritesSection) {
         favoritesSection = document.createElement('div');
         favoritesSection.id = 'favorites-section';
         favoritesSection.className = 'section';
@@ -2042,8 +2105,13 @@ function showFavorites() {
 function showCommunity() {
     // Create community content if it doesn't exist FIRST (before calling showOnlyCommunity)
     const mainContent = document.querySelector('.main-content');
+    if (!mainContent) {
+        console.error('Main content not found!');
+        return;
+    }
+    
     let communitySection = document.getElementById('community-section');
-    if (!communitySection && mainContent) {
+    if (!communitySection) {
         communitySection = document.createElement('div');
         communitySection.id = 'community-section';
         communitySection.className = 'section';
