@@ -9,9 +9,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Mobile Menu Toggle Button -->
+    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+        <i class="fas fa-bars"></i>
+    </button>
+    
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
     <div class="app-container">
         <!-- Left Sidebar -->
-        <div class="sidebar">
+        <div class="sidebar" id="sidebar">
             <div class="logo">
                 <div class="logo-icon">
                     <i class="fas fa-crown"></i>
@@ -1856,6 +1864,148 @@
                 closeProfileModal();
             }
         });
+    </script>
+    
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-bottom-nav" id="mobileBottomNav">
+        <div class="nav-items">
+            <a href="#" class="nav-item active" onclick="showHome(); closeMobileMenu(); updateMobileNav('home'); return false;">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showFavorites(); closeMobileMenu(); updateMobileNav('favorites'); return false;">
+                <i class="fas fa-star"></i>
+                <span>Favorites</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showCommunity(); closeMobileMenu(); updateMobileNav('community'); return false;">
+                <i class="fas fa-users"></i>
+                <span>Community</span>
+            </a>
+            <a href="#" class="nav-item" onclick="showProfile(); closeMobileMenu(); updateMobileNav('profile'); return false;">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Mobile Menu JavaScript -->
+    <script>
+        // Mobile menu toggle functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        function openMobileMenu() {
+            sidebar.classList.add('mobile-open');
+            sidebarOverlay.classList.add('active');
+            mobileMenuToggle.classList.add('active');
+            mobileMenuToggle.innerHTML = '<i class="fas fa-times"></i>';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            sidebar.classList.remove('mobile-open');
+            sidebarOverlay.classList.remove('active');
+            mobileMenuToggle.classList.remove('active');
+            mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
+            document.body.style.overflow = '';
+        }
+        
+        if (mobileMenuToggle) {
+            mobileMenuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (sidebar.classList.contains('mobile-open')) {
+                    closeMobileMenu();
+                } else {
+                    openMobileMenu();
+                }
+            });
+        }
+        
+        // Make functions globally available
+        window.openMobileMenu = openMobileMenu;
+        window.closeMobileMenu = closeMobileMenu;
+        window.updateMobileNav = updateMobileNav;
+        
+        if (sidebarOverlay) {
+            sidebarOverlay.addEventListener('click', closeMobileMenu);
+        }
+        
+        // Close mobile menu when clicking a nav item in sidebar
+        const sidebarNavItems = document.querySelectorAll('.sidebar .nav-item');
+        sidebarNavItems.forEach(item => {
+            item.addEventListener('click', function() {
+                setTimeout(closeMobileMenu, 300);
+            });
+        });
+        
+        // Update mobile bottom nav active state
+        function updateMobileNav(section) {
+            const navItems = document.querySelectorAll('.mobile-bottom-nav .nav-item');
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            const sectionMap = {
+                'home': 0,
+                'favorites': 1,
+                'community': 2,
+                'profile': 3
+            };
+            
+            if (sectionMap[section] !== undefined) {
+                navItems[sectionMap[section]].classList.add('active');
+            }
+        }
+        
+        // Update active state when using desktop navigation
+        const originalShowHome = window.showHome;
+        const originalShowFavorites = window.showFavorites;
+        const originalShowCommunity = window.showCommunity;
+        const originalShowProfile = window.showProfile;
+        
+        if (typeof originalShowHome === 'function') {
+            window.showHome = function() {
+                originalShowHome();
+                updateMobileNav('home');
+            };
+        }
+        
+        if (typeof originalShowFavorites === 'function') {
+            window.showFavorites = function() {
+                originalShowFavorites();
+                updateMobileNav('favorites');
+            };
+        }
+        
+        if (typeof originalShowCommunity === 'function') {
+            window.showCommunity = function() {
+                originalShowCommunity();
+                updateMobileNav('community');
+            };
+        }
+        
+        if (typeof originalShowProfile === 'function') {
+            window.showProfile = function() {
+                originalShowProfile();
+                updateMobileNav('profile');
+            };
+        }
+        
+        // Close mobile menu on window resize (when switching to desktop)
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                closeMobileMenu();
+            }
+        });
+        
+        // Prevent body scroll when mobile menu is open
+        let lastScrollY = 0;
+        window.addEventListener('touchmove', function(e) {
+            if (sidebar.classList.contains('mobile-open')) {
+                e.preventDefault();
+            }
+        }, { passive: false });
     </script>
     </body>
 </html>
