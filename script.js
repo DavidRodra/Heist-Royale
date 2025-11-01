@@ -2244,9 +2244,6 @@ function showCommunity() {
     // Now show the section (after it's created)
     showOnlyCommunity();
     updateNavigationActiveState('Community');
-    
-    // Update navigation active state
-    updateNavigationState('community');
 }
 
 // Duplicate functions removed - using top-level definitions
