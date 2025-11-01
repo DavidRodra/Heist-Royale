@@ -221,6 +221,8 @@ function showLoggedInUser(user) {
     const userName = document.getElementById('userName');
     const userBalance = document.getElementById('userBalance');
     const userAvatar = document.getElementById('userAvatar');
+    const topbarBrand = document.getElementById('topbarBrand');
+    const topbarBalance = document.getElementById('topbarBalance');
     
     console.log('Elements found:');
     console.log('- userProfile:', !!userProfile);
@@ -228,6 +230,8 @@ function showLoggedInUser(user) {
     console.log('- userName:', !!userName);
     console.log('- userBalance:', !!userBalance);
     console.log('- userAvatar:', !!userAvatar);
+    console.log('- topbarBrand:', !!topbarBrand);
+    console.log('- topbarBalance:', !!topbarBalance);
     
     // Show user profile, hide auth buttons
     if (userProfile) {
@@ -240,16 +244,23 @@ function showLoggedInUser(user) {
         console.log('✅ Auth buttons hidden');
     }
     
-    // Update user info
+    // Get display name (prioritize full name, then firstName + lastName, then email)
+    const displayName = user.name || 
+                       (user.firstName && user.lastName ? `${user.firstName} ${user.lastName}` : '') ||
+                       (user.firstName ? user.firstName : '') ||
+                       user.email || 
+                       'User';
+    
+    // Update user info in sidebar
     if (userName) {
-        const displayName = user.name || user.firstName + ' ' + user.lastName || user.email || 'User';
         userName.textContent = displayName;
         console.log('✅ User name updated to:', displayName);
     }
     
     if (userBalance) {
-        userBalance.textContent = `$${user.balance || 0}`;
-        console.log('✅ User balance updated to:', user.balance);
+        const balance = user.balance || 0;
+        userBalance.textContent = `$${balance.toLocaleString()}`;
+        console.log('✅ User balance updated to:', balance);
     }
     
     if (userAvatar) {
@@ -258,12 +269,35 @@ function showLoggedInUser(user) {
         console.log('✅ User avatar updated to:', name.charAt(0).toUpperCase());
     }
     
+    // Update topbar with user's name
+    if (topbarBrand) {
+        topbarBrand.textContent = displayName;
+        console.log('✅ Topbar brand updated to:', displayName);
+    }
+    
+    // Update topbar balance
+    if (topbarBalance) {
+        const balance = user.balance || 0;
+        topbarBalance.textContent = `$${balance.toLocaleString()}`;
+        console.log('✅ Topbar balance updated to:', balance);
+    }
+    
     console.log('✅ User profile display completed');
 }
 
 // Function to show guest state
 function showGuestState() {
     console.log('=== SHOWING GUEST STATE ===');
+    
+    // Reset topbar to default
+    const topbarBrand = document.getElementById('topbarBrand');
+    const topbarBalance = document.getElementById('topbarBalance');
+    if (topbarBrand) {
+        topbarBrand.textContent = 'CasinoMax';
+    }
+    if (topbarBalance) {
+        topbarBalance.textContent = '$0.00';
+    }
     
     const userProfile = document.getElementById('userProfile');
     const authButtons = document.getElementById('authButtons');
