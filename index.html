@@ -9,10 +9,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Mobile Menu Toggle Button -->
-    <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
-        <i class="fas fa-bars"></i>
-    </button>
+    <!-- Mobile Logo (replaces menu toggle) -->
+    <div class="mobile-logo" id="mobileLogo">
+        <div class="mobile-logo-icon">
+            <i class="fas fa-crown"></i>
+        </div>
+        <div class="mobile-logo-text">CasinoMax</div>
+    </div>
     
     <!-- Sidebar Overlay for Mobile -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -1890,36 +1893,20 @@
     
     <!-- Mobile Menu JavaScript -->
     <script>
-        // Mobile menu toggle functionality
-        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        // Mobile sidebar functionality (if needed - can be accessed via other means)
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
         
         function openMobileMenu() {
             sidebar.classList.add('mobile-open');
             sidebarOverlay.classList.add('active');
-            mobileMenuToggle.classList.add('active');
-            mobileMenuToggle.innerHTML = '<i class="fas fa-times"></i>';
             document.body.style.overflow = 'hidden';
         }
         
         function closeMobileMenu() {
             sidebar.classList.remove('mobile-open');
             sidebarOverlay.classList.remove('active');
-            mobileMenuToggle.classList.remove('active');
-            mobileMenuToggle.innerHTML = '<i class="fas fa-bars"></i>';
             document.body.style.overflow = '';
-        }
-        
-        if (mobileMenuToggle) {
-            mobileMenuToggle.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (sidebar.classList.contains('mobile-open')) {
-                    closeMobileMenu();
-                } else {
-                    openMobileMenu();
-                }
-            });
         }
         
         // Make functions globally available

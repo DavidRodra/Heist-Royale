@@ -1299,36 +1299,59 @@ body::before {
     }
 }
 
-/* Mobile Menu Button */
-.mobile-menu-toggle {
+/* Mobile Logo */
+.mobile-logo {
     display: none;
     position: fixed;
     top: 15px;
     left: 15px;
     z-index: 2000;
-    background: var(--color-bg);
-    border: 1px solid rgba(64, 224, 208, 0.3);
-    border-radius: 10px;
-    padding: 12px;
+    background: transparent;
+    padding: 0;
     color: var(--text-light);
-    cursor: pointer;
-    font-size: 20px;
-    width: 48px;
-    height: 48px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    gap: 10px;
     transition: all 0.3s ease;
 }
 
-.mobile-menu-toggle:hover {
-    background: rgba(64, 224, 208, 0.1);
-    border-color: var(--accent-2);
+.mobile-logo-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 50%, #58d68d 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    position: relative;
+    overflow: hidden;
 }
 
-.mobile-menu-toggle.active {
-    background: rgba(64, 224, 208, 0.2);
+.mobile-logo-icon::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+}
+
+.mobile-logo-icon i {
+    color: #ffffff;
+    font-size: 18px;
+    z-index: 1;
+    position: relative;
+}
+
+.mobile-logo-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-light);
+    white-space: nowrap;
 }
 
 /* Mobile Bottom Navigation */
@@ -1416,8 +1439,8 @@ body::before {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
-    /* Show mobile menu button */
-    .mobile-menu-toggle {
+    /* Show mobile logo */
+    .mobile-logo {
         display: flex !important;
         z-index: 2000 !important;
     }
