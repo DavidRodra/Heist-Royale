@@ -1027,13 +1027,25 @@ function setupChatToggle() {
         return;
     }
     
-    let isChatVisible = true;
+    // Start with chat HIDDEN by default
+    let isChatVisible = false;
+    
+    // Ensure chat is hidden on initialization
+    chatSidebar.classList.add('hidden');
+    chatSidebar.style.display = 'none';
+    mainContent.classList.add('chat-hidden');
+    
+    // Set button to show state
+    if (floatingToggle) {
+        floatingToggle.innerHTML = '<i class="fas fa-comments"></i>';
+        floatingToggle.title = 'Show Chat';
+    }
     
     // Initialize from actual DOM state
     if (chatSidebar.classList.contains('hidden') || chatSidebar.style.display === 'none') {
         isChatVisible = false;
         if (floatingToggle) {
-            floatingToggle.innerHTML = '<i class="fas fa-eye"></i>';
+            floatingToggle.innerHTML = '<i class="fas fa-comments"></i>';
             floatingToggle.title = 'Show Chat';
         }
     }
