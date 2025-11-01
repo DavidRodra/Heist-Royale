@@ -1619,8 +1619,6 @@ body::before {
         padding-top: 0 !important;
         margin-top: 0 !important;
     }
-        overflow-x: hidden !important;
-    }
     
     /* Force override any desktop width calculations */
     .app-container:has(.chat-sidebar.hidden) .main-content,
