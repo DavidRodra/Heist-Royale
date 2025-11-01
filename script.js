@@ -1510,29 +1510,43 @@ function updateBalance(amount) {
     }, 1000);
 }
 
-// Live updates simulation
+// Live updates simulation - Optimized for mobile
 function startLiveUpdates() {
+    const isMobile = window.innerWidth <= 768;
+    
+    // On mobile: slower updates, less frequent to save battery and performance
+    const onlineInterval = isMobile ? 15000 : 5000;  // 15s on mobile, 5s on desktop
+    const chatInterval = isMobile ? 30000 : 10000;   // 30s on mobile, 10s on desktop
+    const winsInterval = isMobile ? 45000 : 15000;    // 45s on mobile, 15s on desktop
+    
     // Update online count
     setInterval(() => {
         const onlineCount = document.querySelector('.online-count');
-        const currentCount = parseInt(onlineCount.textContent.replace(',', ''));
-        const newCount = currentCount + Math.floor(Math.random() * 3) - 1;
-        onlineCount.textContent = newCount.toLocaleString() + ' online';
-    }, 5000);
-    
-    // Add random chat messages
-    setInterval(() => {
-        if (Math.random() < 0.3) { // 30% chance every 10 seconds
-            addRandomChatMessage();
+        if (onlineCount) {
+            const currentCount = parseInt(onlineCount.textContent.replace(',', '').replace(' online', ''));
+            const newCount = currentCount + Math.floor(Math.random() * 3) - 1;
+            onlineCount.textContent = newCount.toLocaleString() + ' online';
         }
-    }, 10000);
+    }, onlineInterval);
     
-    // Update recent wins
+    // Add random chat messages - only if chat is visible
     setInterval(() => {
-        if (Math.random() < 0.2) { // 20% chance every 15 seconds
-            addRandomWin();
+        const chatSidebar = document.getElementById('chat-sidebar');
+        if (chatSidebar && !chatSidebar.classList.contains('hidden')) {
+            if (Math.random() < (isMobile ? 0.15 : 0.3)) { // Lower chance on mobile
+                addRandomChatMessage();
+            }
         }
-    }, 15000);
+    }, chatInterval);
+    
+    // Update recent wins - only on desktop or if wins section is visible
+    if (!isMobile) {
+        setInterval(() => {
+            if (Math.random() < 0.2) {
+                addRandomWin();
+            }
+        }, winsInterval);
+    }
 }
 
 function addRandomChatMessage() {

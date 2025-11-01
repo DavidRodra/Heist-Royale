@@ -2038,12 +2038,16 @@
             setTimeout(syncMobileNavOnDesktopNav, 500);
         }
         
-        // Close mobile menu on window resize (when switching to desktop)
+        // Close mobile menu on window resize (when switching to desktop) - THROTTLED
+        let resizeTimer;
         window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                closeMobileMenu();
-            }
-        });
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function() {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            }, 150); // Throttle to once per 150ms
+        }, { passive: true });
         
         // Prevent body scroll when mobile menu is open
         let lastScrollY = 0;
