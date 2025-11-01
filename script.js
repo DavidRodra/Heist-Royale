@@ -1522,17 +1522,17 @@ function addRandomWin() {
         if (winsGrid.children.length > 5) {
             winsGrid.removeChild(winsGrid.lastChild);
         }
+        
+        // Add animation (moved inside the if block so winCard is in scope)
+        winCard.style.opacity = '0';
+        winCard.style.transform = 'translateY(-20px)';
+        
+        setTimeout(() => {
+            winCard.style.transition = 'all 0.5s ease';
+            winCard.style.opacity = '1';
+            winCard.style.transform = 'translateY(0)';
+        }, 100);
     }
-    
-    // Add animation
-    winCard.style.opacity = '0';
-    winCard.style.transform = 'translateY(-20px)';
-    
-    setTimeout(() => {
-        winCard.style.transition = 'all 0.5s ease';
-        winCard.style.opacity = '1';
-        winCard.style.transform = 'translateY(0)';
-    }, 100);
 }
 
 // Notification system
@@ -1823,11 +1823,12 @@ function showOnlyCommunity() {
     const communitySection = document.getElementById('community-section');
     if (communitySection) {
         communitySection.style.display = 'block';
+        communitySection.style.visibility = 'visible';
+        communitySection.style.opacity = '1';
     } else {
-        // Create community section if it doesn't exist
-        if (typeof showCommunity === 'function') {
-            showCommunity();
-        }
+        // Section will be created by showCommunity() - don't call it here to avoid infinite loop
+        // Just return and let showCommunity handle creation
+        console.log('Community section does not exist yet - will be created by showCommunity()');
     }
 }
 
@@ -1836,11 +1837,12 @@ function showOnlyFavorites() {
     const favoritesSection = document.getElementById('favorites-section');
     if (favoritesSection) {
         favoritesSection.style.display = 'block';
+        favoritesSection.style.visibility = 'visible';
+        favoritesSection.style.opacity = '1';
     } else {
-        // Create favorites section if it doesn't exist
-        if (typeof showFavorites === 'function') {
-            showFavorites();
-        }
+        // Section will be created by showFavorites() - don't call it here to avoid infinite loop
+        // Just return and let showFavorites handle creation
+        console.log('Favorites section does not exist yet - will be created by showFavorites()');
     }
 }
 
@@ -2005,12 +2007,10 @@ function showPromotions() {
 }
 
 function showFavorites() {
-    showOnlyFavorites();
-    updateNavigationActiveState('Favorites');
-    
-    // Create favorites content if it doesn't exist
+    // Create favorites content if it doesn't exist FIRST (before calling showOnlyFavorites)
+    const mainContent = document.querySelector('.main-content');
     let favoritesSection = document.getElementById('favorites-section');
-    if (!favoritesSection) {
+    if (!favoritesSection && mainContent) {
         favoritesSection = document.createElement('div');
         favoritesSection.id = 'favorites-section';
         favoritesSection.className = 'section';
@@ -2034,21 +2034,16 @@ function showFavorites() {
         mainContent.appendChild(favoritesSection);
     }
     
-    favoritesSection.style.display = 'block';
-    favoritesSection.style.visibility = 'visible';
-    favoritesSection.style.opacity = '1';
-    
-    // Update navigation active state
-    updateNavigationState('favorites');
+    // Now show the section (after it's created)
+    showOnlyFavorites();
+    updateNavigationActiveState('Favorites');
 }
 
 function showCommunity() {
-    showOnlyCommunity();
-    updateNavigationActiveState('Community');
-    
-    // Create community content if it doesn't exist
+    // Create community content if it doesn't exist FIRST (before calling showOnlyCommunity)
+    const mainContent = document.querySelector('.main-content');
     let communitySection = document.getElementById('community-section');
-    if (!communitySection) {
+    if (!communitySection && mainContent) {
         communitySection = document.createElement('div');
         communitySection.id = 'community-section';
         communitySection.className = 'section';
@@ -2246,9 +2241,9 @@ function showCommunity() {
         mainContent.appendChild(communitySection);
     }
     
-    communitySection.style.display = 'block';
-    communitySection.style.visibility = 'visible';
-    communitySection.style.opacity = '1';
+    // Now show the section (after it's created)
+    showOnlyCommunity();
+    updateNavigationActiveState('Community');
     
     // Update navigation active state
     updateNavigationState('community');
