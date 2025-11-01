@@ -1606,6 +1606,19 @@ body::before {
         left: 0 !important;
         right: 0 !important;
         box-sizing: border-box !important;
+    }
+    
+    /* Remove top padding on mobile for community/favorites sections */
+    .main-content:has(#community-section:not([style*="display: none"])),
+    .main-content:has(#favorites-section:not([style*="display: none"])) {
+        padding-top: 15px !important;
+    }
+    
+    #community-section,
+    #favorites-section {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
         overflow-x: hidden !important;
     }
     
