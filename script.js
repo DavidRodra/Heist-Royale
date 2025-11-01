@@ -1854,7 +1854,16 @@ function showProfile() {
     const profileSection = document.getElementById('profile-section');
     if (profileSection) {
         profileSection.removeAttribute('hidden');
-        profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: fixed !important; top: 0 !important; left: 200px !important; right: 300px !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 30px !important; overflow-y: auto !important; pointer-events: auto !important;';
+        
+        // Mobile vs Desktop positioning
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            // Mobile: full width, account for top padding and bottom nav
+            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 70px 15px 90px 15px !important; overflow-y: auto !important; pointer-events: auto !important; width: 100vw !important; max-width: 100vw !important;';
+        } else {
+            // Desktop: respect sidebar and chat
+            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: fixed !important; top: 0 !important; left: 200px !important; right: 300px !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 30px !important; overflow-y: auto !important; pointer-events: auto !important;';
+        }
         console.log('Profile section FORCED to show with fixed positioning');
         
         // Load profile data

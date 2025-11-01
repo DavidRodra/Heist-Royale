@@ -1869,19 +1869,19 @@
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-bottom-nav" id="mobileBottomNav">
         <div class="nav-items">
-            <a href="#" class="nav-item active" onclick="showHome(); closeMobileMenu(); updateMobileNav('home'); return false;">
+            <a href="#" class="nav-item active" data-section="home" onclick="handleMobileNav(event, 'home'); return false;">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
-            <a href="#" class="nav-item" onclick="showFavorites(); closeMobileMenu(); updateMobileNav('favorites'); return false;">
+            <a href="#" class="nav-item" data-section="favorites" onclick="handleMobileNav(event, 'favorites'); return false;">
                 <i class="fas fa-star"></i>
                 <span>Favorites</span>
             </a>
-            <a href="#" class="nav-item" onclick="showCommunity(); closeMobileMenu(); updateMobileNav('community'); return false;">
+            <a href="#" class="nav-item" data-section="community" onclick="handleMobileNav(event, 'community'); return false;">
                 <i class="fas fa-users"></i>
                 <span>Community</span>
             </a>
-            <a href="#" class="nav-item" onclick="showProfile(); closeMobileMenu(); updateMobileNav('profile'); return false;">
+            <a href="#" class="nav-item" data-section="profile" onclick="handleMobileNav(event, 'profile'); return false;">
                 <i class="fas fa-user"></i>
                 <span>Profile</span>
             </a>
@@ -1946,50 +1946,90 @@
                 item.classList.remove('active');
             });
             
-            const sectionMap = {
-                'home': 0,
-                'favorites': 1,
-                'community': 2,
-                'profile': 3
-            };
-            
-            if (sectionMap[section] !== undefined) {
-                navItems[sectionMap[section]].classList.add('active');
+            const targetNav = document.querySelector(`.mobile-bottom-nav .nav-item[data-section="${section}"]`);
+            if (targetNav) {
+                targetNav.classList.add('active');
             }
         }
         
-        // Update active state when using desktop navigation
-        const originalShowHome = window.showHome;
-        const originalShowFavorites = window.showFavorites;
-        const originalShowCommunity = window.showCommunity;
-        const originalShowProfile = window.showProfile;
-        
-        if (typeof originalShowHome === 'function') {
-            window.showHome = function() {
-                originalShowHome();
-                updateMobileNav('home');
-            };
+        // Handle mobile navigation - wait for scripts to load
+        function handleMobileNav(event, section) {
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Close mobile menu if open
+            if (window.closeMobileMenu) {
+                window.closeMobileMenu();
+            }
+            
+            // Wait a bit for scripts to be ready, then call the appropriate function
+            setTimeout(function() {
+                try {
+                    switch(section) {
+                        case 'home':
+                            if (window.showHome) {
+                                window.showHome();
+                            } else if (window.showOnlyHome) {
+                                window.showOnlyHome();
+                            }
+                            break;
+                        case 'favorites':
+                            if (window.showFavorites) {
+                                window.showFavorites();
+                            } else if (window.showOnlyFavorites) {
+                                window.showOnlyFavorites();
+                            }
+                            break;
+                        case 'community':
+                            if (window.showCommunity) {
+                                window.showCommunity();
+                            } else if (window.showOnlyCommunity) {
+                                window.showOnlyCommunity();
+                            }
+                            break;
+                        case 'profile':
+                            if (window.showProfile) {
+                                window.showProfile();
+                            } else if (window.showOnlyProfile) {
+                                window.showOnlyProfile();
+                            }
+                            break;
+                    }
+                    updateMobileNav(section);
+                } catch (error) {
+                    console.error('Navigation error:', error);
+                }
+            }, 50);
         }
         
-        if (typeof originalShowFavorites === 'function') {
-            window.showFavorites = function() {
-                originalShowFavorites();
-                updateMobileNav('favorites');
-            };
+        // Make handleMobileNav globally available
+        window.handleMobileNav = handleMobileNav;
+        window.updateMobileNav = updateMobileNav;
+        
+        // Update mobile nav when desktop navigation is used (only on mobile)
+        function syncMobileNavOnDesktopNav() {
+            if (window.innerWidth <= 768) {
+                // Listen for navigation changes from desktop sidebar
+                const desktopNavItems = document.querySelectorAll('.sidebar .nav-item');
+                desktopNavItems.forEach(item => {
+                    item.addEventListener('click', function() {
+                        const text = this.querySelector('span')?.textContent?.toLowerCase() || '';
+                        if (text.includes('home')) updateMobileNav('home');
+                        else if (text.includes('favorite')) updateMobileNav('favorites');
+                        else if (text.includes('community')) updateMobileNav('community');
+                        else if (text.includes('profile')) updateMobileNav('profile');
+                    });
+                });
+            }
         }
         
-        if (typeof originalShowCommunity === 'function') {
-            window.showCommunity = function() {
-                originalShowCommunity();
-                updateMobileNav('community');
-            };
-        }
-        
-        if (typeof originalShowProfile === 'function') {
-            window.showProfile = function() {
-                originalShowProfile();
-                updateMobileNav('profile');
-            };
+        // Wait for DOM and scripts to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(syncMobileNavOnDesktopNav, 500);
+            });
+        } else {
+            setTimeout(syncMobileNavOnDesktopNav, 500);
         }
         
         // Close mobile menu on window resize (when switching to desktop)
