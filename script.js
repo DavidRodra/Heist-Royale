@@ -1043,28 +1043,44 @@ function setupChatToggle() {
         console.log('TOGGLE CHAT CALLED! State:', isChatVisible);
         
         isChatVisible = !isChatVisible;
+        const isMobile = window.innerWidth <= 768;
         
         if (isChatVisible) {
             // Show chat
-            chatSidebar.style.display = 'flex';
+            if (isMobile) {
+                // Mobile: use fixed positioning overlay
+                chatSidebar.style.cssText = 'display: flex !important; visibility: visible !important; opacity: 1 !important; position: fixed !important; top: 0 !important; right: 0 !important; bottom: 0 !important; width: 100vw !important; max-width: 100vw !important; z-index: 2000 !important; background: rgba(10, 9, 30, 0.98) !important; padding: 70px 15px 90px 15px !important;';
+            } else {
+                // Desktop: normal display
+                chatSidebar.style.display = 'flex';
+                chatSidebar.style.cssText = 'display: flex !important;';
+            }
             chatSidebar.classList.remove('hidden');
             mainContent.classList.remove('chat-hidden');
             if (floatingToggle) {
-                floatingToggle.innerHTML = '<i class="fas fa-comments"></i>';
+                floatingToggle.innerHTML = '<i class="fas fa-times"></i>';
                 floatingToggle.title = 'Hide Chat';
             }
             const profileSection = document.getElementById('profile-section');
             if (profileSection) {
-                profileSection.style.right = '300px';
+                if (isMobile) {
+                    profileSection.style.right = '0';
+                } else {
+                    profileSection.style.right = '300px';
+                }
             }
             console.log('Chat shown');
         } else {
             // Hide chat
-            chatSidebar.style.display = 'none';
+            if (isMobile) {
+                chatSidebar.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+            } else {
+                chatSidebar.style.display = 'none';
+            }
             chatSidebar.classList.add('hidden');
             mainContent.classList.add('chat-hidden');
             if (floatingToggle) {
-                floatingToggle.innerHTML = '<i class="fas fa-eye"></i>';
+                floatingToggle.innerHTML = '<i class="fas fa-comments"></i>';
                 floatingToggle.title = 'Show Chat';
             }
             const profileSection = document.getElementById('profile-section');
