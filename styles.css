@@ -584,6 +584,13 @@ body::before {
     padding-top: 0;
 }
 
+/* Aggressive fix for section-header in favorites/community */
+#favorites-section .section-header,
+#community-section .section-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
 .section-header h2 {
     font-size: 20px;
     font-weight: bold;
@@ -1608,17 +1615,27 @@ body::before {
         box-sizing: border-box !important;
     }
     
-    /* Remove top padding on mobile for community/favorites sections */
+    /* Remove top padding on mobile for community/favorites sections - AGGRESSIVE */
     #community-section,
     #favorites-section {
         padding-top: 0 !important;
         margin-top: 0 !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
     }
     
-    /* Reduce main-content top padding when showing community/favorites */
-    .main-content:has(#community-section:not([style*="display: none"])):not(:has(.topbar)),
-    .main-content:has(#favorites-section:not([style*="display: none"])):not(:has(.topbar)) {
-        padding-top: 15px !important;
+    /* Remove top padding from main-content when showing community/favorites */
+    .main-content:has(#community-section:not([style*="display: none"])),
+    .main-content:has(#favorites-section:not([style*="display: none"])) {
+        padding-top: 0 !important;
+    }
+    
+    /* Also remove padding/margin from section-header in these sections */
+    #community-section .section-header,
+    #favorites-section .section-header {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 20px !important;
     }
     
     /* Force override any desktop width calculations */

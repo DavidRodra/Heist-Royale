@@ -1861,6 +1861,21 @@ function showOnlyProfile() {
 function showOnlyHome() {
     console.log('=== showOnlyHome called ===');
     
+    // Restore main-content padding for home page
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            // Restore mobile padding
+            mainContent.style.paddingTop = '';
+            mainContent.style.removeProperty('padding-top');
+        } else {
+            // Restore desktop padding
+            mainContent.style.paddingTop = '';
+            mainContent.style.removeProperty('padding-top');
+        }
+    }
+    
     // FORCE HIDE profile section first - move it completely off-screen
     const profileSection = document.getElementById('profile-section');
     if (profileSection) {
@@ -1873,7 +1888,6 @@ function showOnlyHome() {
     hideAllSections();
     
     // Show all home content (non-section elements)
-    const mainContent = document.querySelector('.main-content');
     if (mainContent) {
         const children = mainContent.children;
         for (let i = 0; i < children.length; i++) {
@@ -1922,14 +1936,33 @@ function showOnlyCommunity() {
     
     // Show community section
     const communitySection = document.getElementById('community-section');
+    const mainContent = document.querySelector('.main-content');
     if (communitySection) {
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            // Mobile: full width, no padding
+            // Mobile: full width, no padding - AGGRESSIVE FIX
             communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; padding-top: 0 !important; margin-top: 0 !important;';
+            // Also remove top padding from main-content when showing community
+            if (mainContent) {
+                mainContent.style.paddingTop = '0px';
+                mainContent.style.setProperty('padding-top', '0px', 'important');
+            }
         } else {
             // Desktop: no top padding
             communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 0 !important; margin-top: 0 !important;';
+            // Also remove top padding from main-content on desktop
+            if (mainContent) {
+                mainContent.style.paddingTop = '0px';
+                mainContent.style.setProperty('padding-top', '0px', 'important');
+            }
+        }
+        // Remove padding from section-header too
+        const sectionHeader = communitySection.querySelector('.section-header');
+        if (sectionHeader) {
+            sectionHeader.style.paddingTop = '0px';
+            sectionHeader.style.marginTop = '0px';
+            sectionHeader.style.setProperty('padding-top', '0px', 'important');
+            sectionHeader.style.setProperty('margin-top', '0px', 'important');
         }
         console.log('Community section shown');
     } else {
@@ -1965,14 +1998,33 @@ function showOnlyFavorites() {
     
     // Show favorites section
     const favoritesSection = document.getElementById('favorites-section');
+    const mainContent = document.querySelector('.main-content');
     if (favoritesSection) {
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            // Mobile: full width, no padding
+            // Mobile: full width, no padding - AGGRESSIVE FIX
             favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; padding-top: 0 !important; margin-top: 0 !important;';
+            // Also remove top padding from main-content when showing favorites
+            if (mainContent) {
+                mainContent.style.paddingTop = '0px';
+                mainContent.style.setProperty('padding-top', '0px', 'important');
+            }
         } else {
             // Desktop: no top padding
             favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 0 !important; margin-top: 0 !important;';
+            // Also remove top padding from main-content on desktop
+            if (mainContent) {
+                mainContent.style.paddingTop = '0px';
+                mainContent.style.setProperty('padding-top', '0px', 'important');
+            }
+        }
+        // Remove padding from section-header too
+        const sectionHeader = favoritesSection.querySelector('.section-header');
+        if (sectionHeader) {
+            sectionHeader.style.paddingTop = '0px';
+            sectionHeader.style.marginTop = '0px';
+            sectionHeader.style.setProperty('padding-top', '0px', 'important');
+            sectionHeader.style.setProperty('margin-top', '0px', 'important');
         }
         console.log('Favorites section shown');
     } else {
