@@ -1,4 +1,4 @@
-// Visitor Tracking System for Casino Max
+// Visitor Tracking System for Arcane Games
 // This script tracks visitor analytics and stores data in localStorage
 
 class VisitorTracker {

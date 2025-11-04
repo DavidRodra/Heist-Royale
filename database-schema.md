@@ -1,6 +1,6 @@
-# Casino Max Database Schema
+# Arcane Games Database Schema
 
-This document outlines the database schema for the Casino Max platform. Currently implemented using localStorage for demo purposes, but designed to be easily migrated to a real database.
+This document outlines the database schema for the Arcane Games platform. Currently implemented using localStorage for demo purposes, but designed to be easily migrated to a real database.
 
 ## Tables
 

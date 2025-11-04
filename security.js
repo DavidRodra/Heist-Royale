@@ -1,4 +1,4 @@
-// Security utilities for Casino Max
+// Security utilities for Arcane Games
 // Note: This is a simplified implementation for demo purposes
 // In production, use proper cryptographic libraries and server-side validation
 
