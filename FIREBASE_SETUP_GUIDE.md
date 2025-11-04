@@ -22,7 +22,7 @@
 
 1. Go to [Firebase Console](https://console.firebase.google.com)
 2. Click **"Add project"** or **"Create a project"**
-3. Enter project name: **"CasinoMax"**
+3. Enter project name: **"Arcane Games"**
 4. Disable Google Analytics (not needed for now) - Click **"Continue"**
 5. Click **"Create project"**
 6. Wait for setup (30 seconds)

@@ -1,4 +1,4 @@
-// Database initialization script for Casino Max
+// Database initialization script for Arcane Games
 // This script initializes the localStorage database with sample data
 
 class DatabaseInit {
@@ -55,7 +55,7 @@ class DatabaseInit {
         const users = [
             {
                 id: 'admin-001',
-                email: 'admin@casinomax.com',
+                email: 'admin@arcanegames.com',
                 password: hashPassword('admin123'),
                 firstName: 'Admin',
                 lastName: 'User',
@@ -71,7 +71,7 @@ class DatabaseInit {
             },
             {
                 id: 'demo-001',
-                email: 'demo@casinomax.com',
+                email: 'demo@arcanegames.com',
                 password: hashPassword('demo123'),
                 firstName: 'Demo',
                 lastName: 'User',
@@ -97,7 +97,7 @@ class DatabaseInit {
                 name: 'Book of Ra',
                 description: 'Ancient Egyptian slot adventure with mystical treasures and golden rewards',
                 category: 'slots',
-                provider: 'CasinoMax',
+                provider: 'Arcane Games',
                 rtp: 96.50,
                 minBet: 0.10,
                 maxBet: 100.00,
@@ -112,7 +112,7 @@ class DatabaseInit {
                 name: 'Blackjack',
                 description: 'Classic card game where skill meets luck. Beat the dealer to win big!',
                 category: 'table',
-                provider: 'CasinoMax',
+                provider: 'Arcane Games',
                 rtp: 99.50,
                 minBet: 1.00,
                 maxBet: 500.00,
@@ -127,7 +127,7 @@ class DatabaseInit {
                 name: 'Ocean Hunter',
                 description: 'Dive deep into the ocean and hunt for treasures with your cannon',
                 category: 'arcade',
-                provider: 'CasinoMax',
+                provider: 'Arcane Games',
                 rtp: 97.20,
                 minBet: 0.50,
                 maxBet: 200.00,

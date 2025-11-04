@@ -1,6 +1,6 @@
-# CasinoMax - Modern Online Casino Platform
+# Arcane Games - Premium Gaming Platform
 
-A modern, responsive web application that replicates the CasinoMax online casino platform design. Built with vanilla HTML, CSS, and JavaScript for optimal performance and user experience.
+A modern, responsive web application that replicates the Arcane Games premium gaming platform design. Built with vanilla HTML, CSS, and JavaScript for optimal performance and user experience.
 
 ## 🎰 Features
 
@@ -179,4 +179,4 @@ For support or questions, please contact the development team or create an issue
 
 ---
 
-**CasinoMax** - Bringing the casino experience to your browser! 🎰✨
+**Arcane Games** - Bringing premium gaming to your browser! 🎮✨

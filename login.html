@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Casino Max</title>
+    <title>Login - Arcane Games</title>
     <style>
         * {
             margin: 0;
@@ -375,7 +375,7 @@
             </div>
             <div class="demo-account admin">
                 <strong>Admin:</strong><br>
-                Email: admin@casinomax.com<br>
+                Email: admin@arcanegames.com<br>
                 Password: admin123
             </div>
         </div>
@@ -441,8 +441,8 @@
                     
                     // Redirect based on user type
                     setTimeout(() => {
-                        console.log('Redirecting to:', email === 'admin@casinomax.com' ? 'admin.html' : 'index.html');
-                        if (email === 'admin@casinomax.com') {
+                        console.log('Redirecting to:', email === 'admin@arcanegames.com' ? 'admin.html' : 'index.html');
+                        if (email === 'admin@arcanegames.com') {
                             // Redirect admin to admin panel
                             window.location.href = 'admin.html';
                         } else {
@@ -466,13 +466,13 @@
         // Setup admin account if it doesn't exist
         function ensureAdminAccount() {
             const users = JSON.parse(localStorage.getItem('users') || '[]');
-            const adminExists = users.some(user => user.email === 'admin@casinomax.com');
+            const adminExists = users.some(user => user.email === 'admin@arcanegames.com');
             
             if (!adminExists) {
                 const adminUser = {
                     id: 'admin_001',
                     name: 'Admin User',
-                    email: 'admin@casinomax.com',
+                    email: 'admin@arcanegames.com',
                     password: 'admin123', // Simple password for demo
                     role: 'admin',
                     balance: 0,

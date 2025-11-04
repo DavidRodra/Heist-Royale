@@ -1,4 +1,4 @@
-// CasinoMax Webapp JavaScript
+// Arcane Games Webapp JavaScript
 
 // Friend interaction functions - Define immediately at top level
 function messageFriend(friendId) {
@@ -293,7 +293,7 @@ function showGuestState() {
     const topbarBrand = document.getElementById('topbarBrand');
     const topbarBalance = document.getElementById('topbarBalance');
     if (topbarBrand) {
-        topbarBrand.textContent = 'CasinoMax';
+        topbarBrand.textContent = 'Arcane Games';
     }
     if (topbarBalance) {
         topbarBalance.textContent = '$0.00';
