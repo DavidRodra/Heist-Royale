@@ -218,9 +218,9 @@ CREATE INDEX idx_security_logs_created_at ON security_logs(created_at);
 ### Games
 ```sql
 INSERT INTO games (id, name, description, category, provider, rtp, min_bet, max_bet, is_active) VALUES
-('book-of-ra', 'Book of Ra', 'Ancient Egyptian slot adventure', 'slots', 'CasinoMax', 96.50, 0.10, 100.00, TRUE),
-('blackjack', 'Blackjack', 'Classic card game', 'table', 'CasinoMax', 99.50, 1.00, 500.00, TRUE),
-('ocean-hunter', 'Ocean Hunter', 'Fish shooting game', 'arcade', 'CasinoMax', 97.20, 0.50, 200.00, TRUE);
+('book-of-ra', 'Book of Ra', 'Ancient Egyptian slot adventure', 'slots', 'Arcane Games', 96.50, 0.10, 100.00, TRUE),
+('blackjack', 'Blackjack', 'Classic card game', 'table', 'Arcane Games', 99.50, 1.00, 500.00, TRUE),
+('ocean-hunter', 'Ocean Hunter', 'Fish shooting game', 'arcade', 'Arcane Games', 97.20, 0.50, 200.00, TRUE);
 ```
 
 ### Promotions
