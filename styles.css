@@ -411,6 +411,23 @@ body::before {
     margin-top: 0 !important;
 }
 
+/* Hide topbar when favorites section is visible */
+.main-content:has(#favorites-section:not([style*="display: none"])) .topbar {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Hide banners when favorites section is visible */
+.main-content:has(#favorites-section:not([style*="display: none"])) .banners {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
 /* Simple fix: When chat is hidden, main content should fill the space */
 .chat-sidebar.hidden {
     display: none !important;

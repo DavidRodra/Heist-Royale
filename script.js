@@ -2167,12 +2167,27 @@ function showOnlyFavorites() {
     // Hide ALL home content (topbar, banners, sections)
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
+        // FIRST: Hide topbar explicitly
+        const topbar = mainContent.querySelector('.topbar');
+        if (topbar) {
+            topbar.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
+        }
+        
+        // Hide banners
+        const banners = mainContent.querySelector('.banners');
+        if (banners) {
+            banners.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+        }
+        
+        // Hide all other children
         const children = mainContent.children;
         for (let i = 0; i < children.length; i++) {
             const child = children[i];
             // Hide everything that's NOT the favorites section
             if (!child.id || child.id !== 'favorites-section') {
-                child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                if (child.classList && !child.classList.contains('topbar') && !child.classList.contains('banners')) {
+                    child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                }
             }
         }
     }
@@ -2182,9 +2197,13 @@ function showOnlyFavorites() {
     // mainContent already declared above, reuse it
     if (favoritesSection && mainContent) {
         // AGGRESSIVE: Remove ALL top padding from main-content FIRST
-        mainContent.style.cssText = mainContent.style.cssText + 'padding-top: 0 !important; padding: 0 20px 20px 20px !important;';
         mainContent.style.setProperty('padding-top', '0px', 'important');
         mainContent.style.setProperty('padding', '0 20px 20px 20px', 'important');
+        mainContent.style.setProperty('margin-top', '0px', 'important');
+        
+        // Ensure main-content starts at the very top
+        mainContent.style.setProperty('position', 'relative', 'important');
+        mainContent.style.setProperty('top', '0', 'important');
         
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
@@ -2385,6 +2404,19 @@ function showFavorites() {
     if (mainContent) {
         mainContent.style.setProperty('padding-top', '0px', 'important');
         mainContent.style.setProperty('padding', '0 20px 20px 20px', 'important');
+        mainContent.style.setProperty('margin-top', '0px', 'important');
+        
+        // Hide topbar immediately
+        const topbar = mainContent.querySelector('.topbar');
+        if (topbar) {
+            topbar.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
+        }
+        
+        // Hide banners immediately
+        const banners = mainContent.querySelector('.banners');
+        if (banners) {
+            banners.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+        }
     }
     
     let favoritesSection = document.getElementById('favorites-section');
