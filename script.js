@@ -2028,7 +2028,7 @@ function showOnlyFavorites() {
     
     // Show favorites section
     const favoritesSection = document.getElementById('favorites-section');
-    const mainContent = document.querySelector('.main-content');
+    // mainContent already declared above, reuse it
     if (favoritesSection) {
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
@@ -2437,6 +2437,10 @@ function loadCommunityData() {
         `;
     }
 }
+
+// ============================================
+// COMMUNITY FUNCTIONS - Defined early for immediate availability
+// ============================================
 
 // Make showCommunity available globally - define early
 function showCommunity() {

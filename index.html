@@ -504,6 +504,23 @@
     
     <script src="visitor-tracking.js" defer></script>
     <script src="user-activity-tracker.js"></script>
+    
+    <!-- Define showCommunity early so onclick handlers can access it -->
+    <script>
+        // Early definition of showCommunity - will be replaced by full implementation in script.js
+        window.showCommunity = function() {
+            console.log('showCommunity placeholder called - waiting for full implementation...');
+            // The full function will be defined in script.js
+            if (window.showCommunity && window.showCommunity.toString().includes('placeholder')) {
+                setTimeout(function() {
+                    if (typeof showCommunity === 'function' && !showCommunity.toString().includes('placeholder')) {
+                        showCommunity();
+                    }
+                }, 100);
+            }
+        };
+    </script>
+    
     <script src="script.js"></script>
     
     <!-- EMERGENCY CHAT TOGGLE FIX -->
