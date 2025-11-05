@@ -2184,28 +2184,23 @@ function showOnlyFavorites() {
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
             // Mobile: full width, no padding - AGGRESSIVE FIX
-            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; padding-top: 0 !important; margin-top: 0 !important;';
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding-top: 0 !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important;';
             // Also remove top padding from main-content when showing favorites
             if (mainContent) {
-                mainContent.style.paddingTop = '0px';
                 mainContent.style.setProperty('padding-top', '0px', 'important');
             }
         } else {
             // Desktop: no top padding
-            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 0 !important; margin-top: 0 !important;';
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 0 !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important;';
             // Also remove top padding from main-content on desktop
             if (mainContent) {
-                mainContent.style.paddingTop = '0px';
                 mainContent.style.setProperty('padding-top', '0px', 'important');
             }
         }
-        // Remove padding from section-header too
+        // Remove padding from section-header too - AGGRESSIVE
         const sectionHeader = favoritesSection.querySelector('.section-header');
         if (sectionHeader) {
-            sectionHeader.style.paddingTop = '0px';
-            sectionHeader.style.marginTop = '0px';
-            sectionHeader.style.setProperty('padding-top', '0px', 'important');
-            sectionHeader.style.setProperty('margin-top', '0px', 'important');
+            sectionHeader.style.cssText = 'padding-top: 0 !important; margin-top: 0 !important; margin-bottom: 20px !important;';
         }
         console.log('Favorites section shown');
     } else {
@@ -2381,13 +2376,20 @@ function showFavorites() {
         return;
     }
     
+    // Remove top padding from main-content immediately
+    if (mainContent) {
+        mainContent.style.setProperty('padding-top', '0px', 'important');
+    }
+    
     let favoritesSection = document.getElementById('favorites-section');
     if (!favoritesSection) {
         favoritesSection = document.createElement('div');
         favoritesSection.id = 'favorites-section';
         favoritesSection.className = 'section';
+        // Apply aggressive no-padding styles immediately
+        favoritesSection.style.cssText = 'padding-top: 0 !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important;';
         favoritesSection.innerHTML = `
-            <div class="section-header">
+            <div class="section-header" style="padding-top: 0 !important; margin-top: 0 !important;">
                 <h2><i class="fas fa-star"></i> My Favorites</h2>
             </div>
             <div class="favorites-container">
@@ -2404,6 +2406,15 @@ function showFavorites() {
             </div>
         `;
         mainContent.appendChild(favoritesSection);
+    } else {
+        // Section exists, but ensure no padding is applied
+        favoritesSection.style.setProperty('padding-top', '0px', 'important');
+        favoritesSection.style.setProperty('margin-top', '0px', 'important');
+        const sectionHeader = favoritesSection.querySelector('.section-header');
+        if (sectionHeader) {
+            sectionHeader.style.setProperty('padding-top', '0px', 'important');
+            sectionHeader.style.setProperty('margin-top', '0px', 'important');
+        }
     }
     
     // Now show the section (after it's created)
