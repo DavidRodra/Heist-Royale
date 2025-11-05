@@ -71,6 +71,24 @@ function addFriend(userId) {
     console.log('=== ADD FRIEND CALLED ===');
     console.log('User ID:', userId);
     
+    // Get current friends list
+    const friendsList = JSON.parse(localStorage.getItem('friends') || '[]');
+    
+    // Check if already a friend
+    if (friendsList.includes(userId)) {
+        alert('This user is already your friend!');
+        return;
+    }
+    
+    // Add to friends list
+    friendsList.push(userId);
+    localStorage.setItem('friends', JSON.stringify(friendsList));
+    
+    // Reload community data to show updated friends list
+    loadCommunityData();
+    
+    alert('Friend added successfully!');
+    
     // Get user name for display
     const userNames = {
         'eve': 'Eve Wilson',
@@ -114,23 +132,26 @@ function viewSuggestionProfile(userId) {
     alert(`${userName}'s Profile:\n\nLevel: ${userData.level}\nBalance: $${userData.balance.toLocaleString()}\nStatus: ${userData.statusText}\nGames Played: ${userData.gamesPlayed}\nWin Rate: ${userData.winRate}%\nFriends: ${userData.friends}`);
 }
 
-// Helper function to get user data
+// Helper function to get user data from real users database
 function getUserData(userId, type) {
-    const userDatabase = {
-        // Friends
-        'alice': { level: 15, balance: 2500, status: 'online', statusText: 'Online', gamesPlayed: 1247, winRate: 68, friends: 23 },
-        'bob': { level: 8, balance: 1200, status: 'offline', statusText: 'Offline', gamesPlayed: 456, winRate: 45, friends: 12 },
-        'diana': { level: 22, balance: 5800, status: 'online', statusText: 'Online', gamesPlayed: 2156, winRate: 72, friends: 45 },
-        
-        // Suggestions
-        'eve': { level: 12, balance: 3200, status: 'online', statusText: 'Online', gamesPlayed: 892, winRate: 58, friends: 18 },
-        'frank': { level: 18, balance: 4100, status: 'online', statusText: 'Online', gamesPlayed: 1456, winRate: 63, friends: 31 },
-        'grace': { level: 25, balance: 7500, status: 'online', statusText: 'Online', gamesPlayed: 2890, winRate: 75, friends: 67 },
-        'henry': { level: 6, balance: 800, status: 'offline', statusText: 'Offline', gamesPlayed: 234, winRate: 42, friends: 8 },
-        'ivy': { level: 30, balance: 12000, status: 'online', statusText: 'Online', gamesPlayed: 3456, winRate: 78, friends: 89 }
-    };
+    // Get real users from localStorage
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => u.id === userId || u.email === userId || u.username === userId);
     
-    return userDatabase[userId] || { level: 10, balance: 1000, status: 'offline', statusText: 'Offline', gamesPlayed: 500, winRate: 50, friends: 10 };
+    if (user) {
+        return {
+            level: user.level || 1,
+            balance: user.balance || 0,
+            status: user.status || 'offline',
+            statusText: user.status === 'online' ? 'Online' : 'Offline',
+            gamesPlayed: user.gamesPlayed || 0,
+            winRate: user.winRate || 0,
+            friends: user.friends || 0
+        };
+    }
+    
+    // Return default if user not found
+    return { level: 1, balance: 0, status: 'offline', statusText: 'Offline', gamesPlayed: 0, winRate: 0, friends: 0 };
 }
 
 // Function to handle friend request sending
@@ -2255,6 +2276,184 @@ function showFavorites() {
     updateNavigationActiveState('Favorites');
 }
 
+// Function to load community data dynamically
+function loadCommunityData() {
+    const communitySection = document.getElementById('community-section');
+    if (!communitySection) return;
+    
+    const currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+    const allUsers = JSON.parse(localStorage.getItem('users') || '[]');
+    
+    // Get current user's friends list (stored in localStorage)
+    const friendsList = JSON.parse(localStorage.getItem('friends') || '[]');
+    const currentUserId = currentUser ? (currentUser.id || currentUser.email) : null;
+    
+    // Filter out current user from all users
+    const otherUsers = allUsers.filter(u => {
+        const userId = u.id || u.email;
+        return userId !== currentUserId;
+    });
+    
+    // Get friends (users who are in friends list)
+    const friends = friendsList.map(friendId => {
+        return allUsers.find(u => (u.id || u.email) === friendId);
+    }).filter(Boolean);
+    
+    // Get suggestions (users not in friends list, excluding current user)
+    const suggestions = otherUsers
+        .filter(u => !friendsList.includes(u.id || u.email))
+        .slice(0, 5); // Limit to 5 suggestions
+    
+    // Calculate community stats
+    const activeUsers = allUsers.filter(u => u.status === 'online' || !u.status).length;
+    const totalUsers = allUsers.length;
+    const chatMessages = JSON.parse(localStorage.getItem('chat_messages') || '[]');
+    const todayMessages = chatMessages.filter(msg => {
+        const msgDate = new Date(msg.timestamp || msg.date);
+        const today = new Date();
+        return msgDate.toDateString() === today.toDateString();
+    }).length;
+    
+    // Update friends section
+    const friendsSection = communitySection.querySelector('.friends-section');
+    if (friendsSection) {
+        const friendsListEl = friendsSection.querySelector('.friends-list');
+        const friendCountEl = friendsSection.querySelector('.friend-count');
+        
+        if (friendCountEl) {
+            friendCountEl.textContent = `${friends.length} ${friends.length === 1 ? 'friend' : 'friends'}`;
+        }
+        
+        if (friendsListEl) {
+            if (friends.length === 0) {
+                friendsListEl.innerHTML = `
+                    <div class="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fas fa-user-friends" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                        <h3>No friends yet</h3>
+                        <p>Start building your community by adding friends from suggestions!</p>
+                    </div>
+                `;
+            } else {
+                friendsListEl.innerHTML = friends.map(friend => {
+                    const name = friend.name || friend.firstName + ' ' + friend.lastName || friend.email || 'User';
+                    const initial = name.charAt(0).toUpperCase();
+                    const balance = friend.balance || 0;
+                    const level = friend.level || 1;
+                    const status = friend.status || 'offline';
+                    const statusText = status === 'online' ? 'Online' : 'Offline';
+                    const friendId = friend.id || friend.email;
+                    
+                    return `
+                        <div class="friend-card">
+                            <div class="friend-avatar">${initial}</div>
+                            <div class="friend-info">
+                                <h4>${name}</h4>
+                                <p class="friend-status ${status}">${statusText}</p>
+                                <p class="friend-level">Level ${level} • $${balance.toLocaleString()}</p>
+                            </div>
+                            <div class="friend-actions">
+                                <button class="btn btn-sm btn-outline" onclick="messageFriend('${friendId}')">
+                                    <i class="fas fa-comment"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline" onclick="viewFriendProfile('${friendId}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+    }
+    
+    // Update suggestions section
+    const suggestionsSection = communitySection.querySelector('.suggestions-section');
+    if (suggestionsSection) {
+        const suggestionsListEl = suggestionsSection.querySelector('.suggestions-list');
+        const suggestionCountEl = suggestionsSection.querySelector('.suggestion-count');
+        
+        if (suggestionCountEl) {
+            suggestionCountEl.textContent = `${suggestions.length} ${suggestions.length === 1 ? 'suggestion' : 'suggestions'}`;
+        }
+        
+        if (suggestionsListEl) {
+            if (suggestions.length === 0) {
+                suggestionsListEl.innerHTML = `
+                    <div class="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        <i class="fas fa-user-plus" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                        <h3>No suggestions available</h3>
+                        <p>As more players join, suggestions will appear here!</p>
+                    </div>
+                `;
+            } else {
+                suggestionsListEl.innerHTML = suggestions.map(user => {
+                    const name = user.name || user.firstName + ' ' + user.lastName || user.email || 'User';
+                    const initial = name.charAt(0).toUpperCase();
+                    const balance = user.balance || 0;
+                    const level = user.level || 1;
+                    const userId = user.id || user.email;
+                    const createdAt = user.createdAt || user.created_at;
+                    const isRecent = createdAt && (new Date() - new Date(createdAt)) < 7 * 24 * 60 * 60 * 1000;
+                    const reason = isRecent ? 'Recently joined community' : 'Active player';
+                    
+                    return `
+                        <div class="suggestion-card">
+                            <div class="suggestion-avatar">${initial}</div>
+                            <div class="suggestion-info">
+                                <h4>${name}</h4>
+                                <p class="suggestion-reason">${reason}</p>
+                                <p class="suggestion-level">Level ${level} • $${balance.toLocaleString()}</p>
+                            </div>
+                            <div class="suggestion-actions">
+                                <button class="btn btn-sm btn-primary" onclick="addFriend('${userId}')">
+                                    <i class="fas fa-user-plus"></i> Add
+                                </button>
+                                <button class="btn btn-sm btn-outline" onclick="viewSuggestionProfile('${userId}')">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+    }
+    
+    // Update community stats
+    const statsSection = communitySection.querySelector('.community-stats');
+    if (statsSection) {
+        statsSection.innerHTML = `
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>${totalUsers.toLocaleString()}</h3>
+                    <p>Total Players</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>${activeUsers.toLocaleString()}</h3>
+                    <p>Active Players</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="stat-info">
+                    <h3>${todayMessages.toLocaleString()}</h3>
+                    <p>Messages Today</p>
+                </div>
+            </div>
+        `;
+    }
+}
+
 function showCommunity() {
     // Create community content if it doesn't exist FIRST (before calling showOnlyCommunity)
     const mainContent = document.querySelector('.main-content');
@@ -2277,58 +2476,13 @@ function showCommunity() {
                 <div class="friends-section">
                     <div class="section-subheader">
                         <h3><i class="fas fa-user-friends"></i> My Friends</h3>
-                        <span class="friend-count">3 friends</span>
+                        <span class="friend-count">0 friends</span>
                     </div>
                     <div class="friends-list">
-                        <div class="friend-card">
-                            <div class="friend-avatar">A</div>
-                            <div class="friend-info">
-                                <h4>Alice Johnson</h4>
-                                <p class="friend-status online">Online</p>
-                                <p class="friend-level">Level 15 • $2,500</p>
-                            </div>
-                            <div class="friend-actions">
-                                <button class="btn btn-sm btn-outline" onclick="messageFriend('alice')">
-                                    <i class="fas fa-comment"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline" onclick="viewFriendProfile('alice')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="friend-card">
-                            <div class="friend-avatar">B</div>
-                            <div class="friend-info">
-                                <h4>Bob Smith</h4>
-                                <p class="friend-status offline">Offline</p>
-                                <p class="friend-level">Level 8 • $1,200</p>
-                            </div>
-                            <div class="friend-actions">
-                                <button class="btn btn-sm btn-outline" onclick="messageFriend('bob')">
-                                    <i class="fas fa-comment"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline" onclick="viewFriendProfile('bob')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="friend-card">
-                            <div class="friend-avatar">D</div>
-                            <div class="friend-info">
-                                <h4>Diana Prince</h4>
-                                <p class="friend-status online">Online</p>
-                                <p class="friend-level">Level 22 • $5,800</p>
-                            </div>
-                            <div class="friend-actions">
-                                <button class="btn btn-sm btn-outline" onclick="messageFriend('diana')">
-                                    <i class="fas fa-comment"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline" onclick="viewFriendProfile('diana')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
+                        <div class="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                            <i class="fas fa-user-friends" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                            <h3>No friends yet</h3>
+                            <p>Start building your community by adding friends from suggestions!</p>
                         </div>
                     </div>
                 </div>
@@ -2337,92 +2491,13 @@ function showCommunity() {
                 <div class="suggestions-section">
                     <div class="section-subheader">
                         <h3><i class="fas fa-user-plus"></i> Suggested Friends</h3>
-                        <span class="suggestion-count">5 suggestions</span>
+                        <span class="suggestion-count">0 suggestions</span>
                     </div>
                     <div class="suggestions-list">
-                        <div class="suggestion-card">
-                            <div class="suggestion-avatar">E</div>
-                            <div class="suggestion-info">
-                                <h4>Eve Wilson</h4>
-                                <p class="suggestion-reason">Mutual friends: Alice, Diana</p>
-                                <p class="suggestion-level">Level 12 • $3,200</p>
-                            </div>
-                            <div class="suggestion-actions">
-                                <button class="btn btn-sm btn-primary" onclick="addFriend('eve')">
-                                    <i class="fas fa-user-plus"></i> Add
-                                </button>
-                                <button class="btn btn-sm btn-outline" onclick="viewSuggestionProfile('eve')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="suggestion-card">
-                            <div class="suggestion-avatar">F</div>
-                            <div class="suggestion-info">
-                                <h4>Frank Miller</h4>
-                                <p class="suggestion-reason">Similar gaming interests</p>
-                                <p class="suggestion-level">Level 18 • $4,100</p>
-                            </div>
-                            <div class="suggestion-actions">
-                                <button class="btn btn-sm btn-primary" onclick="addFriend('frank')">
-                                    <i class="fas fa-user-plus"></i> Add
-                                </button>
-                                <button class="btn btn-sm btn-outline" onclick="viewSuggestionProfile('frank')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="suggestion-card">
-                            <div class="suggestion-avatar">G</div>
-                            <div class="suggestion-info">
-                                <h4>Grace Lee</h4>
-                                <p class="suggestion-reason">Active in same tournaments</p>
-                                <p class="suggestion-level">Level 25 • $7,500</p>
-                            </div>
-                            <div class="suggestion-actions">
-                                <button class="btn btn-sm btn-primary" onclick="addFriend('grace')">
-                                    <i class="fas fa-user-plus"></i> Add
-                                </button>
-                                <button class="btn btn-sm btn-outline" onclick="viewSuggestionProfile('grace')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="suggestion-card">
-                            <div class="suggestion-avatar">H</div>
-                            <div class="suggestion-info">
-                                <h4>Henry Davis</h4>
-                                <p class="suggestion-reason">Recently joined community</p>
-                                <p class="suggestion-level">Level 6 • $800</p>
-                            </div>
-                            <div class="suggestion-actions">
-                                <button class="btn btn-sm btn-primary" onclick="addFriend('henry')">
-                                    <i class="fas fa-user-plus"></i> Add
-                                </button>
-                                <button class="btn btn-sm btn-outline" onclick="viewSuggestionProfile('henry')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="suggestion-card">
-                            <div class="suggestion-avatar">I</div>
-                            <div class="suggestion-info">
-                                <h4>Ivy Chen</h4>
-                                <p class="suggestion-reason">High-level player in your region</p>
-                                <p class="suggestion-level">Level 30 • $12,000</p>
-                            </div>
-                            <div class="suggestion-actions">
-                                <button class="btn btn-sm btn-primary" onclick="addFriend('ivy')">
-                                    <i class="fas fa-user-plus"></i> Add
-                                </button>
-                                <button class="btn btn-sm btn-outline" onclick="viewSuggestionProfile('ivy')">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                            </div>
+                        <div class="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                            <i class="fas fa-user-plus" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                            <h3>No suggestions available</h3>
+                            <p>As more players join, suggestions will appear here!</p>
                         </div>
                     </div>
                 </div>
@@ -2434,17 +2509,17 @@ function showCommunity() {
                             <i class="fas fa-users"></i>
                         </div>
                         <div class="stat-info">
-                            <h3>1,247</h3>
-                            <p>Active Players</p>
+                            <h3>0</h3>
+                            <p>Total Players</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon">
-                            <i class="fas fa-trophy"></i>
+                            <i class="fas fa-user-check"></i>
                         </div>
                         <div class="stat-info">
-                            <h3>89</h3>
-                            <p>Tournaments</p>
+                            <h3>0</h3>
+                            <p>Active Players</p>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -2452,7 +2527,7 @@ function showCommunity() {
                             <i class="fas fa-comments"></i>
                         </div>
                         <div class="stat-info">
-                            <h3>2,156</h3>
+                            <h3>0</h3>
                             <p>Messages Today</p>
                         </div>
                     </div>
@@ -2462,7 +2537,10 @@ function showCommunity() {
         mainContent.appendChild(communitySection);
     }
     
-    // Now show the section (after it's created)
+    // Load real community data
+    loadCommunityData();
+    
+    // Now show the section (after it's created and loaded)
     showOnlyCommunity();
     updateNavigationActiveState('Community');
 }

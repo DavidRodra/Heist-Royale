@@ -1355,11 +1355,15 @@
                         }
                         
                         // Create or show community section
+                        // Community section is now created dynamically in script.js
+                        // This fallback code is kept for compatibility but should not be used
                         let communitySection = document.getElementById('community-section');
                         if (!communitySection) {
-                            communitySection = document.createElement('div');
-                            communitySection.id = 'community-section';
-                            communitySection.className = 'section';
+                            // Community section will be created by showCommunity() function
+                            console.log('Community section will be created by showCommunity()');
+                            return;
+                        }
+                        /* REMOVED: Hardcoded demo data - now using dynamic loading from script.js
                             communitySection.innerHTML = `
                                     <div class="section-header">
                                         <h2><i class="fas fa-users"></i> Community</h2>
@@ -1551,10 +1555,10 @@
                                     </div>
                                 </div>
                             `;
-                            mainContent.appendChild(communitySection);
+                            */
                         }
                         
-                        // Show community section
+                        // Show community section (now handled by showCommunity() in script.js)
                         communitySection.style.display = 'block';
                         
                         // Update navigation active state
