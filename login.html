@@ -464,10 +464,22 @@
                     // Log failed login
                     SecurityUtils.logSecurityEvent('login_failed', { email: email });
                     
+                    // Track failed login in activity tracker
+                    if (window.activityTracker) {
+                        window.activityTracker.trackFailedLogin(email, 'email', 'invalid_credentials');
+                    }
+                    
                     showMessage('error', response.message || 'Login failed. Please try again.');
                 }
             } catch (error) {
                 SecurityUtils.logSecurityEvent('login_error', { email: email, error: error.message });
+                
+                // Track failed login on error
+                if (window.activityTracker) {
+                    const email = document.getElementById('email').value;
+                    window.activityTracker.trackFailedLogin(email || 'unknown', 'email', 'system_error');
+                }
+                
                 showMessage('error', 'An error occurred. Please try again.');
                 console.error('Login error:', error);
             }
