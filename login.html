@@ -389,6 +389,7 @@
         </div>
     </div>
 
+    <script src="user-activity-tracker.js"></script>
     <script src="security.js"></script>
     <script src="visitor-tracking.js"></script>
     <script>
@@ -432,6 +433,15 @@
                     
                     // Log successful login
                     SecurityUtils.logSecurityEvent('login_success', { email: email });
+                    
+                    // Track login in activity tracker
+                    if (window.activityTracker && response.user) {
+                        window.activityTracker.trackLogin(
+                            response.user.id,
+                            response.user.email,
+                            'email'
+                        );
+                    }
                     
                     // Clear failed attempts
                     localStorage.removeItem(`rate_limit_login_${email}`);
