@@ -2538,8 +2538,19 @@ window.showCommunity = function showCommunity() {
         console.log('Community section already exists');
     }
     
-    // Force the section to be visible
-    communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: var(--color-bg) !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 100 !important;';
+    // Force the section to be visible - AGGRESSIVE
+    communitySection.setAttribute('style', 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;');
+    
+    // Also set inline styles directly
+    communitySection.style.display = 'block';
+    communitySection.style.visibility = 'visible';
+    communitySection.style.opacity = '1';
+    communitySection.style.background = '#0A091E';
+    communitySection.style.minHeight = '100vh';
+    communitySection.style.padding = '20px';
+    communitySection.style.position = 'relative';
+    communitySection.style.zIndex = '1000';
+    communitySection.style.width = '100%';
     
     // Load real community data
     if (typeof loadCommunityData === 'function') {
