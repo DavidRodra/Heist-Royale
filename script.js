@@ -1,5 +1,156 @@
 // Arcane Games Webapp JavaScript
 
+// ============================================
+// COMMUNITY FUNCTION - Defined at top for immediate availability
+// ============================================
+function showCommunity() {
+    console.log('=== showCommunity() called ===');
+    
+    // Create community content if it doesn't exist FIRST (before calling showOnlyCommunity)
+    const mainContent = document.querySelector('.main-content');
+    if (!mainContent) {
+        console.error('Main content not found!');
+        return;
+    }
+    
+    // Hide all other content first
+    const children = mainContent.children;
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (child.id !== 'community-section') {
+            child.style.display = 'none';
+        }
+    }
+    
+    let communitySection = document.getElementById('community-section');
+    if (!communitySection) {
+        console.log('Creating new community section...');
+        communitySection = document.createElement('div');
+        communitySection.id = 'community-section';
+        communitySection.className = 'section';
+        communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important;';
+        communitySection.innerHTML = `
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> Community</h2>
+            </div>
+            <div class="community-container">
+                <!-- Friends Section -->
+                <div class="friends-section">
+                    <div class="section-subheader">
+                        <h3><i class="fas fa-user-friends"></i> My Friends</h3>
+                        <span class="friend-count">0 friends</span>
+                    </div>
+                    <div class="friends-list">
+                        <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <i class="fas fa-user-friends" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: var(--text-light);">No friends yet</h3>
+                            <p style="color: var(--text-muted); font-size: 1rem;">Start building your community by adding friends from suggestions!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Friend Suggestions Section -->
+                <div class="suggestions-section">
+                    <div class="section-subheader">
+                        <h3><i class="fas fa-user-plus"></i> Suggested Friends</h3>
+                        <span class="suggestion-count">0 suggestions</span>
+                    </div>
+                    <div class="suggestions-list">
+                        <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <i class="fas fa-user-plus" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: var(--text-light);">No suggestions available</h3>
+                            <p style="color: var(--text-muted); font-size: 1rem;">As more players join and register, suggestions will appear here!</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Community Stats -->
+                <div class="community-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>0</h3>
+                            <p>Total Players</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>0</h3>
+                            <p>Active Players</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>0</h3>
+                            <p>Messages Today</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        mainContent.appendChild(communitySection);
+        console.log('Community section created and appended to DOM');
+    } else {
+        console.log('Community section already exists');
+    }
+    
+    // Force the section to be visible - AGGRESSIVE
+    communitySection.setAttribute('style', 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;');
+    
+    // Also set inline styles directly
+    communitySection.style.display = 'block';
+    communitySection.style.visibility = 'visible';
+    communitySection.style.opacity = '1';
+    communitySection.style.background = '#0A091E';
+    communitySection.style.minHeight = '100vh';
+    communitySection.style.padding = '20px';
+    communitySection.style.position = 'relative';
+    communitySection.style.zIndex = '1000';
+    communitySection.style.width = '100%';
+    
+    // Load real community data
+    if (typeof loadCommunityData === 'function') {
+        loadCommunityData();
+    }
+    
+    // Now show the section (after it's created and loaded)
+    if (typeof showOnlyCommunity === 'function') {
+        showOnlyCommunity();
+    } else {
+        // Fallback: just make sure it's visible
+        communitySection.style.display = 'block';
+        communitySection.style.visibility = 'visible';
+        communitySection.style.opacity = '1';
+    }
+    
+    // Update navigation
+    if (typeof updateNavigationActiveState === 'function') {
+        updateNavigationActiveState('Community');
+    } else {
+        // Fallback: manual navigation update
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        const communityNav = document.getElementById('community-nav');
+        if (communityNav) {
+            communityNav.classList.add('active');
+        }
+    }
+    
+    console.log('=== showCommunity() completed ===');
+    console.log('Community section element:', communitySection);
+    console.log('Community section display:', window.getComputedStyle(communitySection).display);
+}
+
+// Make it available globally immediately
+window.showCommunity = showCommunity;
+
 // Friend interaction functions - Define immediately at top level
 function messageFriend(friendId) {
     console.log('=== MESSAGE FRIEND CALLED ===');
@@ -2438,158 +2589,7 @@ function loadCommunityData() {
     }
 }
 
-// ============================================
-// COMMUNITY FUNCTIONS - Defined early for immediate availability
-// ============================================
-
-// Make showCommunity available globally - define early
-function showCommunity() {
-    console.log('=== showCommunity() called ===');
-    
-    // Create community content if it doesn't exist FIRST (before calling showOnlyCommunity)
-    const mainContent = document.querySelector('.main-content');
-    if (!mainContent) {
-        console.error('Main content not found!');
-        return;
-    }
-    
-    // Hide all other content first
-    const children = mainContent.children;
-    for (let i = 0; i < children.length; i++) {
-        const child = children[i];
-        if (child.id !== 'community-section') {
-            child.style.display = 'none';
-        }
-    }
-    
-    let communitySection = document.getElementById('community-section');
-    if (!communitySection) {
-        console.log('Creating new community section...');
-        communitySection = document.createElement('div');
-        communitySection.id = 'community-section';
-        communitySection.className = 'section';
-        communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: var(--color-bg) !important; min-height: 100vh !important; padding: 20px !important;';
-        communitySection.innerHTML = `
-            <div class="section-header">
-                <h2><i class="fas fa-users"></i> Community</h2>
-            </div>
-            <div class="community-container">
-                <!-- Friends Section -->
-                <div class="friends-section">
-                    <div class="section-subheader">
-                        <h3><i class="fas fa-user-friends"></i> My Friends</h3>
-                        <span class="friend-count">0 friends</span>
-                    </div>
-                    <div class="friends-list">
-                        <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                            <i class="fas fa-user-friends" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: var(--text-light);">No friends yet</h3>
-                            <p style="color: var(--text-muted); font-size: 1rem;">Start building your community by adding friends from suggestions!</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Friend Suggestions Section -->
-                <div class="suggestions-section">
-                    <div class="section-subheader">
-                        <h3><i class="fas fa-user-plus"></i> Suggested Friends</h3>
-                        <span class="suggestion-count">0 suggestions</span>
-                    </div>
-                    <div class="suggestions-list">
-                        <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
-                            <i class="fas fa-user-plus" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
-                            <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: var(--text-light);">No suggestions available</h3>
-                            <p style="color: var(--text-muted); font-size: 1rem;">As more players join and register, suggestions will appear here!</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Community Stats -->
-                <div class="community-stats">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>0</h3>
-                            <p>Total Players</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>0</h3>
-                            <p>Active Players</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <div class="stat-info">
-                            <h3>0</h3>
-                            <p>Messages Today</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        mainContent.appendChild(communitySection);
-        console.log('Community section created and appended to DOM');
-    } else {
-        console.log('Community section already exists');
-    }
-    
-    // Force the section to be visible - AGGRESSIVE
-    communitySection.setAttribute('style', 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;');
-    
-    // Also set inline styles directly
-    communitySection.style.display = 'block';
-    communitySection.style.visibility = 'visible';
-    communitySection.style.opacity = '1';
-    communitySection.style.background = '#0A091E';
-    communitySection.style.minHeight = '100vh';
-    communitySection.style.padding = '20px';
-    communitySection.style.position = 'relative';
-    communitySection.style.zIndex = '1000';
-    communitySection.style.width = '100%';
-    
-    // Load real community data
-    if (typeof loadCommunityData === 'function') {
-        loadCommunityData();
-    }
-    
-    // Now show the section (after it's created and loaded)
-    if (typeof showOnlyCommunity === 'function') {
-        showOnlyCommunity();
-    } else {
-        // Fallback: just make sure it's visible
-        communitySection.style.display = 'block';
-        communitySection.style.visibility = 'visible';
-        communitySection.style.opacity = '1';
-    }
-    
-    // Update navigation
-    if (typeof updateNavigationActiveState === 'function') {
-        updateNavigationActiveState('Community');
-    } else {
-        // Fallback: manual navigation update
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        const communityNav = document.getElementById('community-nav');
-        if (communityNav) {
-            communityNav.classList.add('active');
-        }
-    }
-    
-    console.log('=== showCommunity() completed ===');
-    console.log('Community section element:', communitySection);
-    console.log('Community section display:', window.getComputedStyle(communitySection).display);
-}
-
-// Make it available globally
-window.showCommunity = showCommunity;
+// showCommunity is now defined at the top of this file for immediate availability
 
 // Duplicate functions removed - using top-level definitions
 
