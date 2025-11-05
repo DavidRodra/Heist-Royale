@@ -2438,7 +2438,8 @@ function loadCommunityData() {
     }
 }
 
-function showCommunity() {
+// Make showCommunity available globally
+window.showCommunity = function showCommunity() {
     console.log('=== showCommunity() called ===');
     
     // Create community content if it doesn't exist FIRST (before calling showOnlyCommunity)
@@ -2448,13 +2449,22 @@ function showCommunity() {
         return;
     }
     
+    // Hide all other content first
+    const children = mainContent.children;
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        if (child.id !== 'community-section') {
+            child.style.display = 'none';
+        }
+    }
+    
     let communitySection = document.getElementById('community-section');
     if (!communitySection) {
         console.log('Creating new community section...');
         communitySection = document.createElement('div');
         communitySection.id = 'community-section';
         communitySection.className = 'section';
-        communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: var(--color-bg) !important; min-height: 100vh !important;';
+        communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: var(--color-bg) !important; min-height: 100vh !important; padding: 20px !important;';
         communitySection.innerHTML = `
             <div class="section-header">
                 <h2><i class="fas fa-users"></i> Community</h2>
@@ -2528,15 +2538,40 @@ function showCommunity() {
         console.log('Community section already exists');
     }
     
+    // Force the section to be visible
+    communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: var(--color-bg) !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 100 !important;';
+    
     // Load real community data
-    loadCommunityData();
+    if (typeof loadCommunityData === 'function') {
+        loadCommunityData();
+    }
     
     // Now show the section (after it's created and loaded)
-    showOnlyCommunity();
-    updateNavigationActiveState('Community');
+    if (typeof showOnlyCommunity === 'function') {
+        showOnlyCommunity();
+    } else {
+        // Fallback: just make sure it's visible
+        communitySection.style.display = 'block';
+        communitySection.style.visibility = 'visible';
+        communitySection.style.opacity = '1';
+    }
+    
+    // Update navigation
+    if (typeof updateNavigationActiveState === 'function') {
+        updateNavigationActiveState('Community');
+    } else {
+        // Fallback: manual navigation update
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        const communityNav = document.getElementById('community-nav');
+        if (communityNav) {
+            communityNav.classList.add('active');
+        }
+    }
     
     console.log('=== showCommunity() completed ===');
-}
+    console.log('Community section element:', communitySection);
+    console.log('Community section display:', window.getComputedStyle(communitySection).display);
+};
 
 // Duplicate functions removed - using top-level definitions
 
