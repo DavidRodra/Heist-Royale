@@ -1984,10 +1984,17 @@ function showOnlyCommunity() {
         if (sectionHeader) {
             sectionHeader.style.paddingTop = '20px';
             sectionHeader.style.marginTop = '0px';
-            sectionHeader.style.setProperty('padding-top', '0px', 'important');
+            sectionHeader.style.setProperty('padding-top', '20px', 'important');
             sectionHeader.style.setProperty('margin-top', '0px', 'important');
         }
-        console.log('Community section shown');
+        
+        // Ensure container is visible
+        const container = communitySection.querySelector('.community-container');
+        if (container) {
+            container.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+        }
+        
+        console.log('✅ Community section shown successfully');
     } else {
         console.log('Community section does not exist yet - will be created by showCommunity()');
     }
@@ -2432,6 +2439,8 @@ function loadCommunityData() {
 }
 
 function showCommunity() {
+    console.log('=== showCommunity() called ===');
+    
     // Create community content if it doesn't exist FIRST (before calling showOnlyCommunity)
     const mainContent = document.querySelector('.main-content');
     if (!mainContent) {
@@ -2441,9 +2450,11 @@ function showCommunity() {
     
     let communitySection = document.getElementById('community-section');
     if (!communitySection) {
+        console.log('Creating new community section...');
         communitySection = document.createElement('div');
         communitySection.id = 'community-section';
         communitySection.className = 'section';
+        communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: var(--color-bg) !important; min-height: 100vh !important;';
         communitySection.innerHTML = `
             <div class="section-header">
                 <h2><i class="fas fa-users"></i> Community</h2>
@@ -2512,6 +2523,9 @@ function showCommunity() {
             </div>
         `;
         mainContent.appendChild(communitySection);
+        console.log('Community section created and appended to DOM');
+    } else {
+        console.log('Community section already exists');
     }
     
     // Load real community data
@@ -2520,6 +2534,8 @@ function showCommunity() {
     // Now show the section (after it's created and loaded)
     showOnlyCommunity();
     updateNavigationActiveState('Community');
+    
+    console.log('=== showCommunity() completed ===');
 }
 
 // Duplicate functions removed - using top-level definitions
