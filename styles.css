@@ -386,22 +386,22 @@ body::before {
     order: 2;
 }
 
-/* Remove top padding when showing community/favorites sections */
+/* Small top padding when showing community/favorites sections for breathing room */
 .main-content:has(#community-section:not([style*="display: none"])),
 .main-content:has(#favorites-section:not([style*="display: none"])) {
-    padding-top: 0 !important;
-    padding: 0 20px 20px 20px !important;
+    padding-top: 20px !important;
+    padding: 20px 20px 20px 20px !important;
 }
 
-/* Additional aggressive fix for favorites section */
+/* Favorites section with small top padding for breathing room */
 #favorites-section {
-    padding-top: 0 !important;
+    padding-top: 20px !important;
     margin-top: 0 !important;
 }
 
-/* Ensure main-content has no top padding when favorites is visible */
+/* Ensure main-content has small top padding when favorites is visible */
 .main-content:has(#favorites-section) {
-    padding-top: 0 !important;
+    padding-top: 20px !important;
 }
 
 /* Ensure section and header have no top spacing */
@@ -1660,23 +1660,22 @@ body::before {
         box-sizing: border-box !important;
     }
     
-    /* Remove top padding on mobile for community/favorites sections - AGGRESSIVE */
+    /* Small top padding on mobile for community/favorites sections */
     #community-section,
     #favorites-section {
-        padding-top: 0 !important;
+        padding-top: 15px !important;
         margin-top: 0 !important;
         padding-left: 15px !important;
         padding-right: 15px !important;
         padding-bottom: 20px !important;
         position: relative !important;
-        top: 0 !important;
     }
     
-    /* Remove top padding from main-content when showing community/favorites */
+    /* Small top padding from main-content when showing community/favorites on mobile */
     .main-content:has(#community-section:not([style*="display: none"])),
     .main-content:has(#favorites-section:not([style*="display: none"])) {
-        padding-top: 0 !important;
-        padding: 0 15px 20px 15px !important;
+        padding-top: 15px !important;
+        padding: 15px 15px 20px 15px !important;
     }
     
     /* Also remove padding/margin from section-header in these sections */

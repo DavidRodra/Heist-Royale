@@ -2196,9 +2196,15 @@ function showOnlyFavorites() {
     const favoritesSection = document.getElementById('favorites-section');
     // mainContent already declared above, reuse it
     if (favoritesSection && mainContent) {
-        // AGGRESSIVE: Remove ALL top padding from main-content FIRST
-        mainContent.style.setProperty('padding-top', '0px', 'important');
-        mainContent.style.setProperty('padding', '0 20px 20px 20px', 'important');
+        // Set small top padding for main-content to give breathing room
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            mainContent.style.setProperty('padding-top', '15px', 'important');
+            mainContent.style.setProperty('padding', '15px 20px 20px 20px', 'important');
+        } else {
+            mainContent.style.setProperty('padding-top', '20px', 'important');
+            mainContent.style.setProperty('padding', '20px 20px 20px 20px', 'important');
+        }
         mainContent.style.setProperty('margin-top', '0px', 'important');
         
         // Ensure main-content starts at the very top
@@ -2207,11 +2213,11 @@ function showOnlyFavorites() {
         
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            // Mobile: full width, no padding - AGGRESSIVE FIX
-            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding-top: 0 !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important; top: 0 !important;';
+            // Mobile: full width with small top padding
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding-top: 15px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important;';
         } else {
-            // Desktop: no top padding
-            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 0 !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important; top: 0 !important;';
+            // Desktop: small top padding for breathing room
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important;';
         }
         
         // Remove padding from section-header too - AGGRESSIVE
@@ -2400,10 +2406,16 @@ function showFavorites() {
         return;
     }
     
-    // Remove top padding from main-content immediately - AGGRESSIVE
+    // Set small top padding for main-content to give breathing room
     if (mainContent) {
-        mainContent.style.setProperty('padding-top', '0px', 'important');
-        mainContent.style.setProperty('padding', '0 20px 20px 20px', 'important');
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            mainContent.style.setProperty('padding-top', '15px', 'important');
+            mainContent.style.setProperty('padding', '15px 20px 20px 20px', 'important');
+        } else {
+            mainContent.style.setProperty('padding-top', '20px', 'important');
+            mainContent.style.setProperty('padding', '20px 20px 20px 20px', 'important');
+        }
         mainContent.style.setProperty('margin-top', '0px', 'important');
         
         // Hide topbar immediately
@@ -2424,8 +2436,8 @@ function showFavorites() {
         favoritesSection = document.createElement('div');
         favoritesSection.id = 'favorites-section';
         favoritesSection.className = 'section';
-        // Apply aggressive no-padding styles immediately
-        favoritesSection.style.cssText = 'padding-top: 0 !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important; top: 0 !important;';
+        // Apply styles with small top padding for breathing room
+        favoritesSection.style.cssText = 'padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important;';
         favoritesSection.innerHTML = `
             <div class="section-header" style="padding-top: 0 !important; margin-top: 0 !important; padding: 0 !important; margin-bottom: 20px !important;">
                 <h2 style="margin-top: 0 !important; padding-top: 0 !important;"><i class="fas fa-star"></i> My Favorites</h2>
