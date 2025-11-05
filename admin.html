@@ -4609,12 +4609,15 @@ End of Report
             document.getElementById('newRegistrations').textContent = reportData.metrics.newRegistrations || 0;
             document.getElementById('avgSessionTime').textContent = reportData.metrics.avgSessionTime || '0m';
             
-            // Update change indicators (simulated)
-            const changes = ['+12.5%', '+8.3%', '+15.2%', '+5.7%', '+22.1%', '+18.4%', '+25.3%', '+19.7%', '+31.2%', '+14.8%', '+8.9%'];
+            // Update change indicators based on real data comparison
+            // Changes are calculated from actual data comparisons in analytics functions
+            // For now, show 0% if no comparison data available
             const changeElements = document.querySelectorAll('.report-change');
-            changeElements.forEach((el, index) => {
-                el.textContent = changes[index] || '+0%';
-                el.className = 'report-change positive';
+            changeElements.forEach((el) => {
+                if (!el.textContent || el.textContent === '') {
+                    el.textContent = '+0%';
+                    el.className = 'report-change';
+                }
             });
         }
 
