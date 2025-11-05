@@ -299,6 +299,21 @@ function showGuestState() {
         topbarBalance.textContent = '$0.00';
     }
     
+    // Reset sidebar user info
+    const userName = document.getElementById('userName');
+    const userBalance = document.getElementById('userBalance');
+    const userAvatar = document.getElementById('userAvatar');
+    
+    if (userName) {
+        userName.textContent = 'Guest';
+    }
+    if (userBalance) {
+        userBalance.textContent = '$0.00';
+    }
+    if (userAvatar) {
+        userAvatar.textContent = 'G';
+    }
+    
     const userProfile = document.getElementById('userProfile');
     const authButtons = document.getElementById('authButtons');
     
