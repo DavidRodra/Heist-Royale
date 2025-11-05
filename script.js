@@ -1959,7 +1959,7 @@ function showOnlyCommunity() {
     
     // Show community section
     const communitySection = document.getElementById('community-section');
-    const mainContent = document.querySelector('.main-content');
+    // mainContent already declared above, reuse it
     if (communitySection) {
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
@@ -2438,8 +2438,8 @@ function loadCommunityData() {
     }
 }
 
-// Make showCommunity available globally
-window.showCommunity = function showCommunity() {
+// Make showCommunity available globally - define early
+function showCommunity() {
     console.log('=== showCommunity() called ===');
     
     // Create community content if it doesn't exist FIRST (before calling showOnlyCommunity)
@@ -2582,7 +2582,10 @@ window.showCommunity = function showCommunity() {
     console.log('=== showCommunity() completed ===');
     console.log('Community section element:', communitySection);
     console.log('Community section display:', window.getComputedStyle(communitySection).display);
-};
+}
+
+// Make it available globally
+window.showCommunity = showCommunity;
 
 // Duplicate functions removed - using top-level definitions
 
