@@ -73,9 +73,15 @@
             gap: 12px;
         }
 
-        .logo h1::before {
-            content: '🎮';
-            font-size: 2rem;
+        .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--accent-2) 0%, #45E6D8 100%);
+            border-radius: 8px;
+            font-size: 1.3rem;
         }
 
         .logo p {
@@ -300,7 +306,10 @@
     
     <div class="login-container">
         <div class="logo">
-            <h1>ARCANE GAMES</h1>
+            <h1>
+                <span class="logo-icon">👑</span>
+                ARCANE GAMES
+            </h1>
             <p>Welcome Back</p>
         </div>
 
