@@ -3063,7 +3063,7 @@
             
             // Draw charts
             drawRevenueChart();
-            drawUserChart();
+            drawUserGrowthChart();
             
             // Load real-time data
             loadActivityFeed();
@@ -3132,63 +3132,7 @@
             document.getElementById('bannedUsers').textContent = users.filter(u => u.isActive === false).length;
         }
 
-        // Draw revenue chart
-        function drawRevenueChart() {
-            const canvas = document.getElementById('revenueChart');
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            const data = generateRevenueData();
-            
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw chart
-            drawLineChart(ctx, data, canvas.width, canvas.height, '#ff6b9d', 'Revenue');
-        }
-
-        // Draw user chart
-        function drawUserChart() {
-            const canvas = document.getElementById('userChart');
-            if (!canvas) return;
-            
-            const ctx = canvas.getContext('2d');
-            const data = generateUserData();
-            
-            // Clear canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Draw chart
-            drawLineChart(ctx, data, canvas.width, canvas.height, '#27ae60', 'Users');
-        }
-
-        // Generate sample revenue data
-        function generateRevenueData() {
-            const data = [];
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
-                data.push({
-                    date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                    value: 0
-                });
-            }
-            return data;
-        }
-
-        // Generate user data (empty for production launch)
-        function generateUserData() {
-            const data = [];
-            for (let i = 6; i >= 0; i--) {
-                const date = new Date();
-                date.setDate(date.getDate() - i);
-                data.push({
-                    date: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-                    value: 0
-                });
-            }
-            return data;
-        }
+        // Old chart functions removed - using real data functions below instead
 
         // Draw line chart
         function drawLineChart(ctx, data, width, height, color, label) {
