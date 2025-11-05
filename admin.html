@@ -2229,7 +2229,7 @@
                         </div>
                     </div>
                     <div class="chart-container">
-                        <canvas id="userChart" width="500" height="250"></canvas>
+                        <canvas id="userGrowthChart" width="500" height="250"></canvas>
                     </div>
                 </div>
             </div>
@@ -5015,15 +5015,24 @@ End of Report
             ctx.stroke();
             
             // Draw data points
-            ctx.fillStyle = '#3498db';
+            ctx.fillStyle = '#40E0D0'; // Use theme color
             data.forEach((point, index) => {
                 const x = margin + index * stepX;
-                const y = height - margin - ((point.users - minUsers) / (maxUsers - minUsers)) * chartHeight;
+                const userRange = maxUsers - minUsers || 1;
+                const y = height - margin - ((point.users - minUsers) / userRange) * chartHeight;
                 
                 ctx.beginPath();
-                ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
                 ctx.fill();
             });
+            
+            // Show message if no data
+            if (maxUsers === 0) {
+                ctx.fillStyle = 'var(--text-muted)';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('No user data yet', width / 2, height / 2);
+            }
             
             // Draw labels
             ctx.fillStyle = '#e8e8e8';
@@ -5040,10 +5049,13 @@ End of Report
             
             // Y-axis labels
             ctx.textAlign = 'right';
+            ctx.fillStyle = 'var(--text-muted)';
+            ctx.font = '11px Arial';
             for (let i = 0; i <= 5; i++) {
-                const value = minUsers + ((maxUsers - minUsers) / 5) * i;
+                const userRange = maxUsers - minUsers || 1;
+                const value = minUsers + (userRange / 5) * i;
                 const y = height - margin - (i / 5) * chartHeight;
-                ctx.fillText(value.toString(), margin - 10, y + 4);
+                ctx.fillText(`${Math.round(value)}`, margin - 10, y + 4);
             }
         }
 
