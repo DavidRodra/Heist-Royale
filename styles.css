@@ -404,8 +404,7 @@ body::before {
     padding-top: 20px !important;
 }
 
-/* Ensure section and header have no top spacing */
-#favorites-section,
+/* Section header has no top spacing (section itself has padding-top) */
 #favorites-section .section-header {
     padding-top: 0 !important;
     margin-top: 0 !important;
