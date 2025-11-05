@@ -390,6 +390,25 @@ body::before {
 .main-content:has(#community-section:not([style*="display: none"])),
 .main-content:has(#favorites-section:not([style*="display: none"])) {
     padding-top: 0 !important;
+    padding: 0 20px 20px 20px !important;
+}
+
+/* Additional aggressive fix for favorites section */
+#favorites-section {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Ensure main-content has no top padding when favorites is visible */
+.main-content:has(#favorites-section) {
+    padding-top: 0 !important;
+}
+
+/* Ensure section and header have no top spacing */
+#favorites-section,
+#favorites-section .section-header {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
 }
 
 /* Simple fix: When chat is hidden, main content should fill the space */
