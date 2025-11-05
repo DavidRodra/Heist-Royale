@@ -166,34 +166,35 @@ document.addEventListener('DOMContentLoaded', function() {
         SecurityUtils.init();
     }
     
-    // Check if user data exists, if not create a test user
+    // Check if user data exists (only from real logins)
     console.log('=== CHECKING USER DATA ===');
     
-    let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+    let currentUser = JSON.parse(localStorage.getItem('user') || 'null');
     const token = localStorage.getItem('token');
     
-    if (!token || !currentUser.email) {
-        console.log('No user data found, creating test user');
-        // Create a test user only if no user exists
-        const testUser = {
-            id: 'user_001',
-            email: 'charlie@example.com',
-            name: 'Charlie Brown',
-            balance: 3000,
-            firstName: 'Charlie',
-            lastName: 'Brown'
-        };
+    // Only show logged-in user if they have a valid token and email
+    if (token && currentUser && currentUser.email) {
+        // Verify user exists in users database (for real authentication)
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const userExists = users.some(u => 
+            (u.id && u.id === currentUser.id) || 
+            (u.email && u.email === currentUser.email)
+        );
         
-        // Set user data in localStorage
-        localStorage.setItem('user', JSON.stringify(testUser));
-        localStorage.setItem('token', 'user_token_123');
-        currentUser = testUser;
+        if (userExists) {
+            console.log('Valid logged-in user found:', currentUser);
+            showLoggedInUser(currentUser);
+        } else {
+            console.log('User not found in database, showing guest state');
+            // Clear invalid user data
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            showGuestState();
+        }
     } else {
-        console.log('Existing user data found:', currentUser);
+        console.log('No user logged in, showing guest state');
+        showGuestState();
     }
-    
-    // Show the user profile immediately
-    showLoggedInUser(currentUser);
     
     // Add event listener to logout button
     const logoutBtn = document.getElementById('logoutBtn');
