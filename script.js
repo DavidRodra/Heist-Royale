@@ -87,45 +87,22 @@ function addFriend(userId) {
     // Reload community data to show updated friends list
     loadCommunityData();
     
-    alert('Friend added successfully!');
+    // Get user name from real users database
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => (u.id || u.email) === userId);
+    const userName = user ? (user.name || user.firstName + ' ' + user.lastName || user.email) : userId;
     
-    // Get user name for display
-    const userNames = {
-        'eve': 'Eve Wilson',
-        'frank': 'Frank Miller',
-        'grace': 'Grace Lee',
-        'henry': 'Henry Davis',
-        'ivy': 'Ivy Chen'
-    };
-    
-    const userName = userNames[userId] || userId;
-    
-    // Show immediate feedback
-    alert(`Adding ${userName} as friend...`);
-    
-    // Simple confirmation
-    if (confirm(`Send friend request to ${userName}?`)) {
-        alert(`Friend request sent to ${userName}!`);
-    }
+    alert(`${userName} added as friend successfully!`);
 }
 
 function viewSuggestionProfile(userId) {
     console.log('=== VIEW SUGGESTION PROFILE CALLED ===');
     console.log('User ID:', userId);
     
-    // Get user name for display
-    const userNames = {
-        'eve': 'Eve Wilson',
-        'frank': 'Frank Miller',
-        'grace': 'Grace Lee',
-        'henry': 'Henry Davis',
-        'ivy': 'Ivy Chen'
-    };
-    
-    const userName = userNames[userId] || userId;
-    
-    // Show immediate feedback
-    alert(`Loading ${userName}'s profile...`);
+    // Get user name from real users database
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => (u.id || u.email) === userId);
+    const userName = user ? (user.name || user.firstName + ' ' + user.lastName || user.email) : userId;
     
     // Show profile in a simple alert for now
     const userData = getUserData(userId, 'suggestion');
