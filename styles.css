@@ -272,44 +272,53 @@ body::before {
 .auth-buttons {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin: 0 10px 20px 10px;
+    gap: 12px;
+    margin: 0;
     padding: 20px;
-    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1) 0%, transparent 100%);
-    border-radius: 12px;
-    border-top: 1px solid rgba(52, 73, 94, 0.5);
+    background: transparent;
+    border-radius: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .auth-buttons .btn {
-    padding: 12px 20px;
+    width: 100%;
+    padding: 14px 20px;
     text-align: center;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-weight: 600;
     transition: all 0.3s ease;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     border: none;
     cursor: pointer;
+    display: block;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
 }
 
 .auth-buttons .btn-primary {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
+    margin-bottom: 0;
 }
 
 .auth-buttons .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
 }
 
 .auth-buttons .btn-secondary {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
     color: white;
+    margin-top: 0;
 }
 
 .auth-buttons .btn-secondary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(240, 147, 251, 0.3);
+    box-shadow: 0 8px 20px rgba(240, 147, 251, 0.4);
 }
 
 .user-avatar {
