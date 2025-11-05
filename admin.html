@@ -2300,27 +2300,10 @@
                             <i class="fas fa-cog"></i> Manage
                         </button>
                     </div>
-                    <div class="game-stats">
-                        <div class="game-stat">
-                            <div class="game-icon">🎰</div>
-                            <div class="game-info">
-                                <span class="game-name">Book of Ra</span>
-                                <span class="game-plays" id="bookOfRaPlays">0 plays</span>
-                            </div>
-                        </div>
-                        <div class="game-stat">
-                            <div class="game-icon">🃏</div>
-                            <div class="game-info">
-                                <span class="game-name">Blackjack</span>
-                                <span class="game-plays" id="blackjackPlays">0 plays</span>
-                            </div>
-                        </div>
-                        <div class="game-stat">
-                            <div class="game-icon">🐠</div>
-                            <div class="game-info">
-                                <span class="game-name">Ocean Hunter</span>
-                                <span class="game-plays" id="oceanHunterPlays">0 plays</span>
-                            </div>
+                    <div class="game-stats" id="gameStatsList">
+                        <!-- Games will be loaded dynamically from localStorage -->
+                        <div style="text-align: center; padding: 20px; color: var(--text-muted);">
+                            No games added yet. Use "Add New Game" to get started.
                         </div>
                     </div>
                 </div>
@@ -2390,77 +2373,7 @@
                 <div class="admin-card">
                     <h3 class="card-title">Recent Activity</h3>
                     <div class="user-list" id="recentActivity">
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-user-plus"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>John Smith</strong> registered a new account
-                                </div>
-                                <div class="activity-time">2 minutes ago</div>
-                            </div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-gamepad"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>Sarah Johnson</strong> played Book of Ra and won $150
-                                </div>
-                                <div class="activity-time">5 minutes ago</div>
-                            </div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-coins"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>Mike Wilson</strong> deposited $500 via credit card
-                                </div>
-                                <div class="activity-time">8 minutes ago</div>
-                            </div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-trophy"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>Emma Davis</strong> hit the jackpot in Ocean Hunter - $2,500!
-                                </div>
-                                <div class="activity-time">12 minutes ago</div>
-                            </div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-exchange-alt"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>Tom Brown</strong> withdrew $300 to bank account
-                                </div>
-                                <div class="activity-time">15 minutes ago</div>
-                            </div>
-                        </div>
-                        
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <i class="fas fa-gamepad"></i>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-text">
-                                    <strong>Lisa Garcia</strong> played Blackjack for 30 minutes
-                                </div>
-                                <div class="activity-time">18 minutes ago</div>
-                            </div>
-                        </div>
+                        <!-- Activity will be populated dynamically from real data -->
                         
                         <div class="activity-item">
                             <div class="activity-icon">
@@ -2658,30 +2571,11 @@
             <div id="analytics-section" class="admin-section" style="display: none;">
                 <div class="admin-card">
                     <h3 class="card-title">Game Performance</h3>
-                    <div class="analytics-grid">
-                        <div class="analytics-item">
-                            <h4>Book of Ra</h4>
-                            <div class="analytics-stats">
-                                <div class="stat">Plays: <span id="bookOfRaPlays">0</span></div>
-                                <div class="stat">Revenue: <span id="bookOfRaRevenue">$0</span></div>
-                                <div class="stat">RTP: 96.5%</div>
-                            </div>
-                        </div>
-                        <div class="analytics-item">
-                            <h4>Blackjack</h4>
-                            <div class="analytics-stats">
-                                <div class="stat">Plays: <span id="blackjackPlays">0</span></div>
-                                <div class="stat">Revenue: <span id="blackjackRevenue">$0</span></div>
-                                <div class="stat">RTP: 99.5%</div>
-                            </div>
-                        </div>
-                        <div class="analytics-item">
-                            <h4>Ocean Hunter</h4>
-                            <div class="analytics-stats">
-                                <div class="stat">Plays: <span id="oceanHunterPlays">0</span></div>
-                                <div class="stat">Revenue: <span id="oceanHunterRevenue">$0</span></div>
-                                <div class="stat">RTP: 97.2%</div>
-                            </div>
+                    <div class="analytics-grid" id="gameAnalyticsGrid">
+                        <!-- Game analytics will be populated dynamically -->
+                        <div style="text-align: center; padding: 40px; color: var(--text-muted); grid-column: 1 / -1;">
+                            <i class="fas fa-gamepad" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
+                            <p>No games added yet. Add games through Game Management.</p>
                         </div>
                     </div>
                 </div>
@@ -3705,6 +3599,8 @@
 
         // Update statistics
         function updateStats() {
+            // Load game stats
+            loadGameStats();
             const users = JSON.parse(localStorage.getItem('users') || '[]');
             const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
             
@@ -3865,16 +3761,52 @@
                 `).join('');
         }
 
+        // Load game stats dynamically
+        function loadGameStats() {
+            const games = JSON.parse(localStorage.getItem('games') || '[]');
+            const gameStatsList = document.getElementById('gameStatsList');
+            const gameAnalyticsGrid = document.getElementById('gameAnalyticsGrid');
+            
+            // Update game stats in management section
+            if (gameStatsList) {
+                if (games.length === 0) {
+                    gameStatsList.innerHTML = '<div style="text-align: center; padding: 20px; color: var(--text-muted);">No games added yet. Use "Add New Game" to get started.</div>';
+                } else {
+                    gameStatsList.innerHTML = games.slice(0, 5).map(game => `
+                        <div class="game-stat">
+                            <div class="game-icon">🎮</div>
+                            <div class="game-info">
+                                <span class="game-name">${game.name}</span>
+                                <span class="game-plays">${game.plays || 0} plays</span>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+            
+            // Update analytics grid
+            if (gameAnalyticsGrid) {
+                if (games.length === 0) {
+                    gameAnalyticsGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--text-muted); grid-column: 1 / -1;"><i class="fas fa-gamepad" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i><p>No games added yet. Add games through Game Management.</p></div>';
+                } else {
+                    gameAnalyticsGrid.innerHTML = games.map(game => `
+                        <div class="analytics-item">
+                            <h4>${game.name}</h4>
+                            <div class="analytics-stats">
+                                <div class="stat">Plays: <span>${game.plays || 0}</span></div>
+                                <div class="stat">Revenue: <span>$${(game.revenue || 0).toFixed(2)}</span></div>
+                                <div class="stat">RTP: ${game.rtp || 96.5}%</div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            }
+        }
+
         // Load analytics data
         function loadAnalyticsData() {
-            // This would typically come from game session data
-            // For now, we'll show placeholder data
-            document.getElementById('bookOfRaPlays').textContent = '0';
-            document.getElementById('bookOfRaRevenue').textContent = '$0';
-            document.getElementById('blackjackPlays').textContent = '0';
-            document.getElementById('blackjackRevenue').textContent = '$0';
-            document.getElementById('oceanHunterPlays').textContent = '0';
-            document.getElementById('oceanHunterRevenue').textContent = '$0';
+            // Game stats will be loaded dynamically from localStorage
+            loadGameStats();
         }
 
         // Load visitor analytics data
@@ -4092,7 +4024,7 @@
             const visitors = [
                 { id: 'A', page: 'Homepage', time: '2 minutes ago', location: '🇺🇸 New York' },
                 { id: 'B', page: 'Login Page', time: '1 minute ago', location: '🇬🇧 London' },
-                { id: 'C', page: 'Book of Ra Game', time: '30 seconds ago', location: '🇨🇦 Toronto' },
+                // { id: 'C', page: 'Game', time: '30 seconds ago', location: '🇨🇦 Toronto' },
                 { id: 'D', page: 'Registration', time: '1 minute ago', location: '🇦🇺 Sydney' }
             ];
             

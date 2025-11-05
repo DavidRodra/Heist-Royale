@@ -91,53 +91,8 @@ class DatabaseInit {
     }
 
     initGames() {
-        const games = [
-            {
-                id: 'book-of-ra',
-                name: 'Book of Ra',
-                description: 'Ancient Egyptian slot adventure with mystical treasures and golden rewards',
-                category: 'slots',
-                provider: 'Arcane Games',
-                rtp: 96.50,
-                minBet: 0.10,
-                maxBet: 100.00,
-                isActive: true,
-                thumbnailUrl: '/images/book-of-ra-thumbnail.jpg',
-                gameUrl: 'book-of-ra-game.html',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            },
-            {
-                id: 'blackjack',
-                name: 'Blackjack',
-                description: 'Classic card game where skill meets luck. Beat the dealer to win big!',
-                category: 'table',
-                provider: 'Arcane Games',
-                rtp: 99.50,
-                minBet: 1.00,
-                maxBet: 500.00,
-                isActive: true,
-                thumbnailUrl: '/images/blackjack-thumbnail.jpg',
-                gameUrl: 'blackjack-game.html',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            },
-            {
-                id: 'ocean-hunter',
-                name: 'Ocean Hunter',
-                description: 'Dive deep into the ocean and hunt for treasures with your cannon',
-                category: 'arcade',
-                provider: 'Arcane Games',
-                rtp: 97.20,
-                minBet: 0.50,
-                maxBet: 200.00,
-                isActive: true,
-                thumbnailUrl: '/images/ocean-hunter-thumbnail.jpg',
-                gameUrl: 'fish-game.html',
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            }
-        ];
+        // Initialize with empty games array - games will be added through admin panel
+        const games = [];
 
         localStorage.setItem('games', JSON.stringify(games));
     }
