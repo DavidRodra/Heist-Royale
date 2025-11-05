@@ -1964,7 +1964,7 @@ function showOnlyCommunity() {
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
             // Mobile: full width, no padding - AGGRESSIVE FIX
-            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; padding-top: 0 !important; margin-top: 0 !important;';
+            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding: 20px 15px !important; margin: 0 !important; padding-top: 20px !important; margin-top: 0 !important; position: relative !important; z-index: 100 !important;';
             // Also remove top padding from main-content when showing community
             if (mainContent) {
                 mainContent.style.paddingTop = '0px';
@@ -1972,7 +1972,7 @@ function showOnlyCommunity() {
             }
         } else {
             // Desktop: no top padding
-            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 0 !important; margin-top: 0 !important;';
+            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 20px !important; margin: 0 !important; padding-top: 20px !important; margin-top: 0 !important; position: relative !important; z-index: 100 !important;';
             // Also remove top padding from main-content on desktop
             if (mainContent) {
                 mainContent.style.paddingTop = '0px';
@@ -1982,7 +1982,7 @@ function showOnlyCommunity() {
         // Remove padding from section-header too
         const sectionHeader = communitySection.querySelector('.section-header');
         if (sectionHeader) {
-            sectionHeader.style.paddingTop = '0px';
+            sectionHeader.style.paddingTop = '20px';
             sectionHeader.style.marginTop = '0px';
             sectionHeader.style.setProperty('padding-top', '0px', 'important');
             sectionHeader.style.setProperty('margin-top', '0px', 'important');
@@ -2304,10 +2304,10 @@ function loadCommunityData() {
         if (friendsListEl) {
             if (friends.length === 0) {
                 friendsListEl.innerHTML = `
-                    <div class="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                        <i class="fas fa-user-friends" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
-                        <h3>No friends yet</h3>
-                        <p>Start building your community by adding friends from suggestions!</p>
+                    <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <i class="fas fa-user-friends" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: var(--text-light);">No friends yet</h3>
+                        <p style="color: var(--text-muted); font-size: 1rem;">Start building your community by adding friends from suggestions!</p>
                     </div>
                 `;
             } else {
@@ -2356,10 +2356,10 @@ function loadCommunityData() {
         if (suggestionsListEl) {
             if (suggestions.length === 0) {
                 suggestionsListEl.innerHTML = `
-                    <div class="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                        <i class="fas fa-user-plus" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
-                        <h3>No suggestions available</h3>
-                        <p>As more players join, suggestions will appear here!</p>
+                    <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                        <i class="fas fa-user-plus" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: var(--text-light);">No suggestions available</h3>
+                        <p style="color: var(--text-muted); font-size: 1rem;">As more players join and register, suggestions will appear here!</p>
                     </div>
                 `;
             } else {
@@ -2456,10 +2456,10 @@ function showCommunity() {
                         <span class="friend-count">0 friends</span>
                     </div>
                     <div class="friends-list">
-                        <div class="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                            <i class="fas fa-user-friends" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
-                            <h3>No friends yet</h3>
-                            <p>Start building your community by adding friends from suggestions!</p>
+                        <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <i class="fas fa-user-friends" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: var(--text-light);">No friends yet</h3>
+                            <p style="color: var(--text-muted); font-size: 1rem;">Start building your community by adding friends from suggestions!</p>
                         </div>
                     </div>
                 </div>
@@ -2471,10 +2471,10 @@ function showCommunity() {
                         <span class="suggestion-count">0 suggestions</span>
                     </div>
                     <div class="suggestions-list">
-                        <div class="empty-state" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                            <i class="fas fa-user-plus" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.3;"></i>
-                            <h3>No suggestions available</h3>
-                            <p>As more players join, suggestions will appear here!</p>
+                        <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--text-light); background: rgba(255, 255, 255, 0.03); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                            <i class="fas fa-user-plus" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
+                            <h3 style="font-size: 1.5rem; margin-bottom: 10px; color: var(--text-light);">No suggestions available</h3>
+                            <p style="color: var(--text-muted); font-size: 1rem;">As more players join and register, suggestions will appear here!</p>
                         </div>
                     </div>
                 </div>
