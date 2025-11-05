@@ -2938,6 +2938,7 @@
         </div>
     </div>
 
+    <script src="user-activity-tracker.js"></script>
     <script src="visitor-tracking.js"></script>
     <script src="security.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -4488,9 +4489,22 @@
                 return loginDate >= today && loginDate < tomorrow;
             });
             
-            const emailLoginsToday = todayLogins.filter(login => login.method === 'email').length;
-            const phoneLoginsToday = todayLogins.filter(login => login.method === 'phone').length;
-            const totalLoginsToday = todayLogins.length;
+            // Use real activity tracker if available
+            let emailLoginsToday = 0;
+            let phoneLoginsToday = 0;
+            let totalLoginsToday = 0;
+            
+            if (window.activityTracker) {
+                const loginAnalytics = window.activityTracker.getLoginAnalytics('today');
+                emailLoginsToday = loginAnalytics.emailLoginsToday;
+                phoneLoginsToday = loginAnalytics.phoneLoginsToday;
+                totalLoginsToday = loginAnalytics.totalLoginsToday;
+            } else {
+                // Fallback to old method
+                emailLoginsToday = todayLogins.filter(login => login.method === 'email').length;
+                phoneLoginsToday = todayLogins.filter(login => login.method === 'phone').length;
+                totalLoginsToday = todayLogins.length;
+            }
             
             // Calculate average session time
             const sessions = JSON.parse(localStorage.getItem('user_sessions') || '[]');
@@ -4632,30 +4646,56 @@ End of Report
         function loadLoginAnalytics() {
             const loginAnalyticsGrid = document.getElementById('loginAnalyticsGrid');
             
-            // Generate sample login analytics data
-            const today = new Date();
-            const yesterday = new Date(today);
-            yesterday.setDate(yesterday.getDate() - 1);
-            
-            // Simulate login data
-            const loginData = {
-                emailLoginsToday: Math.floor(Math.random() * 50) + 20,
-                phoneLoginsToday: Math.floor(Math.random() * 30) + 10,
-                totalLoginsToday: Math.floor(Math.random() * 80) + 30,
-                emailLoginsYesterday: Math.floor(Math.random() * 45) + 15,
-                phoneLoginsYesterday: Math.floor(Math.random() * 25) + 8,
-                totalLoginsYesterday: Math.floor(Math.random() * 70) + 25,
-                avgSessionTime: Math.floor(Math.random() * 30) + 15,
-                peakLoginHour: Math.floor(Math.random() * 12) + 8,
-                loginSuccessRate: Math.floor(Math.random() * 20) + 80,
-                uniqueUsersToday: Math.floor(Math.random() * 40) + 20,
-                returningUsersToday: Math.floor(Math.random() * 30) + 15
-            };
+            // Use real activity tracker data
+            let loginData;
+            if (window.activityTracker) {
+                const analytics = window.activityTracker.getLoginAnalytics('today');
+                const yesterdayAnalytics = window.activityTracker.getLoginAnalytics('yesterday');
+                
+                loginData = {
+                    emailLoginsToday: analytics.emailLoginsToday,
+                    phoneLoginsToday: analytics.phoneLoginsToday,
+                    totalLoginsToday: analytics.totalLoginsToday,
+                    emailLoginsYesterday: yesterdayAnalytics.emailLoginsToday,
+                    phoneLoginsYesterday: yesterdayAnalytics.phoneLoginsToday,
+                    totalLoginsYesterday: yesterdayAnalytics.totalLoginsToday,
+                    avgSessionTime: 0, // Will be calculated from visitor data
+                    peakLoginHour: analytics.peakLoginHour,
+                    loginSuccessRate: analytics.loginSuccessRate,
+                    uniqueUsersToday: analytics.uniqueUsersToday,
+                    returningUsersToday: analytics.returningUsers
+                };
+                
+                // Get session time from visitor tracker
+                const visitorData = JSON.parse(localStorage.getItem('visitor_analytics') || '{}');
+                loginData.avgSessionTime = Math.round((visitorData.avgSessionTime || 0) / 60) || 0;
+            } else {
+                // Fallback to zeros if tracker not loaded
+                loginData = {
+                    emailLoginsToday: 0,
+                    phoneLoginsToday: 0,
+                    totalLoginsToday: 0,
+                    emailLoginsYesterday: 0,
+                    phoneLoginsYesterday: 0,
+                    totalLoginsYesterday: 0,
+                    avgSessionTime: 0,
+                    peakLoginHour: '0:00',
+                    loginSuccessRate: 0,
+                    uniqueUsersToday: 0,
+                    returningUsersToday: 0
+                };
+            }
             
             // Calculate changes
-            const emailChange = ((loginData.emailLoginsToday - loginData.emailLoginsYesterday) / loginData.emailLoginsYesterday * 100).toFixed(1);
-            const phoneChange = ((loginData.phoneLoginsToday - loginData.phoneLoginsYesterday) / loginData.phoneLoginsYesterday * 100).toFixed(1);
-            const totalChange = ((loginData.totalLoginsToday - loginData.totalLoginsYesterday) / loginData.totalLoginsYesterday * 100).toFixed(1);
+            const emailChange = loginData.emailLoginsYesterday > 0 
+                ? ((loginData.emailLoginsToday - loginData.emailLoginsYesterday) / loginData.emailLoginsYesterday * 100).toFixed(1)
+                : '0';
+            const phoneChange = loginData.phoneLoginsYesterday > 0 
+                ? ((loginData.phoneLoginsToday - loginData.phoneLoginsYesterday) / loginData.phoneLoginsYesterday * 100).toFixed(1)
+                : '0';
+            const totalChange = loginData.totalLoginsYesterday > 0 
+                ? ((loginData.totalLoginsToday - loginData.totalLoginsYesterday) / loginData.totalLoginsYesterday * 100).toFixed(1)
+                : '0';
             
             loginAnalyticsGrid.innerHTML = `
                 <div class="login-analytics-item">
@@ -4710,37 +4750,52 @@ End of Report
         }
 
         function loadTransactionSummary() {
-            const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
             const transactionSummary = document.getElementById('transactionSummary');
             
-            const deposits = transactions.filter(t => t.type === 'deposit');
-            const withdrawals = transactions.filter(t => t.type === 'withdrawal');
-            const bets = transactions.filter(t => t.type === 'bet');
-            
-            const totalDeposits = deposits.reduce((sum, t) => sum + (t.amount || 0), 0);
-            const totalWithdrawals = withdrawals.reduce((sum, t) => sum + (t.amount || 0), 0);
-            const totalBets = bets.reduce((sum, t) => sum + (t.amount || 0), 0);
+            // Use real activity tracker data
+            let analytics;
+            if (window.activityTracker) {
+                analytics = window.activityTracker.getTransactionAnalytics('today');
+            } else {
+                // Fallback to localStorage
+                const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+                const deposits = transactions.filter(t => t.type === 'deposit');
+                const withdrawals = transactions.filter(t => t.type === 'withdrawal');
+                const bets = transactions.filter(t => t.type === 'bet');
+                
+                analytics = {
+                    totalDeposits: deposits.reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0),
+                    totalWithdrawals: withdrawals.reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0),
+                    totalBets: bets.reduce((sum, t) => sum + (parseFloat(t.amount) || 0), 0),
+                    netProfit: 0,
+                    depositCount: deposits.length,
+                    withdrawalCount: withdrawals.length,
+                    betCount: bets.length,
+                    totalTransactions: transactions.length
+                };
+                analytics.netProfit = analytics.totalDeposits - analytics.totalWithdrawals;
+            }
             
             transactionSummary.innerHTML = `
                 <div class="transaction-summary-item">
                     <h5>Total Deposits</h5>
-                    <div class="value">$${totalDeposits.toFixed(2)}</div>
-                    <div class="count">${deposits.length} transactions</div>
+                    <div class="value">$${analytics.totalDeposits.toFixed(2)}</div>
+                    <div class="count">${analytics.depositCount} transactions</div>
                 </div>
                 <div class="transaction-summary-item">
                     <h5>Total Withdrawals</h5>
-                    <div class="value">$${totalWithdrawals.toFixed(2)}</div>
-                    <div class="count">${withdrawals.length} transactions</div>
+                    <div class="value">$${analytics.totalWithdrawals.toFixed(2)}</div>
+                    <div class="count">${analytics.withdrawalCount} transactions</div>
                 </div>
                 <div class="transaction-summary-item">
                     <h5>Total Bets</h5>
-                    <div class="value">$${totalBets.toFixed(2)}</div>
-                    <div class="count">${bets.length} transactions</div>
+                    <div class="value">$${analytics.totalBets.toFixed(2)}</div>
+                    <div class="count">${analytics.betCount} transactions</div>
                 </div>
                 <div class="transaction-summary-item">
                     <h5>Net Profit</h5>
-                    <div class="value">$${(totalDeposits - totalWithdrawals).toFixed(2)}</div>
-                    <div class="count">${transactions.length} total transactions</div>
+                    <div class="value">$${analytics.netProfit.toFixed(2)}</div>
+                    <div class="count">${analytics.totalTransactions} total transactions</div>
                 </div>
             `;
         }

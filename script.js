@@ -353,6 +353,15 @@ function loginUser(userInfo) {
     localStorage.setItem('loggedInUser', JSON.stringify(userData));
     localStorage.setItem('token', 'auth_token_' + Date.now());
     
+    // Track login activity
+    if (window.activityTracker) {
+        window.activityTracker.trackLogin(
+            userData.id,
+            userData.email,
+            userData.email.includes('@') ? 'email' : 'phone'
+        );
+    }
+    
     // Update display immediately
     showLoggedInUser(userData);
     
@@ -2664,13 +2673,17 @@ function withdrawBalance() {
 }
 
 function addTransaction(type, amount, category) {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
     const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
     const transaction = {
         id: Date.now(),
-        type: type,
+        userId: user.id || user.email,
+        type: type.toLowerCase(), // Normalize to lowercase: 'deposit', 'withdrawal', etc.
         amount: amount,
         category: category,
+        status: 'completed',
         date: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
         timestamp: new Date().toLocaleString()
     };
     
@@ -2682,6 +2695,12 @@ function addTransaction(type, amount, category) {
     }
     
     localStorage.setItem('transactions', JSON.stringify(transactions));
+    
+    // Track transaction in activity tracker
+    if (window.activityTracker) {
+        window.activityTracker.trackTransaction(transaction);
+    }
+    
     loadTransactionHistory();
 }
 
