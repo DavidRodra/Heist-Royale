@@ -146,6 +146,11 @@ function showCommunity() {
     console.log('=== showCommunity() completed ===');
     console.log('Community section element:', communitySection);
     console.log('Community section display:', window.getComputedStyle(communitySection).display);
+    
+    // Update mobile nav if on mobile
+    if (window.innerWidth <= 768 && typeof updateMobileNav === 'function') {
+        updateMobileNav('community');
+    }
 }
 
 // Make it available globally immediately
