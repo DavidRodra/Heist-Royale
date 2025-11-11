@@ -2275,7 +2275,14 @@ function showProfile() {
 function showHome() {
     showOnlyHome();
     updateNavigationActiveState('Home');
+    
+    // Update mobile nav if on mobile
+    if (window.innerWidth <= 768 && typeof updateMobileNav === 'function') {
+        updateMobileNav('home');
+    }
 }
+// Make globally available
+window.showHome = showHome;
 
 // Function to go to home page (for Browse Games button)
 function goToHomePage() {
@@ -2470,7 +2477,14 @@ function showFavorites() {
     // Now show the section (after it's created)
     showOnlyFavorites();
     updateNavigationActiveState('Favorites');
+    
+    // Update mobile nav if on mobile
+    if (window.innerWidth <= 768 && typeof updateMobileNav === 'function') {
+        updateMobileNav('favorites');
+    }
 }
+// Make globally available
+window.showFavorites = showFavorites;
 
 // Function to load community data dynamically
 function loadCommunityData() {

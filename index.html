@@ -1759,55 +1759,90 @@
             }
         }
         
-        // Handle mobile navigation - wait for scripts to load
+        // Handle mobile navigation - improved version
         function handleMobileNav(event, section) {
-            event.preventDefault();
-            event.stopPropagation();
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            
+            console.log('Mobile nav clicked:', section);
             
             // Close mobile menu if open
             if (window.closeMobileMenu) {
                 window.closeMobileMenu();
             }
             
-            // Wait a bit for scripts to be ready, then call the appropriate function
-            setTimeout(function() {
-                try {
-                    switch(section) {
-                        case 'home':
-                            if (window.showHome) {
-                                window.showHome();
-                            } else if (window.showOnlyHome) {
-                                window.showOnlyHome();
+            // Call the appropriate function immediately (functions should be loaded)
+            try {
+                switch(section) {
+                    case 'home':
+                        if (typeof window.showHome === 'function') {
+                            window.showHome();
+                        } else if (typeof window.showOnlyHome === 'function') {
+                            window.showOnlyHome();
+                            if (typeof updateNavigationActiveState === 'function') {
+                                updateNavigationActiveState('Home');
                             }
-                            break;
-                        case 'favorites':
-                            if (window.showFavorites) {
-                                window.showFavorites();
-                            } else if (window.showOnlyFavorites) {
-                                window.showOnlyFavorites();
+                        } else {
+                            console.error('showHome function not available');
+                        }
+                        break;
+                    case 'favorites':
+                        if (typeof window.showFavorites === 'function') {
+                            window.showFavorites();
+                        } else if (typeof window.showOnlyFavorites === 'function') {
+                            window.showOnlyFavorites();
+                            if (typeof updateNavigationActiveState === 'function') {
+                                updateNavigationActiveState('Favorites');
                             }
-                            break;
-                        case 'community':
-                            if (window.showCommunity) {
-                                window.showCommunity();
-                            } else if (window.showOnlyCommunity) {
-                                window.showOnlyCommunity();
+                        } else {
+                            console.error('showFavorites function not available');
+                        }
+                        break;
+                    case 'community':
+                        if (typeof window.showCommunity === 'function') {
+                            window.showCommunity();
+                        } else if (typeof window.showOnlyCommunity === 'function') {
+                            window.showOnlyCommunity();
+                            if (typeof updateNavigationActiveState === 'function') {
+                                updateNavigationActiveState('Community');
                             }
-                            break;
-                        case 'profile':
-                            if (window.showProfile) {
-                                window.showProfile();
-                            } else if (window.showOnlyProfile) {
-                                window.showOnlyProfile();
+                        } else {
+                            console.error('showCommunity function not available');
+                        }
+                        break;
+                    case 'profile':
+                        if (typeof window.showProfile === 'function') {
+                            window.showProfile();
+                        } else if (typeof window.showOnlyProfile === 'function') {
+                            window.showOnlyProfile();
+                            if (typeof updateNavigationActiveState === 'function') {
+                                updateNavigationActiveState('Profile');
                             }
-                            break;
-                    }
-                    updateMobileNav(section);
-                } catch (error) {
-                    console.error('Navigation error:', error);
+                        } else {
+                            console.error('showProfile function not available');
+                        }
+                        break;
+                    default:
+                        console.error('Unknown section:', section);
                 }
-            }, 50);
+                
+                // Update mobile nav active state
+                if (typeof updateMobileNav === 'function') {
+                    updateMobileNav(section);
+                }
+            } catch (error) {
+                console.error('Navigation error:', error);
+                // Fallback: try again after a short delay
+                setTimeout(function() {
+                    handleMobileNav(null, section);
+                }, 100);
+            }
         }
+        
+        // Make handleMobileNav globally available
+        window.handleMobileNav = handleMobileNav;
         
         // Make handleMobileNav globally available
         window.handleMobileNav = handleMobileNav;
