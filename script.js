@@ -2270,7 +2270,14 @@ function showProfile() {
     
     // Update navigation
     updateNavigationActiveState('Profile');
+    
+    // Update mobile nav if on mobile
+    if (window.innerWidth <= 768 && typeof updateMobileNav === 'function') {
+        updateMobileNav('profile');
+    }
 }
+// Make globally available
+window.showProfile = showProfile;
 
 function showHome() {
     showOnlyHome();
