@@ -32,11 +32,11 @@
             </div>
             
             <nav class="nav-menu">
-                <a href="#" class="nav-item active" onclick="showHome()">
+                <a href="#" class="nav-item active" onclick="showHome(); return false;">
                     <i class="fas fa-home"></i>
                     <span>Home</span>
                 </a>
-                <a href="#" class="nav-item" id="favorites-nav">
+                <a href="#" class="nav-item" id="favorites-nav" onclick="showFavorites(); return false;">
                     <i class="fas fa-star"></i>
                     <span>Favorites</span>
                 </a>
@@ -44,7 +44,7 @@
                     <i class="fas fa-users"></i>
                     <span>Community</span>
                 </a>
-                <a href="#" class="nav-item" onclick="showProfile(); console.log('Profile clicked!'); return false;">
+                <a href="#" class="nav-item" onclick="showProfile(); return false;">
                     <i class="fas fa-user"></i>
                     <span>Profile</span>
                 </a>
