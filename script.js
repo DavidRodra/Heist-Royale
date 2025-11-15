@@ -2040,6 +2040,10 @@ function showOnlyProfile() {
 function showOnlyHome() {
     console.log('=== showOnlyHome called ===');
     
+    // Restore body scrolling when leaving profile
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    
     // Restore main-content padding for home page
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
@@ -2088,6 +2092,10 @@ function showOnlyHome() {
 }
 
 function showOnlyCommunity() {
+    // Restore body scrolling when leaving profile
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    
     console.log('=== showOnlyCommunity called ===');
     
     // Hide profile section
@@ -2158,6 +2166,10 @@ function showOnlyCommunity() {
 
 function showOnlyFavorites() {
     console.log('=== showOnlyFavorites called ===');
+    
+    // Restore body scrolling when leaving profile
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
     
     // Hide profile section
     const profileSection = document.getElementById('profile-section');
@@ -2249,6 +2261,10 @@ function showProfile() {
     // Hide all other sections
     hideAllSections();
     
+    // Prevent body scrolling when profile is open (for smooth scrolling)
+    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
+    
     // Show profile section - FORCE IT TO SHOW with fixed positioning
     const profileSection = document.getElementById('profile-section');
     if (profileSection) {
@@ -2258,12 +2274,13 @@ function showProfile() {
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
             // Mobile: full width, account for top padding and bottom nav
-            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 70px 15px 90px 15px !important; overflow-y: auto !important; pointer-events: auto !important; width: 100vw !important; max-width: 100vw !important;';
+            // Use position: absolute instead of fixed for better scrolling
+            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 70px 15px 90px 15px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; pointer-events: auto !important; width: 100vw !important; max-width: 100vw !important; height: 100vh !important;';
         } else {
             // Desktop: respect sidebar and chat
-            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: fixed !important; top: 0 !important; left: 200px !important; right: 300px !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 30px !important; overflow-y: auto !important; pointer-events: auto !important;';
+            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: absolute !important; top: 0 !important; left: 200px !important; right: 300px !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 30px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; pointer-events: auto !important; height: 100vh !important;';
         }
-        console.log('Profile section FORCED to show with fixed positioning');
+        console.log('Profile section FORCED to show with absolute positioning for smooth scrolling');
         
         // Load profile data
         if (typeof loadProfileData === 'function') {

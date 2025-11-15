@@ -1869,28 +1869,73 @@
                                     const banners = document.querySelector('.banners');
                                     if (topbar) topbar.style.display = 'block';
                                     if (banners) banners.style.display = 'block';
+                                    // Restore body scrolling
+                                    document.body.style.overflow = '';
+                                    document.documentElement.style.overflow = '';
                                     break;
                                 case 'favorites':
                                     targetId = 'favorites-section';
+                                    // Restore body scrolling
+                                    document.body.style.overflow = '';
+                                    document.documentElement.style.overflow = '';
                                     break;
                                 case 'community':
                                     targetId = 'community-section';
+                                    // Restore body scrolling
+                                    document.body.style.overflow = '';
+                                    document.documentElement.style.overflow = '';
                                     break;
                                 case 'profile':
                                     targetId = 'profile-section';
+                                    // Prevent body scrolling for profile
+                                    document.body.style.overflow = 'hidden';
+                                    document.documentElement.style.overflow = 'hidden';
                                     break;
                             }
                             
                             if (targetId) {
                                 let targetSection = document.getElementById(targetId);
                                 if (targetSection) {
+                                    // For favorites and community, ensure they're created if missing
+                                    if ((targetId === 'favorites-section' || targetId === 'community-section') && !targetSection.innerHTML.trim()) {
+                                        console.log('Section exists but is empty, calling creation function...');
+                                        if (targetId === 'favorites-section' && typeof window.showFavorites === 'function') {
+                                            window.showFavorites();
+                                            navigationExecuted = true;
+                                            return;
+                                        } else if (targetId === 'community-section' && typeof window.showCommunity === 'function') {
+                                            window.showCommunity();
+                                            navigationExecuted = true;
+                                            return;
+                                        }
+                                    }
+                                    
                                     targetSection.style.display = 'block';
                                     targetSection.style.visibility = 'visible';
                                     targetSection.style.opacity = '1';
+                                    
+                                    // For profile, use absolute positioning for smooth scrolling
+                                    if (targetId === 'profile-section') {
+                                        const isMobile = window.innerWidth <= 768;
+                                        if (isMobile) {
+                                            targetSection.style.cssText += 'position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important;';
+                                        } else {
+                                            targetSection.style.cssText += 'position: absolute !important; top: 0 !important; left: 200px !important; right: 300px !important; bottom: 0 !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important;';
+                                        }
+                                    }
+                                    
                                     console.log('Direct DOM manipulation: showing', targetId);
                                     navigationExecuted = true;
                                 } else {
-                                    console.log('Target section not found:', targetId);
+                                    console.log('Target section not found:', targetId, '- attempting to create...');
+                                    // Try to create the section by calling the function
+                                    if (targetId === 'favorites-section' && typeof window.showFavorites === 'function') {
+                                        window.showFavorites();
+                                        navigationExecuted = true;
+                                    } else if (targetId === 'community-section' && typeof window.showCommunity === 'function') {
+                                        window.showCommunity();
+                                        navigationExecuted = true;
+                                    }
                                 }
                             }
                         }
