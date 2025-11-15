@@ -1526,6 +1526,13 @@ body::before {
 
 /* Mobile Responsive Styles */
 @media (max-width: 768px) {
+    /* Ensure mobile bottom nav is visible */
+    .mobile-bottom-nav {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
     /* PERFORMANCE: Disable all animations on mobile */
     * {
         animation-duration: 0s !important;
