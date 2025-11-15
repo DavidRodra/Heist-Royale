@@ -1474,6 +1474,11 @@ body::before {
     border-radius: 12px;
     margin: 0 4px;
     transform: none !important;
+    -webkit-tap-highlight-color: rgba(64, 224, 208, 0.2);
+    touch-action: manipulation;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .mobile-bottom-nav .nav-item i {
