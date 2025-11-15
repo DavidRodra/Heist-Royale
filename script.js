@@ -2043,6 +2043,7 @@ function showOnlyHome() {
     // Restore body scrolling when leaving profile
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
+    document.body.classList.remove('profile-open');
     
     // Restore main-content padding for home page
     const mainContent = document.querySelector('.main-content');
@@ -2095,6 +2096,7 @@ function showOnlyCommunity() {
     // Restore body scrolling when leaving profile
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
+    document.body.classList.remove('profile-open');
     
     console.log('=== showOnlyCommunity called ===');
     
@@ -2170,6 +2172,7 @@ function showOnlyFavorites() {
     // Restore body scrolling when leaving profile
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
+    document.body.classList.remove('profile-open');
     
     // Hide profile section
     const profileSection = document.getElementById('profile-section');
@@ -2264,8 +2267,9 @@ function showProfile() {
     // Prevent body scrolling when profile is open (for smooth scrolling)
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
+    document.body.classList.add('profile-open');
     
-    // Show profile section - FORCE IT TO SHOW with fixed positioning
+    // Show profile section - FORCE IT TO SHOW with absolute positioning for smooth scrolling
     const profileSection = document.getElementById('profile-section');
     if (profileSection) {
         profileSection.removeAttribute('hidden');
@@ -2275,10 +2279,10 @@ function showProfile() {
         if (isMobile) {
             // Mobile: full width, account for top padding and bottom nav
             // Use position: absolute instead of fixed for better scrolling
-            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 70px 15px 90px 15px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; pointer-events: auto !important; width: 100vw !important; max-width: 100vw !important; height: 100vh !important;';
+            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: absolute !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 70px 15px 90px 15px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; scroll-behavior: smooth !important; overscroll-behavior: contain !important; pointer-events: auto !important; width: 100vw !important; max-width: 100vw !important; height: 100vh !important;';
         } else {
             // Desktop: respect sidebar and chat
-            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: absolute !important; top: 0 !important; left: 200px !important; right: 300px !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 30px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; pointer-events: auto !important; height: 100vh !important;';
+            profileSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; position: absolute !important; top: 0 !important; left: 200px !important; right: 300px !important; bottom: 0 !important; z-index: 1000 !important; background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%) !important; color: white !important; padding: 30px !important; overflow-y: auto !important; -webkit-overflow-scrolling: touch !important; scroll-behavior: smooth !important; overscroll-behavior: contain !important; pointer-events: auto !important; height: 100vh !important;';
         }
         console.log('Profile section FORCED to show with absolute positioning for smooth scrolling');
         

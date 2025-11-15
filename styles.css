@@ -373,7 +373,7 @@ body::before {
     padding: 20px;
     padding-top: 20px;
     background: var(--color-bg);
-    position: relative;
+    position: relative; /* Required for absolute positioning of profile section */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     overflow-x: hidden;
     overflow-y: auto;
@@ -1750,7 +1750,7 @@ body::before {
         padding: 70px 15px 90px 15px !important;
     }
     
-    /* Profile section mobile adjustments */
+    /* Profile section mobile adjustments - use absolute for smooth scrolling */
     #profile-section {
         left: 0 !important;
         right: 0 !important;
@@ -1759,7 +1759,12 @@ body::before {
         padding: 70px 15px 90px 15px !important;
         margin-left: 0 !important;
         margin-right: 0 !important;
-        position: fixed !important;
+        position: absolute !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        height: 100vh !important;
     }
     
     /* Topbar mobile adjustments */
@@ -2152,10 +2157,24 @@ body::before {
     /* PERFORMANCE: Optimize scrolling on mobile */
     .main-content,
     .chat-sidebar,
-    .chat-messages,
+    .chat-messages {
+        -webkit-overflow-scrolling: touch !important;
+        overflow-scrolling: touch !important;
+    }
+    
+    /* Profile section smooth scrolling */
     #profile-section {
         -webkit-overflow-scrolling: touch !important;
         overflow-scrolling: touch !important;
+        scroll-behavior: smooth !important;
+        overscroll-behavior: contain !important;
+    }
+    
+    /* Prevent body scroll when profile is open */
+    body.profile-open {
+        overflow: hidden !important;
+        position: fixed !important;
+        width: 100% !important;
     }
     
     /* PERFORMANCE: Reduce paint complexity */
