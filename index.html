@@ -1692,19 +1692,19 @@
     <!-- Mobile Bottom Navigation -->
     <nav class="mobile-bottom-nav" id="mobileBottomNav">
         <div class="nav-items">
-            <a href="#" class="nav-item active" data-section="home" onclick="handleMobileNav(event, 'home'); return false;">
+            <a href="#" class="nav-item active" data-section="home">
                 <i class="fas fa-home"></i>
                 <span>Home</span>
             </a>
-            <a href="#" class="nav-item" data-section="favorites" onclick="handleMobileNav(event, 'favorites'); return false;">
+            <a href="#" class="nav-item" data-section="favorites">
                 <i class="fas fa-star"></i>
                 <span>Favorites</span>
             </a>
-            <a href="#" class="nav-item" data-section="community" onclick="handleMobileNav(event, 'community'); return false;">
+            <a href="#" class="nav-item" data-section="community">
                 <i class="fas fa-users"></i>
                 <span>Community</span>
             </a>
-            <a href="#" class="nav-item" data-section="profile" onclick="handleMobileNav(event, 'profile'); return false;">
+            <a href="#" class="nav-item" data-section="profile">
                 <i class="fas fa-user"></i>
                 <span>Profile</span>
             </a>
@@ -1759,7 +1759,7 @@
             }
         }
         
-        // Handle mobile navigation - improved version
+        // Handle mobile navigation - improved version with retry logic
         function handleMobileNav(event, section) {
             if (event) {
                 event.preventDefault();
@@ -1773,77 +1773,126 @@
                 window.closeMobileMenu();
             }
             
-            // Call the appropriate function immediately (functions should be loaded)
-            try {
-                switch(section) {
-                    case 'home':
-                        if (typeof window.showHome === 'function') {
-                            window.showHome();
-                        } else if (typeof window.showOnlyHome === 'function') {
-                            window.showOnlyHome();
-                            if (typeof updateNavigationActiveState === 'function') {
-                                updateNavigationActiveState('Home');
+            // Function to execute navigation
+            function executeNavigation() {
+                try {
+                    let navigationExecuted = false;
+                    
+                    switch(section) {
+                        case 'home':
+                            if (typeof window.showHome === 'function') {
+                                window.showHome();
+                                navigationExecuted = true;
+                            } else if (typeof window.showOnlyHome === 'function') {
+                                window.showOnlyHome();
+                                if (typeof updateNavigationActiveState === 'function') {
+                                    updateNavigationActiveState('Home');
+                                }
+                                navigationExecuted = true;
                             }
-                        } else {
-                            console.error('showHome function not available');
-                        }
-                        break;
-                    case 'favorites':
-                        if (typeof window.showFavorites === 'function') {
-                            window.showFavorites();
-                        } else if (typeof window.showOnlyFavorites === 'function') {
-                            window.showOnlyFavorites();
-                            if (typeof updateNavigationActiveState === 'function') {
-                                updateNavigationActiveState('Favorites');
+                            break;
+                        case 'favorites':
+                            if (typeof window.showFavorites === 'function') {
+                                window.showFavorites();
+                                navigationExecuted = true;
+                            } else if (typeof window.showOnlyFavorites === 'function') {
+                                window.showOnlyFavorites();
+                                if (typeof updateNavigationActiveState === 'function') {
+                                    updateNavigationActiveState('Favorites');
+                                }
+                                navigationExecuted = true;
                             }
-                        } else {
-                            console.error('showFavorites function not available');
-                        }
-                        break;
-                    case 'community':
-                        if (typeof window.showCommunity === 'function') {
-                            window.showCommunity();
-                        } else if (typeof window.showOnlyCommunity === 'function') {
-                            window.showOnlyCommunity();
-                            if (typeof updateNavigationActiveState === 'function') {
-                                updateNavigationActiveState('Community');
+                            break;
+                        case 'community':
+                            if (typeof window.showCommunity === 'function') {
+                                window.showCommunity();
+                                navigationExecuted = true;
+                            } else if (typeof window.showOnlyCommunity === 'function') {
+                                window.showOnlyCommunity();
+                                if (typeof updateNavigationActiveState === 'function') {
+                                    updateNavigationActiveState('Community');
+                                }
+                                navigationExecuted = true;
                             }
-                        } else {
-                            console.error('showCommunity function not available');
-                        }
-                        break;
-                    case 'profile':
-                        if (typeof window.showProfile === 'function') {
-                            window.showProfile();
-                        } else if (typeof window.showOnlyProfile === 'function') {
-                            window.showOnlyProfile();
-                            if (typeof updateNavigationActiveState === 'function') {
-                                updateNavigationActiveState('Profile');
+                            break;
+                        case 'profile':
+                            if (typeof window.showProfile === 'function') {
+                                window.showProfile();
+                                navigationExecuted = true;
+                            } else if (typeof window.showOnlyProfile === 'function') {
+                                window.showOnlyProfile();
+                                if (typeof updateNavigationActiveState === 'function') {
+                                    updateNavigationActiveState('Profile');
+                                }
+                                navigationExecuted = true;
                             }
-                        } else {
-                            console.error('showProfile function not available');
-                        }
-                        break;
-                    default:
-                        console.error('Unknown section:', section);
+                            break;
+                        default:
+                            console.error('Unknown section:', section);
+                    }
+                    
+                    // Update mobile nav active state
+                    if (typeof updateMobileNav === 'function') {
+                        updateMobileNav(section);
+                    }
+                    
+                    // If navigation didn't execute, retry after a short delay
+                    if (!navigationExecuted) {
+                        console.log('Navigation function not ready, retrying...', section);
+                        setTimeout(executeNavigation, 200);
+                    }
+                } catch (error) {
+                    console.error('Navigation error:', error);
+                    // Fallback: try again after a short delay
+                    setTimeout(executeNavigation, 200);
                 }
-                
-                // Update mobile nav active state
-                if (typeof updateMobileNav === 'function') {
-                    updateMobileNav(section);
-                }
-            } catch (error) {
-                console.error('Navigation error:', error);
-                // Fallback: try again after a short delay
-                setTimeout(function() {
-                    handleMobileNav(null, section);
-                }, 100);
             }
+            
+            // Execute navigation immediately
+            executeNavigation();
         }
         
         // Make handleMobileNav globally available
         window.handleMobileNav = handleMobileNav;
         window.updateMobileNav = updateMobileNav;
+        
+        // Setup mobile navigation event listeners (works better than onclick on mobile)
+        function setupMobileNavListeners() {
+            const mobileNavItems = document.querySelectorAll('.mobile-bottom-nav .nav-item');
+            mobileNavItems.forEach(item => {
+                const section = item.getAttribute('data-section');
+                if (!section) return;
+                
+                // Remove any existing listeners by cloning
+                const newItem = item.cloneNode(true);
+                item.parentNode.replaceChild(newItem, item);
+                
+                // Add both click and touchstart for maximum compatibility
+                newItem.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleMobileNav(e, section);
+                }, { passive: false });
+                
+                newItem.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleMobileNav(e, section);
+                }, { passive: false });
+            });
+        }
+        
+        // Initialize mobile nav listeners when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(setupMobileNavListeners, 100);
+            });
+        } else {
+            setTimeout(setupMobileNavListeners, 100);
+        }
+        
+        // Also setup after a delay to ensure script.js has loaded
+        setTimeout(setupMobileNavListeners, 500);
         
         // Update mobile nav when desktop navigation is used (only on mobile)
         function syncMobileNavOnDesktopNav() {
