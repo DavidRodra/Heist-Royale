@@ -1852,6 +1852,12 @@
                         // Direct DOM fallback - hide all sections and show the target
                         const mainContent = document.querySelector('.main-content');
                         if (mainContent) {
+                            // Hide topbar and banners
+                            const topbar = mainContent.querySelector('.topbar');
+                            const banners = mainContent.querySelector('.banners');
+                            if (topbar) topbar.style.display = 'none';
+                            if (banners) banners.style.display = 'none';
+                            
                             // Hide all children
                             Array.from(mainContent.children).forEach(child => {
                                 if (child.id && child.id.includes('section')) {
@@ -1896,23 +1902,93 @@
                             if (targetId) {
                                 let targetSection = document.getElementById(targetId);
                                 if (targetSection) {
-                                    // For favorites and community, ensure they're created if missing
-                                    if ((targetId === 'favorites-section' || targetId === 'community-section') && !targetSection.innerHTML.trim()) {
-                                        console.log('Section exists but is empty, calling creation function...');
-                                        if (targetId === 'favorites-section' && typeof window.showFavorites === 'function') {
-                                            window.showFavorites();
-                                            navigationExecuted = true;
-                                            return;
-                                        } else if (targetId === 'community-section' && typeof window.showCommunity === 'function') {
-                                            window.showCommunity();
-                                            navigationExecuted = true;
-                                            return;
+                                    // For favorites and community, ensure they're created if missing or empty
+                                    if ((targetId === 'favorites-section' || targetId === 'community-section')) {
+                                        if (!targetSection || !targetSection.innerHTML || !targetSection.innerHTML.trim()) {
+                                            console.log('Section exists but is empty, calling creation function...');
+                                            if (targetId === 'favorites-section') {
+                                                if (typeof window.showFavorites === 'function') {
+                                                    window.showFavorites();
+                                                    navigationExecuted = true;
+                                                    return;
+                                                } else {
+                                                    // Create directly if function not available
+                                                    const mainContent = document.querySelector('.main-content');
+                                                    if (mainContent && !targetSection) {
+                                                        const newSection = document.createElement('div');
+                                                        newSection.id = 'favorites-section';
+                                                        newSection.className = 'section';
+                                                        newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 20px !important; position: relative !important; width: 100% !important;';
+                                                        newSection.innerHTML = `
+                                                            <div class="section-header"><h2><i class="fas fa-star"></i> My Favorites</h2></div>
+                                                            <div class="favorites-container">
+                                                                <div class="no-favorites-message">
+                                                                    <h3>No Favorites Yet</h3>
+                                                                    <p>Games you favorite will appear here.</p>
+                                                                </div>
+                                                            </div>
+                                                        `;
+                                                        mainContent.appendChild(newSection);
+                                                        navigationExecuted = true;
+                                                        return;
+                                                    }
+                                                }
+                                            } else if (targetId === 'community-section') {
+                                                if (typeof window.showCommunity === 'function') {
+                                                    window.showCommunity();
+                                                    navigationExecuted = true;
+                                                    return;
+                                                } else {
+                                                    // Create directly if function not available
+                                                    const mainContent = document.querySelector('.main-content');
+                                                    if (mainContent && !targetSection) {
+                                                        const newSection = document.createElement('div');
+                                                        newSection.id = 'community-section';
+                                                        newSection.className = 'section';
+                                                        newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px !important; position: relative !important; width: 100% !important;';
+                                                        newSection.innerHTML = `
+                                                            <div class="section-header"><h2><i class="fas fa-users"></i> Community</h2></div>
+                                                            <div class="community-container">
+                                                                <div class="friends-section">
+                                                                    <h3>My Friends</h3>
+                                                                    <div class="friends-list">
+                                                                        <div class="empty-state">
+                                                                            <h3>No friends yet</h3>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        `;
+                                                        mainContent.appendChild(newSection);
+                                                        navigationExecuted = true;
+                                                        return;
+                                                    }
+                                                }
+                                            }
                                         }
                                     }
                                     
                                     targetSection.style.display = 'block';
                                     targetSection.style.visibility = 'visible';
                                     targetSection.style.opacity = '1';
+                                    
+                                    // For favorites and community, ensure proper styling
+                                    if (targetId === 'favorites-section' || targetId === 'community-section') {
+                                        const isMobile = window.innerWidth <= 768;
+                                        if (targetId === 'favorites-section') {
+                                            if (isMobile) {
+                                                targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 15px !important; position: relative !important; width: 100% !important;';
+                                            } else {
+                                                targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 20px !important; position: relative !important; width: 100% !important;';
+                                            }
+                                        } else if (targetId === 'community-section') {
+                                            if (isMobile) {
+                                                targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px 15px !important; position: relative !important; width: 100% !important;';
+                                            } else {
+                                                targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px !important; position: relative !important; width: 100% !important;';
+                                            }
+                                        }
+                                    }
                                     
                                     // For profile, use absolute positioning for smooth scrolling
                                     if (targetId === 'profile-section') {
@@ -1929,12 +2005,94 @@
                                 } else {
                                     console.log('Target section not found:', targetId, '- attempting to create...');
                                     // Try to create the section by calling the function
-                                    if (targetId === 'favorites-section' && typeof window.showFavorites === 'function') {
-                                        window.showFavorites();
-                                        navigationExecuted = true;
-                                    } else if (targetId === 'community-section' && typeof window.showCommunity === 'function') {
-                                        window.showCommunity();
-                                        navigationExecuted = true;
+                                    if (targetId === 'favorites-section') {
+                                        if (typeof window.showFavorites === 'function') {
+                                            console.log('Calling showFavorites() to create section...');
+                                            window.showFavorites();
+                                            navigationExecuted = true;
+                                        } else {
+                                            console.log('showFavorites not available, creating section directly...');
+                                            // Direct creation as last resort
+                                            const mainContent = document.querySelector('.main-content');
+                                            if (mainContent) {
+                                                const newSection = document.createElement('div');
+                                                newSection.id = 'favorites-section';
+                                                newSection.className = 'section';
+                                                const isMobile = window.innerWidth <= 768;
+                                                if (isMobile) {
+                                                    newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 15px !important; position: relative !important; width: 100% !important;';
+                                                } else {
+                                                    newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 20px !important; position: relative !important; width: 100% !important;';
+                                                }
+                                                newSection.innerHTML = `
+                                                    <div class="section-header">
+                                                        <h2><i class="fas fa-star"></i> My Favorites</h2>
+                                                    </div>
+                                                    <div class="favorites-container">
+                                                        <div class="no-favorites-message">
+                                                            <div class="no-favorites-icon">
+                                                                <i class="fas fa-star"></i>
+                                                            </div>
+                                                            <h3>No Favorites Yet</h3>
+                                                            <p>Games you favorite will appear here. Start exploring and add games to your favorites!</p>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                                mainContent.appendChild(newSection);
+                                                navigationExecuted = true;
+                                                console.log('Favorites section created directly');
+                                            }
+                                        }
+                                    } else if (targetId === 'community-section') {
+                                        if (typeof window.showCommunity === 'function') {
+                                            console.log('Calling showCommunity() to create section...');
+                                            window.showCommunity();
+                                            navigationExecuted = true;
+                                        } else {
+                                            console.log('showCommunity not available, creating section directly...');
+                                            // Direct creation as last resort
+                                            const mainContent = document.querySelector('.main-content');
+                                            if (mainContent) {
+                                                const newSection = document.createElement('div');
+                                                newSection.id = 'community-section';
+                                                newSection.className = 'section';
+                                                const isMobile = window.innerWidth <= 768;
+                                                if (isMobile) {
+                                                    newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px 15px !important; position: relative !important; width: 100% !important;';
+                                                } else {
+                                                    newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px !important; position: relative !important; width: 100% !important;';
+                                                }
+                                                newSection.innerHTML = `
+                                                    <div class="section-header">
+                                                        <h2><i class="fas fa-users"></i> Community</h2>
+                                                    </div>
+                                                    <div class="community-container">
+                                                        <div class="friends-section">
+                                                            <div class="section-subheader">
+                                                                <h3><i class="fas fa-user-friends"></i> My Friends</h3>
+                                                                <span class="friend-count">0 friends</span>
+                                                            </div>
+                                                            <div class="friends-list">
+                                                                <div class="empty-state" style="text-align: center; padding: 60px 20px;">
+                                                                    <i class="fas fa-user-friends" style="font-size: 4rem; margin-bottom: 20px; color: var(--accent-2); opacity: 0.6;"></i>
+                                                                    <h3>No friends yet</h3>
+                                                                    <p>Start building your community by adding friends from suggestions!</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                `;
+                                                mainContent.appendChild(newSection);
+                                                navigationExecuted = true;
+                                                console.log('Community section created directly');
+                                                // Try to load community data if function becomes available
+                                                setTimeout(() => {
+                                                    if (typeof loadCommunityData === 'function') {
+                                                        loadCommunityData();
+                                                    }
+                                                }, 100);
+                                            }
+                                        }
                                     }
                                 }
                             }
