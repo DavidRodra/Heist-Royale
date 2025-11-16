@@ -1862,27 +1862,8 @@
                                 banners.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
                             }
                             
-                            // Hide ALL children except the target section
-                            const targetId = section === 'home' ? 'home-section' : 
-                                           section === 'favorites' ? 'favorites-section' :
-                                           section === 'community' ? 'community-section' :
-                                           section === 'profile' ? 'profile-section' : '';
-                            
-                            Array.from(mainContent.children).forEach(child => {
-                                if (child.id !== targetId) {
-                                    child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                                }
-                            });
-                            
-                            // Also hide game sections, sliders, etc.
-                            const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section');
-                            gameSections.forEach(gameSection => {
-                                if (gameSection.id !== targetId) {
-                                    gameSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                                }
-                            });
-                            
-                            // Show target section (targetId already defined above)
+                            // Determine target section ID
+                            let targetId = '';
                             switch(section) {
                                 case 'home':
                                     targetId = 'home-section';
@@ -1914,6 +1895,21 @@
                                     document.documentElement.style.overflow = 'hidden';
                                     break;
                             }
+                            
+                            // Hide ALL children except the target section
+                            Array.from(mainContent.children).forEach(child => {
+                                if (child.id !== targetId) {
+                                    child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                }
+                            });
+                            
+                            // Also hide game sections, sliders, etc.
+                            const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section');
+                            gameSections.forEach(gameSection => {
+                                if (gameSection.id !== targetId) {
+                                    gameSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                }
+                            });
                             
                             if (targetId) {
                                 let targetSection = document.getElementById(targetId);
