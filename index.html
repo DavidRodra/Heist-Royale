@@ -1867,11 +1867,29 @@
                             switch(section) {
                                 case 'home':
                                     targetId = 'home-section';
-                                    // Show topbar and banners for home
+                                    // Show topbar and banners for home with !important
                                     const topbar = document.querySelector('.topbar');
                                     const banners = document.querySelector('.banners');
-                                    if (topbar) topbar.style.display = 'block';
-                                    if (banners) banners.style.display = 'block';
+                                    if (topbar) {
+                                        topbar.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+                                    }
+                                    if (banners) {
+                                        banners.style.cssText = 'display: flex !important; visibility: visible !important; opacity: 1 !important;';
+                                    }
+                                    // Show all homepage content
+                                    const mainContent = document.querySelector('.main-content');
+                                    if (mainContent) {
+                                        Array.from(mainContent.children).forEach(child => {
+                                            if (!child.id || (!child.id.includes('section') && !child.id.includes('profile'))) {
+                                                child.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+                                            }
+                                        });
+                                        // Show game sections
+                                        const gameSections = mainContent.querySelectorAll('.games-section, .games-slider');
+                                        gameSections.forEach(section => {
+                                            section.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+                                        });
+                                    }
                                     // Restore body scrolling
                                     document.body.style.overflow = '';
                                     document.documentElement.style.overflow = '';
