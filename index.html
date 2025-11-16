@@ -1906,20 +1906,26 @@
                                             gameSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
                                         });
                                         
-                                        // Restore main-content padding to original values
-                                        const isMobile = window.innerWidth <= 768;
-                                        if (isMobile) {
-                                            // Remove all padding overrides and restore default
-                                            mainContent.style.removeProperty('padding-top');
-                                            mainContent.style.removeProperty('padding');
-                                            mainContent.style.paddingTop = '20px';
-                                            mainContent.style.padding = '20px';
-                                        } else {
-                                            // Restore desktop padding (20px)
-                                            mainContent.style.removeProperty('padding-top');
-                                            mainContent.style.removeProperty('padding');
-                                            mainContent.style.paddingTop = '20px';
-                                            mainContent.style.padding = '20px';
+                                        // Restore main-content padding by removing all inline styles
+                                        // This lets the CSS apply the default padding (20px)
+                                        mainContent.style.removeProperty('padding');
+                                        mainContent.style.removeProperty('padding-top');
+                                        mainContent.style.removeProperty('padding-left');
+                                        mainContent.style.removeProperty('padding-right');
+                                        mainContent.style.removeProperty('padding-bottom');
+                                        
+                                        // Clean up style attribute
+                                        const currentStyle = mainContent.getAttribute('style');
+                                        if (currentStyle) {
+                                            const newStyle = currentStyle
+                                                .replace(/padding[^;]*/gi, '')
+                                                .replace(/;;+/g, ';')
+                                                .replace(/^;|;$/g, '');
+                                            if (newStyle.trim()) {
+                                                mainContent.setAttribute('style', newStyle);
+                                            } else {
+                                                mainContent.removeAttribute('style');
+                                            }
                                         }
                                     }
                                     // Restore body scrolling

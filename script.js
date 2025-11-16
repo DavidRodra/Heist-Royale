@@ -2074,30 +2074,32 @@ function showOnlyHome() {
     document.documentElement.style.overflow = '';
     document.body.classList.remove('profile-open');
     
-    // Restore main-content padding for home page to original values
+    // Restore main-content padding for home page to original CSS values
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
-        const isMobile = window.innerWidth <= 768;
-        if (isMobile) {
-            // Restore mobile padding to original (usually 20px or default)
-            mainContent.style.removeProperty('padding-top');
-            mainContent.style.removeProperty('padding');
-            mainContent.style.paddingTop = '';
-            mainContent.style.padding = '';
-            // Reset to default CSS values
-            mainContent.style.cssText = mainContent.style.cssText.replace(/padding[^;]*/g, '');
-            // Reapply default padding from CSS
-            if (mainContent.style.cssText.indexOf('padding') === -1) {
-                mainContent.style.padding = '20px';
-                mainContent.style.paddingTop = '20px';
+        // Remove all inline padding styles to let CSS take over
+        mainContent.style.removeProperty('padding');
+        mainContent.style.removeProperty('padding-top');
+        mainContent.style.removeProperty('padding-left');
+        mainContent.style.removeProperty('padding-right');
+        mainContent.style.removeProperty('padding-bottom');
+        
+        // Remove padding from style attribute if present
+        const currentStyle = mainContent.getAttribute('style');
+        if (currentStyle) {
+            const newStyle = currentStyle
+                .replace(/padding[^;]*/gi, '')
+                .replace(/;;+/g, ';')
+                .replace(/^;|;$/g, '');
+            if (newStyle.trim()) {
+                mainContent.setAttribute('style', newStyle);
+            } else {
+                mainContent.removeAttribute('style');
             }
-        } else {
-            // Restore desktop padding to original (20px)
-            mainContent.style.removeProperty('padding-top');
-            mainContent.style.removeProperty('padding');
-            mainContent.style.paddingTop = '20px';
-            mainContent.style.padding = '20px';
         }
+        
+        // CSS will apply the default padding (20px) automatically
+        console.log('Main-content padding reset to CSS defaults');
     }
     
     // FORCE HIDE profile section first - move it completely off-screen
