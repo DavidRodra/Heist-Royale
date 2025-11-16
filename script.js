@@ -2309,7 +2309,7 @@ function showOnlyFavorites() {
         mainContent.style.setProperty('position', 'relative', 'important');
         mainContent.style.setProperty('top', '0', 'important');
         
-        const isMobile = window.innerWidth <= 768;
+        // Reuse isMobile variable already declared above
         if (isMobile) {
             // Mobile: full width with extra top padding to prevent logo overlap
             favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding-top: 60px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important;';

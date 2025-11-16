@@ -1906,11 +1906,7 @@
                                             gameSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
                                         });
                                         
-                                        // Hide all sections IMMEDIATELY (before setting padding)
-                                        const favoritesSection = document.getElementById('favorites-section');
-                                        const communitySection = document.getElementById('community-section');
-                                        const profileSection = document.getElementById('profile-section');
-                                        
+                                        // Sections already hidden above, ensure they stay hidden
                                         if (favoritesSection) {
                                             favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
                                         }
