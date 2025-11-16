@@ -2489,11 +2489,11 @@ function showFavorites() {
         profileSection.setAttribute('hidden', 'true');
     }
     
-    // Set small top padding for main-content to give breathing room
+    // Set top padding for main-content (less on mobile since section has its own padding)
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
-        mainContent.style.setProperty('padding-top', '15px', 'important');
-        mainContent.style.setProperty('padding', '15px 20px 20px 20px', 'important');
+        mainContent.style.setProperty('padding-top', '0px', 'important');
+        mainContent.style.setProperty('padding', '0px 0px 20px 0px', 'important');
     } else {
         mainContent.style.setProperty('padding-top', '20px', 'important');
         mainContent.style.setProperty('padding', '20px 20px 20px 20px', 'important');
@@ -2525,10 +2525,10 @@ function showFavorites() {
         favoritesSection = document.createElement('div');
         favoritesSection.id = 'favorites-section';
         favoritesSection.className = 'section';
-        // Apply styles with small top padding for breathing room
+        // Apply styles with extra top padding on mobile to prevent logo overlap
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 15px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 60px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
         } else {
             favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
         }
