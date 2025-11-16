@@ -1906,14 +1906,20 @@
                                             gameSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
                                         });
                                         
-                                        // Restore main-content padding
+                                        // Restore main-content padding to original values
                                         const isMobile = window.innerWidth <= 768;
                                         if (isMobile) {
-                                            mainContent.style.setProperty('padding-top', '', 'important');
-                                            mainContent.style.setProperty('padding', '', 'important');
+                                            // Remove all padding overrides and restore default
+                                            mainContent.style.removeProperty('padding-top');
+                                            mainContent.style.removeProperty('padding');
+                                            mainContent.style.paddingTop = '20px';
+                                            mainContent.style.padding = '20px';
                                         } else {
-                                            mainContent.style.setProperty('padding-top', '', 'important');
-                                            mainContent.style.setProperty('padding', '', 'important');
+                                            // Restore desktop padding (20px)
+                                            mainContent.style.removeProperty('padding-top');
+                                            mainContent.style.removeProperty('padding');
+                                            mainContent.style.paddingTop = '20px';
+                                            mainContent.style.padding = '20px';
                                         }
                                     }
                                     // Restore body scrolling

@@ -2074,18 +2074,29 @@ function showOnlyHome() {
     document.documentElement.style.overflow = '';
     document.body.classList.remove('profile-open');
     
-    // Restore main-content padding for home page
+    // Restore main-content padding for home page to original values
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            // Restore mobile padding
-            mainContent.style.setProperty('padding-top', '', 'important');
-            mainContent.style.setProperty('padding', '', 'important');
+            // Restore mobile padding to original (usually 20px or default)
+            mainContent.style.removeProperty('padding-top');
+            mainContent.style.removeProperty('padding');
+            mainContent.style.paddingTop = '';
+            mainContent.style.padding = '';
+            // Reset to default CSS values
+            mainContent.style.cssText = mainContent.style.cssText.replace(/padding[^;]*/g, '');
+            // Reapply default padding from CSS
+            if (mainContent.style.cssText.indexOf('padding') === -1) {
+                mainContent.style.padding = '20px';
+                mainContent.style.paddingTop = '20px';
+            }
         } else {
-            // Restore desktop padding
-            mainContent.style.setProperty('padding-top', '', 'important');
-            mainContent.style.setProperty('padding', '', 'important');
+            // Restore desktop padding to original (20px)
+            mainContent.style.removeProperty('padding-top');
+            mainContent.style.removeProperty('padding');
+            mainContent.style.paddingTop = '20px';
+            mainContent.style.padding = '20px';
         }
     }
     
