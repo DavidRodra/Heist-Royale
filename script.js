@@ -2121,23 +2121,14 @@ function showOnlyHome() {
         console.log('Main-content padding explicitly set for home', isMobile ? '(mobile: 65px 15px 90px 15px)' : '(desktop: 20px)');
     }
     
-    // FORCE HIDE profile section first - move it completely off-screen
-    const profileSection = document.getElementById('profile-section');
+    // Profile section already hidden above, just ensure it's moved off-screen
     if (profileSection) {
         profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; position: fixed !important; top: -9999px !important; left: -9999px !important; z-index: -9999 !important; pointer-events: none !important;';
         profileSection.setAttribute('hidden', 'true');
         console.log('Profile section FORCE HIDDEN and moved off-screen');
     }
     
-    // Hide favorites and community sections
-    const favoritesSection = document.getElementById('favorites-section');
-    const communitySection = document.getElementById('community-section');
-    if (favoritesSection) {
-        favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-    }
-    if (communitySection) {
-        communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-    }
+    // Favorites and community sections already hidden above
     
     // Show all home content (non-section elements) with !important to override previous hides
     if (mainContent) {
