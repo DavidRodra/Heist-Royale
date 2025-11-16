@@ -1712,10 +1712,9 @@ body::before {
         padding: 15px 15px 20px 15px !important;
     }
     
-    /* Ensure home page has normal padding when no sections are visible */
+    /* Ensure home page has normal mobile padding when no sections are visible */
     .main-content:not(:has(#community-section:not([style*="display: none"]))):not(:has(#favorites-section:not([style*="display: none"]))):not(:has(#profile-section:not([style*="display: none"]))) {
-        padding: 20px !important;
-        padding-top: 20px !important;
+        padding: 65px 15px 90px 15px !important;
     }
     
     /* Also remove padding/margin from section-header in these sections */

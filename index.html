@@ -1906,8 +1906,24 @@
                                             gameSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
                                         });
                                         
+                                        // Ensure sections are hidden so CSS :not() selector works
+                                        const favoritesSection = document.getElementById('favorites-section');
+                                        const communitySection = document.getElementById('community-section');
+                                        const profileSection = document.getElementById('profile-section');
+                                        
+                                        if (favoritesSection) {
+                                            favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                        }
+                                        if (communitySection) {
+                                            communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                        }
+                                        if (profileSection) {
+                                            profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                        }
+                                        
                                         // Restore main-content padding by removing all inline styles
-                                        // This lets the CSS apply the default padding (20px)
+                                        // This lets the CSS apply the default padding
+                                        // Mobile: 65px 15px 90px 15px, Desktop: 20px
                                         mainContent.style.removeProperty('padding');
                                         mainContent.style.removeProperty('padding-top');
                                         mainContent.style.removeProperty('padding-left');
