@@ -1876,14 +1876,13 @@
                             
                             // Also hide game sections, sliders, etc.
                             const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section');
-                            gameSections.forEach(section => {
-                                if (section.id !== targetId) {
-                                    section.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                            gameSections.forEach(gameSection => {
+                                if (gameSection.id !== targetId) {
+                                    gameSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
                                 }
                             });
                             
-                            // Show target section
-                            let targetId = '';
+                            // Show target section (targetId already defined above)
                             switch(section) {
                                 case 'home':
                                     targetId = 'home-section';
