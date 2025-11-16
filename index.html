@@ -1921,9 +1921,10 @@
                                         // This ensures consistent padding regardless of CSS selector issues
                                         const isMobile = window.innerWidth <= 768;
                                         if (isMobile) {
-                                            // Mobile: 65px top, 15px sides, 90px bottom
-                                            mainContent.style.setProperty('padding', '65px 15px 90px 15px', 'important');
-                                            mainContent.style.setProperty('padding-top', '65px', 'important');
+                                            // Mobile: Match initial load appearance - less top padding (~20px)
+                                            // Content should start right after mobile logo area
+                                            mainContent.style.setProperty('padding', '20px 15px 90px 15px', 'important');
+                                            mainContent.style.setProperty('padding-top', '20px', 'important');
                                             mainContent.style.setProperty('padding-left', '15px', 'important');
                                             mainContent.style.setProperty('padding-right', '15px', 'important');
                                             mainContent.style.setProperty('padding-bottom', '90px', 'important');

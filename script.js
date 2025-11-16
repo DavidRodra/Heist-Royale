@@ -2137,8 +2137,15 @@ function showOnlyHome() {
     
     // Now set ONLY the padding we need for home (matching CSS defaults)
     if (isMobile) {
-        // Mobile: 65px top, 15px sides, 90px bottom (matches CSS @media rule)
-        mainContent.style.setProperty('padding', '65px 15px 90px 15px', 'important');
+        // Mobile: Remove inline padding and let CSS handle it naturally
+        // The CSS @media rule will apply: padding: 65px 15px 90px 15px
+        // But we need to ensure no conflicting inline styles
+        // Actually, let's match what the initial load looks like - less top padding
+        // Based on screenshot, content should start closer to top (~20-25px from top)
+        // Mobile logo is fixed at top: 15px, height ~40px = ~55px total
+        // But content should start right after logo area, so ~20px padding should be enough
+        mainContent.style.setProperty('padding', '20px 15px 90px 15px', 'important');
+        mainContent.style.setProperty('padding-top', '20px', 'important');
     } else {
         // Desktop: 20px all around (matches CSS default)
         mainContent.style.setProperty('padding', '20px', 'important');
