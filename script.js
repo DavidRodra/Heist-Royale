@@ -2080,59 +2080,45 @@ function showOnlyHome() {
     document.documentElement.style.overflow = '';
     document.body.classList.remove('profile-open');
     
-    // Restore main-content padding for home page to original CSS values
+    // Hide all sections IMMEDIATELY (before setting padding)
+    const favoritesSection = document.getElementById('favorites-section');
+    const communitySection = document.getElementById('community-section');
+    const profileSection = document.getElementById('profile-section');
+    
+    if (favoritesSection) {
+        favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    }
+    if (communitySection) {
+        communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    }
+    if (profileSection) {
+        profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    }
+    
+    // Restore main-content padding for home page - EXPLICITLY set it
     const mainContent = document.querySelector('.main-content');
     if (mainContent) {
         const isMobile = window.innerWidth <= 768;
         
-        // Remove all inline padding styles to let CSS take over
-        mainContent.style.removeProperty('padding');
-        mainContent.style.removeProperty('padding-top');
-        mainContent.style.removeProperty('padding-left');
-        mainContent.style.removeProperty('padding-right');
-        mainContent.style.removeProperty('padding-bottom');
-        
-        // Remove padding from style attribute if present
-        const currentStyle = mainContent.getAttribute('style');
-        if (currentStyle) {
-            const newStyle = currentStyle
-                .replace(/padding[^;]*/gi, '')
-                .replace(/;;+/g, ';')
-                .replace(/^;|;$/g, '');
-            if (newStyle.trim()) {
-                mainContent.setAttribute('style', newStyle);
-            } else {
-                mainContent.removeAttribute('style');
-            }
+        // Explicitly set the padding to match the original CSS values
+        // This ensures consistent padding regardless of CSS selector issues
+        if (isMobile) {
+            // Mobile: 65px top, 15px sides, 90px bottom
+            mainContent.style.setProperty('padding', '65px 15px 90px 15px', 'important');
+            mainContent.style.setProperty('padding-top', '65px', 'important');
+            mainContent.style.setProperty('padding-left', '15px', 'important');
+            mainContent.style.setProperty('padding-right', '15px', 'important');
+            mainContent.style.setProperty('padding-bottom', '90px', 'important');
+        } else {
+            // Desktop: 20px all around
+            mainContent.style.setProperty('padding', '20px', 'important');
+            mainContent.style.setProperty('padding-top', '20px', 'important');
+            mainContent.style.setProperty('padding-left', '20px', 'important');
+            mainContent.style.setProperty('padding-right', '20px', 'important');
+            mainContent.style.setProperty('padding-bottom', '20px', 'important');
         }
         
-        // Ensure sections are hidden so CSS :not() selector works
-        // But use a timeout to ensure this doesn't interfere with other navigation
-        setTimeout(() => {
-            const favoritesSection = document.getElementById('favorites-section');
-            const communitySection = document.getElementById('community-section');
-            const profileSection = document.getElementById('profile-section');
-            
-            // Only hide if we're still on home (check if topbar is visible)
-            const topbar = document.querySelector('.topbar');
-            const isStillOnHome = topbar && window.getComputedStyle(topbar).display !== 'none';
-            
-            if (isStillOnHome) {
-                if (favoritesSection) {
-                    favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                }
-                if (communitySection) {
-                    communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                }
-                if (profileSection) {
-                    profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                }
-            }
-        }, 100);
-        
-        // CSS will apply the default padding automatically
-        // Mobile: 65px 15px 90px 15px, Desktop: 20px
-        console.log('Main-content padding reset to CSS defaults', isMobile ? '(mobile: 65px 15px 90px 15px)' : '(desktop: 20px)');
+        console.log('Main-content padding explicitly set for home', isMobile ? '(mobile: 65px 15px 90px 15px)' : '(desktop: 20px)');
     }
     
     // FORCE HIDE profile section first - move it completely off-screen
