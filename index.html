@@ -1852,16 +1852,33 @@
                         // Direct DOM fallback - hide all sections and show the target
                         const mainContent = document.querySelector('.main-content');
                         if (mainContent) {
-                            // Hide topbar and banners
+                            // Hide topbar and banners aggressively
                             const topbar = mainContent.querySelector('.topbar');
                             const banners = mainContent.querySelector('.banners');
-                            if (topbar) topbar.style.display = 'none';
-                            if (banners) banners.style.display = 'none';
+                            if (topbar) {
+                                topbar.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
+                            }
+                            if (banners) {
+                                banners.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                            }
                             
-                            // Hide all children
+                            // Hide ALL children except the target section
+                            const targetId = section === 'home' ? 'home-section' : 
+                                           section === 'favorites' ? 'favorites-section' :
+                                           section === 'community' ? 'community-section' :
+                                           section === 'profile' ? 'profile-section' : '';
+                            
                             Array.from(mainContent.children).forEach(child => {
-                                if (child.id && child.id.includes('section')) {
-                                    child.style.display = 'none';
+                                if (child.id !== targetId) {
+                                    child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                }
+                            });
+                            
+                            // Also hide game sections, sliders, etc.
+                            const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section');
+                            gameSections.forEach(section => {
+                                if (section.id !== targetId) {
+                                    section.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
                                 }
                             });
                             

@@ -42,16 +42,34 @@ function showCommunity() {
         favoritesSection.style.display = 'none';
     }
     
-    // Hide all other content
-    const children = mainContent.children;
-    for (let i = 0; i < children.length; i++) {
-        const child = children[i];
-        if (child.id !== 'community-section' && child.id !== 'profile-section') {
-            if (child.classList && !child.classList.contains('topbar') && !child.classList.contains('banners')) {
-                child.style.display = 'none';
-            }
+    // Hide ALL homepage content aggressively
+    Array.from(mainContent.children).forEach(child => {
+        // Keep only community section visible
+        if (child.id === 'community-section') {
+            // Keep it visible
+            return;
         }
+        // Hide everything else - topbar, banners, game sections, sliders, etc.
+        child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    });
+    
+    // Also explicitly hide topbar and banners (in case they're not children)
+    const topbar2 = document.querySelector('.topbar');
+    const banners2 = document.querySelector('.banners');
+    if (topbar2) {
+        topbar2.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
     }
+    if (banners2) {
+        banners2.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    }
+    
+    // Hide any game sections or sliders
+    const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section:not(#community-section)');
+    gameSections.forEach(section => {
+        if (section.id !== 'community-section') {
+            section.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+        }
+    });
     
     // Create or get community section
     let communitySection = document.getElementById('community-section');
@@ -2544,12 +2562,32 @@ function showFavorites() {
         }
     }
     
-    // Hide all other children of mainContent
+    // Hide ALL homepage content aggressively
     Array.from(mainContent.children).forEach(child => {
-        if (child.id !== 'favorites-section' && child.id !== 'profile-section') {
-            if (child.classList && !child.classList.contains('topbar') && !child.classList.contains('banners')) {
-                child.style.display = 'none';
-            }
+        // Keep only favorites section visible
+        if (child.id === 'favorites-section') {
+            // Keep it visible
+            return;
+        }
+        // Hide everything else - topbar, banners, game sections, sliders, etc.
+        child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    });
+    
+    // Also explicitly hide topbar and banners (in case they're not children)
+    const topbar = document.querySelector('.topbar');
+    const banners = document.querySelector('.banners');
+    if (topbar) {
+        topbar.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
+    }
+    if (banners) {
+        banners.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    }
+    
+    // Hide any game sections or sliders
+    const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section:not(#favorites-section)');
+    gameSections.forEach(section => {
+        if (section.id !== 'favorites-section') {
+            section.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
         }
     });
     
