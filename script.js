@@ -2262,8 +2262,8 @@ function showOnlyFavorites() {
         
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            // Mobile: full width with small top padding
-            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding-top: 15px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important;';
+            // Mobile: full width with extra top padding to prevent logo overlap
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; width: 100% !important; max-width: 100% !important; padding-top: 60px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important;';
         } else {
             // Desktop: small top padding for breathing room
             favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important;';
@@ -2553,10 +2553,10 @@ function showFavorites() {
         console.log('Favorites section created and appended');
     } else {
         console.log('Favorites section already exists, showing it...');
-        // Section exists, ensure it's visible
+        // Section exists, ensure it's visible with proper mobile padding
         const isMobile = window.innerWidth <= 768;
         if (isMobile) {
-            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 15px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 60px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
         } else {
             favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
         }
