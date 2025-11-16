@@ -13,22 +13,59 @@ function showCommunity() {
         return;
     }
     
-    // Hide all other content first
+    // Restore body scrolling when leaving profile
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    document.body.classList.remove('profile-open');
+    
+    // Hide profile section
+    const profileSection = document.getElementById('profile-section');
+    if (profileSection) {
+        profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; position: fixed !important; top: -9999px !important; left: -9999px !important; z-index: -9999 !important; pointer-events: none !important;';
+        profileSection.setAttribute('hidden', 'true');
+    }
+    
+    // Hide topbar and banners
+    const topbar = mainContent.querySelector('.topbar');
+    if (topbar) {
+        topbar.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
+    }
+    
+    const banners = mainContent.querySelector('.banners');
+    if (banners) {
+        banners.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    }
+    
+    // Hide favorites section if visible
+    const favoritesSection = document.getElementById('favorites-section');
+    if (favoritesSection) {
+        favoritesSection.style.display = 'none';
+    }
+    
+    // Hide all other content
     const children = mainContent.children;
     for (let i = 0; i < children.length; i++) {
         const child = children[i];
-        if (child.id !== 'community-section') {
-            child.style.display = 'none';
+        if (child.id !== 'community-section' && child.id !== 'profile-section') {
+            if (child.classList && !child.classList.contains('topbar') && !child.classList.contains('banners')) {
+                child.style.display = 'none';
+            }
         }
     }
     
+    // Create or get community section
     let communitySection = document.getElementById('community-section');
     if (!communitySection) {
         console.log('Creating new community section...');
         communitySection = document.createElement('div');
         communitySection.id = 'community-section';
         communitySection.className = 'section';
-        communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important;';
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px 15px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;';
+        } else {
+            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;';
+        }
         communitySection.innerHTML = `
             <div class="section-header">
                 <h2><i class="fas fa-users"></i> Community</h2>
@@ -99,58 +136,32 @@ function showCommunity() {
         mainContent.appendChild(communitySection);
         console.log('Community section created and appended to DOM');
     } else {
-        console.log('Community section already exists');
+        console.log('Community section already exists, showing it...');
+        // Force the section to be visible
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px 15px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;';
+        } else {
+            communitySection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;';
+        }
     }
-    
-    // Force the section to be visible - AGGRESSIVE
-    communitySection.setAttribute('style', 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;');
-    
-    // Also set inline styles directly
-    communitySection.style.display = 'block';
-    communitySection.style.visibility = 'visible';
-    communitySection.style.opacity = '1';
-    communitySection.style.background = '#0A091E';
-    communitySection.style.minHeight = '100vh';
-    communitySection.style.padding = '20px';
-    communitySection.style.position = 'relative';
-    communitySection.style.zIndex = '1000';
-    communitySection.style.width = '100%';
     
     // Load real community data
     if (typeof loadCommunityData === 'function') {
         loadCommunityData();
     }
     
-    // Now show the section (after it's created and loaded)
-    if (typeof showOnlyCommunity === 'function') {
-        showOnlyCommunity();
-    } else {
-        // Fallback: just make sure it's visible
-        communitySection.style.display = 'block';
-        communitySection.style.visibility = 'visible';
-        communitySection.style.opacity = '1';
-    }
-    
     // Update navigation
-    if (typeof updateNavigationActiveState === 'function') {
-        updateNavigationActiveState('Community');
-    } else {
-        // Fallback: manual navigation update
-        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-        const communityNav = document.getElementById('community-nav');
-        if (communityNav) {
-            communityNav.classList.add('active');
-        }
-    }
-    
-    console.log('=== showCommunity() completed ===');
-    console.log('Community section element:', communitySection);
-    console.log('Community section display:', window.getComputedStyle(communitySection).display);
+    updateNavigationActiveState('Community');
     
     // Update mobile nav if on mobile
     if (window.innerWidth <= 768 && typeof updateMobileNav === 'function') {
         updateMobileNav('community');
     }
+    
+    console.log('=== showCommunity() completed ===');
+    console.log('Community section element:', communitySection);
+    console.log('Community section display:', window.getComputedStyle(communitySection).display);
 }
 
 // Make it available globally immediately
@@ -2439,6 +2450,8 @@ function showPromotions() {
 }
 
 function showFavorites() {
+    console.log('=== showFavorites() called ===');
+    
     // Create favorites content if it doesn't exist FIRST (before calling showOnlyFavorites)
     const mainContent = document.querySelector('.main-content');
     if (!mainContent) {
@@ -2446,38 +2459,61 @@ function showFavorites() {
         return;
     }
     
-    // Set small top padding for main-content to give breathing room
-    if (mainContent) {
-        const isMobile = window.innerWidth <= 768;
-        if (isMobile) {
-            mainContent.style.setProperty('padding-top', '15px', 'important');
-            mainContent.style.setProperty('padding', '15px 20px 20px 20px', 'important');
-        } else {
-            mainContent.style.setProperty('padding-top', '20px', 'important');
-            mainContent.style.setProperty('padding', '20px 20px 20px 20px', 'important');
-        }
-        mainContent.style.setProperty('margin-top', '0px', 'important');
-        
-        // Hide topbar immediately
-        const topbar = mainContent.querySelector('.topbar');
-        if (topbar) {
-            topbar.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
-        }
-        
-        // Hide banners immediately
-        const banners = mainContent.querySelector('.banners');
-        if (banners) {
-            banners.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-        }
+    // Restore body scrolling when leaving profile
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
+    document.body.classList.remove('profile-open');
+    
+    // Hide profile section
+    const profileSection = document.getElementById('profile-section');
+    if (profileSection) {
+        profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; position: fixed !important; top: -9999px !important; left: -9999px !important; z-index: -9999 !important; pointer-events: none !important;';
+        profileSection.setAttribute('hidden', 'true');
     }
     
+    // Set small top padding for main-content to give breathing room
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        mainContent.style.setProperty('padding-top', '15px', 'important');
+        mainContent.style.setProperty('padding', '15px 20px 20px 20px', 'important');
+    } else {
+        mainContent.style.setProperty('padding-top', '20px', 'important');
+        mainContent.style.setProperty('padding', '20px 20px 20px 20px', 'important');
+    }
+    mainContent.style.setProperty('margin-top', '0px', 'important');
+    
+    // Hide topbar immediately
+    const topbar = mainContent.querySelector('.topbar');
+    if (topbar) {
+        topbar.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; height: 0 !important; margin: 0 !important; padding: 0 !important;';
+    }
+    
+    // Hide banners immediately
+    const banners = mainContent.querySelector('.banners');
+    if (banners) {
+        banners.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+    }
+    
+    // Hide community section if visible
+    const communitySection = document.getElementById('community-section');
+    if (communitySection) {
+        communitySection.style.display = 'none';
+    }
+    
+    // Create or get favorites section
     let favoritesSection = document.getElementById('favorites-section');
     if (!favoritesSection) {
+        console.log('Creating favorites section...');
         favoritesSection = document.createElement('div');
         favoritesSection.id = 'favorites-section';
         favoritesSection.className = 'section';
         // Apply styles with small top padding for breathing room
-        favoritesSection.style.cssText = 'padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important;';
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 15px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
+        } else {
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
+        }
         favoritesSection.innerHTML = `
             <div class="section-header" style="padding-top: 0 !important; margin-top: 0 !important; padding: 0 !important; margin-bottom: 20px !important;">
                 <h2 style="margin-top: 0 !important; padding-top: 0 !important;"><i class="fas fa-star"></i> My Favorites</h2>
@@ -2496,25 +2532,36 @@ function showFavorites() {
             </div>
         `;
         mainContent.appendChild(favoritesSection);
+        console.log('Favorites section created and appended');
     } else {
-        // Section exists, but ensure no padding is applied
-        favoritesSection.style.setProperty('padding-top', '0px', 'important');
-        favoritesSection.style.setProperty('margin-top', '0px', 'important');
-        const sectionHeader = favoritesSection.querySelector('.section-header');
-        if (sectionHeader) {
-            sectionHeader.style.setProperty('padding-top', '0px', 'important');
-            sectionHeader.style.setProperty('margin-top', '0px', 'important');
+        console.log('Favorites section already exists, showing it...');
+        // Section exists, ensure it's visible
+        const isMobile = window.innerWidth <= 768;
+        if (isMobile) {
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 15px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
+        } else {
+            favoritesSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
         }
     }
     
-    // Now show the section (after it's created)
-    showOnlyFavorites();
+    // Hide all other children of mainContent
+    Array.from(mainContent.children).forEach(child => {
+        if (child.id !== 'favorites-section' && child.id !== 'profile-section') {
+            if (child.classList && !child.classList.contains('topbar') && !child.classList.contains('banners')) {
+                child.style.display = 'none';
+            }
+        }
+    });
+    
+    // Update navigation
     updateNavigationActiveState('Favorites');
     
     // Update mobile nav if on mobile
     if (window.innerWidth <= 768 && typeof updateMobileNav === 'function') {
         updateMobileNav('favorites');
     }
+    
+    console.log('=== showFavorites() completed ===');
 }
 // Make globally available
 window.showFavorites = showFavorites;
