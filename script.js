@@ -2080,6 +2080,12 @@ function showOnlyHome() {
     document.documentElement.style.overflow = '';
     document.body.classList.remove('profile-open');
     
+    const mainContent = document.querySelector('.main-content');
+    if (!mainContent) {
+        console.error('Main content not found!');
+        return;
+    }
+    
     // Hide all sections IMMEDIATELY (before setting padding)
     const favoritesSection = document.getElementById('favorites-section');
     const communitySection = document.getElementById('community-section');
@@ -2092,82 +2098,104 @@ function showOnlyHome() {
         communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
     }
     if (profileSection) {
-        profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-    }
-    
-    // Restore main-content padding for home page - EXPLICITLY set it
-    const mainContent = document.querySelector('.main-content');
-    if (mainContent) {
-        const isMobile = window.innerWidth <= 768;
-        
-        // Explicitly set the padding to match the original CSS values
-        // This ensures consistent padding regardless of CSS selector issues
-        if (isMobile) {
-            // Mobile: 65px top, 15px sides, 90px bottom
-            mainContent.style.setProperty('padding', '65px 15px 90px 15px', 'important');
-            mainContent.style.setProperty('padding-top', '65px', 'important');
-            mainContent.style.setProperty('padding-left', '15px', 'important');
-            mainContent.style.setProperty('padding-right', '15px', 'important');
-            mainContent.style.setProperty('padding-bottom', '90px', 'important');
-        } else {
-            // Desktop: 20px all around
-            mainContent.style.setProperty('padding', '20px', 'important');
-            mainContent.style.setProperty('padding-top', '20px', 'important');
-            mainContent.style.setProperty('padding-left', '20px', 'important');
-            mainContent.style.setProperty('padding-right', '20px', 'important');
-            mainContent.style.setProperty('padding-bottom', '20px', 'important');
-        }
-        
-        console.log('Main-content padding explicitly set for home', isMobile ? '(mobile: 65px 15px 90px 15px)' : '(desktop: 20px)');
-    }
-    
-    // Profile section already hidden above, just ensure it's moved off-screen
-    if (profileSection) {
         profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important; position: fixed !important; top: -9999px !important; left: -9999px !important; z-index: -9999 !important; pointer-events: none !important;';
         profileSection.setAttribute('hidden', 'true');
-        console.log('Profile section FORCE HIDDEN and moved off-screen');
     }
     
-    // Favorites and community sections already hidden above
+    // Remove ALL inline styles from main-content that might have been added by other sections
+    // Then set only what we need for home
+    const isMobile = window.innerWidth <= 768;
+    
+    // Remove all padding/margin/position styles first
+    mainContent.style.removeProperty('padding');
+    mainContent.style.removeProperty('padding-top');
+    mainContent.style.removeProperty('padding-left');
+    mainContent.style.removeProperty('padding-right');
+    mainContent.style.removeProperty('padding-bottom');
+    mainContent.style.removeProperty('margin');
+    mainContent.style.removeProperty('margin-top');
+    mainContent.style.removeProperty('position');
+    mainContent.style.removeProperty('top');
+    
+    // Clean up style attribute completely
+    const currentStyle = mainContent.getAttribute('style');
+    if (currentStyle) {
+        // Remove padding, margin, position related styles
+        const cleanedStyle = currentStyle
+            .replace(/padding[^;]*/gi, '')
+            .replace(/margin[^;]*/gi, '')
+            .replace(/position[^;]*/gi, '')
+            .replace(/top[^;]*/gi, '')
+            .replace(/;;+/g, ';')
+            .replace(/^;|;$/g, '');
+        if (cleanedStyle.trim()) {
+            mainContent.setAttribute('style', cleanedStyle);
+        } else {
+            mainContent.removeAttribute('style');
+        }
+    }
+    
+    // Now set ONLY the padding we need for home (matching CSS defaults)
+    if (isMobile) {
+        // Mobile: 65px top, 15px sides, 90px bottom (matches CSS @media rule)
+        mainContent.style.setProperty('padding', '65px 15px 90px 15px', 'important');
+    } else {
+        // Desktop: 20px all around (matches CSS default)
+        mainContent.style.setProperty('padding', '20px', 'important');
+    }
     
     // Show all home content (non-section elements) with !important to override previous hides
-    if (mainContent) {
-        const children = mainContent.children;
-        for (let i = 0; i < children.length; i++) {
-            const child = children[i];
-            // Show only elements that are NOT sections (topbar, banners, game sections, etc.)
-            if (!child.id || (!child.id.includes('section') && !child.id.includes('profile'))) {
-                // Use cssText with !important to override previous !important hides
-                child.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
-                console.log('Showing home element:', child.className || child.tagName || child.id);
-            } else {
-                // Hide section elements
-                child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                console.log('FORCE HIDING section element:', child.id);
-            }
+    const children = mainContent.children;
+    for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        // Show only elements that are NOT sections (topbar, banners, game sections, etc.)
+        if (!child.id || (!child.id.includes('section') && !child.id.includes('profile'))) {
+            // Remove any inline styles that might hide it
+            child.style.removeProperty('display');
+            child.style.removeProperty('visibility');
+            child.style.removeProperty('opacity');
+            // Then explicitly show it
+            child.style.setProperty('display', 'block', 'important');
+            child.style.setProperty('visibility', 'visible', 'important');
+            child.style.setProperty('opacity', '1', 'important');
+        } else {
+            // Hide section elements
+            child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
         }
-        
-        // Explicitly show topbar and banners (they might be hidden)
-        const topbar = mainContent.querySelector('.topbar');
-        const banners = mainContent.querySelector('.banners');
-        if (topbar) {
-            topbar.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
-            console.log('Topbar restored');
-        }
-        if (banners) {
-            banners.style.cssText = 'display: flex !important; visibility: visible !important; opacity: 1 !important;';
-            console.log('Banners restored');
-        }
-        
-        // Explicitly show all game sections
-        const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section:not(#favorites-section):not(#community-section):not(#profile-section)');
-        gameSections.forEach(section => {
-            section.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
-            console.log('Game section restored:', section.className);
-        });
     }
     
-    console.log('Home content should be visible, profile FORCE HIDDEN');
+    // Explicitly show topbar and banners (they might be hidden)
+    const topbar = mainContent.querySelector('.topbar');
+    const banners = mainContent.querySelector('.banners');
+    if (topbar) {
+        topbar.style.removeProperty('display');
+        topbar.style.removeProperty('visibility');
+        topbar.style.removeProperty('opacity');
+        topbar.style.setProperty('display', 'block', 'important');
+        topbar.style.setProperty('visibility', 'visible', 'important');
+        topbar.style.setProperty('opacity', '1', 'important');
+    }
+    if (banners) {
+        banners.style.removeProperty('display');
+        banners.style.removeProperty('visibility');
+        banners.style.removeProperty('opacity');
+        banners.style.setProperty('display', 'flex', 'important');
+        banners.style.setProperty('visibility', 'visible', 'important');
+        banners.style.setProperty('opacity', '1', 'important');
+    }
+    
+    // Explicitly show all game sections
+    const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section:not(#favorites-section):not(#community-section):not(#profile-section)');
+    gameSections.forEach(section => {
+        section.style.removeProperty('display');
+        section.style.removeProperty('visibility');
+        section.style.removeProperty('opacity');
+        section.style.setProperty('display', 'block', 'important');
+        section.style.setProperty('visibility', 'visible', 'important');
+        section.style.setProperty('opacity', '1', 'important');
+    });
+    
+    console.log('Home content restored - padding:', isMobile ? '65px 15px 90px 15px' : '20px');
 }
 
 function showOnlyCommunity() {
