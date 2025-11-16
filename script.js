@@ -42,11 +42,17 @@ function showCommunity() {
         favoritesSection.style.display = 'none';
     }
     
-    // Hide ALL homepage content aggressively
+    // Hide ALL homepage content aggressively, BUT ensure community section is visible
     Array.from(mainContent.children).forEach(child => {
         // Keep only community section visible
         if (child.id === 'community-section') {
-            // Keep it visible
+            // FORCE it to be visible with !important
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                child.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px 15px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;';
+            } else {
+                child.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; min-height: 100vh !important; padding: 20px !important; position: relative !important; z-index: 1000 !important; width: 100% !important;';
+            }
             return;
         }
         // Hide everything else - topbar, banners, game sections, sliders, etc.
@@ -2101,19 +2107,28 @@ function showOnlyHome() {
         }
         
         // Ensure sections are hidden so CSS :not() selector works
-        const favoritesSection = document.getElementById('favorites-section');
-        const communitySection = document.getElementById('community-section');
-        const profileSection = document.getElementById('profile-section');
-        
-        if (favoritesSection) {
-            favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-        }
-        if (communitySection) {
-            communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-        }
-        if (profileSection) {
-            profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-        }
+        // But use a timeout to ensure this doesn't interfere with other navigation
+        setTimeout(() => {
+            const favoritesSection = document.getElementById('favorites-section');
+            const communitySection = document.getElementById('community-section');
+            const profileSection = document.getElementById('profile-section');
+            
+            // Only hide if we're still on home (check if topbar is visible)
+            const topbar = document.querySelector('.topbar');
+            const isStillOnHome = topbar && window.getComputedStyle(topbar).display !== 'none';
+            
+            if (isStillOnHome) {
+                if (favoritesSection) {
+                    favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                }
+                if (communitySection) {
+                    communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                }
+                if (profileSection) {
+                    profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                }
+            }
+        }, 100);
         
         // CSS will apply the default padding automatically
         // Mobile: 65px 15px 90px 15px, Desktop: 20px
@@ -2619,11 +2634,17 @@ function showFavorites() {
         }
     }
     
-    // Hide ALL homepage content aggressively
+    // Hide ALL homepage content aggressively, BUT ensure favorites section is visible
     Array.from(mainContent.children).forEach(child => {
         // Keep only favorites section visible
         if (child.id === 'favorites-section') {
-            // Keep it visible
+            // FORCE it to be visible with !important
+            const isMobile = window.innerWidth <= 768;
+            if (isMobile) {
+                child.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 60px !important; margin-top: 0 !important; padding-left: 15px !important; padding-right: 15px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
+            } else {
+                child.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding-top: 20px !important; margin-top: 0 !important; padding-left: 20px !important; padding-right: 20px !important; padding-bottom: 20px !important; position: relative !important; width: 100% !important;';
+            }
             return;
         }
         // Hide everything else - topbar, banners, game sections, sliders, etc.

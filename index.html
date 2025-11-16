@@ -1907,19 +1907,28 @@
                                         });
                                         
                                         // Ensure sections are hidden so CSS :not() selector works
-                                        const favoritesSection = document.getElementById('favorites-section');
-                                        const communitySection = document.getElementById('community-section');
-                                        const profileSection = document.getElementById('profile-section');
-                                        
-                                        if (favoritesSection) {
-                                            favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                                        }
-                                        if (communitySection) {
-                                            communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                                        }
-                                        if (profileSection) {
-                                            profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                                        }
+                                        // But use a timeout to ensure this doesn't interfere with other navigation
+                                        setTimeout(() => {
+                                            const favoritesSection = document.getElementById('favorites-section');
+                                            const communitySection = document.getElementById('community-section');
+                                            const profileSection = document.getElementById('profile-section');
+                                            
+                                            // Only hide if we're still on home (check if topbar is visible)
+                                            const topbar = document.querySelector('.topbar');
+                                            const isStillOnHome = topbar && window.getComputedStyle(topbar).display !== 'none';
+                                            
+                                            if (isStillOnHome) {
+                                                if (favoritesSection) {
+                                                    favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                                }
+                                                if (communitySection) {
+                                                    communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                                }
+                                                if (profileSection) {
+                                                    profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                                }
+                                            }
+                                        }, 100);
                                         
                                         // Restore main-content padding by removing all inline styles
                                         // This lets the CSS apply the default padding
