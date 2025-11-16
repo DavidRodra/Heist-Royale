@@ -1866,7 +1866,7 @@
                             let targetId = '';
                             switch(section) {
                                 case 'home':
-                                    targetId = 'home-section';
+                                    // Home doesn't have a single section - it has multiple elements
                                     // Show topbar and banners for home with !important
                                     const topbar = document.querySelector('.topbar');
                                     const banners = document.querySelector('.banners');
@@ -1879,20 +1879,51 @@
                                     // Show all homepage content
                                     const mainContent = document.querySelector('.main-content');
                                     if (mainContent) {
+                                        // Hide all section elements first
+                                        const favoritesSection = document.getElementById('favorites-section');
+                                        const communitySection = document.getElementById('community-section');
+                                        const profileSection = document.getElementById('profile-section');
+                                        if (favoritesSection) {
+                                            favoritesSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                        }
+                                        if (communitySection) {
+                                            communitySection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                        }
+                                        if (profileSection) {
+                                            profileSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                        }
+                                        
+                                        // Show all homepage elements
                                         Array.from(mainContent.children).forEach(child => {
                                             if (!child.id || (!child.id.includes('section') && !child.id.includes('profile'))) {
                                                 child.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
                                             }
                                         });
-                                        // Show game sections
-                                        const gameSections = mainContent.querySelectorAll('.games-section, .games-slider');
-                                        gameSections.forEach(section => {
-                                            section.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
+                                        
+                                        // Show game sections explicitly
+                                        const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section:not(#favorites-section):not(#community-section):not(#profile-section)');
+                                        gameSections.forEach(gameSection => {
+                                            gameSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important;';
                                         });
+                                        
+                                        // Restore main-content padding
+                                        const isMobile = window.innerWidth <= 768;
+                                        if (isMobile) {
+                                            mainContent.style.setProperty('padding-top', '', 'important');
+                                            mainContent.style.setProperty('padding', '', 'important');
+                                        } else {
+                                            mainContent.style.setProperty('padding-top', '', 'important');
+                                            mainContent.style.setProperty('padding', '', 'important');
+                                        }
                                     }
                                     // Restore body scrolling
                                     document.body.style.overflow = '';
                                     document.documentElement.style.overflow = '';
+                                    document.body.classList.remove('profile-open');
+                                    
+                                    // Mark navigation as executed
+                                    navigationExecuted = true;
+                                    console.log('Home navigation executed - all homepage content restored');
                                     break;
                                 case 'favorites':
                                     targetId = 'favorites-section';
@@ -1914,22 +1945,25 @@
                                     break;
                             }
                             
-                            // Hide ALL children except the target section
-                            Array.from(mainContent.children).forEach(child => {
-                                if (child.id !== targetId) {
-                                    child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                                }
-                            });
+                            // Hide ALL children except the target section (skip if home - handled above)
+                            if (section !== 'home') {
+                                Array.from(mainContent.children).forEach(child => {
+                                    if (child.id !== targetId) {
+                                        child.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                    }
+                                });
+                                
+                                // Also hide game sections, sliders, etc.
+                                const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section');
+                                gameSections.forEach(gameSection => {
+                                    if (gameSection.id !== targetId) {
+                                        gameSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
+                                    }
+                                });
+                            }
                             
-                            // Also hide game sections, sliders, etc.
-                            const gameSections = mainContent.querySelectorAll('.games-section, .games-slider, .section');
-                            gameSections.forEach(gameSection => {
-                                if (gameSection.id !== targetId) {
-                                    gameSection.style.cssText = 'display: none !important; visibility: hidden !important; opacity: 0 !important;';
-                                }
-                            });
-                            
-                            if (targetId) {
+                            // Only process targetId if it's not 'home' (home is handled above)
+                            if (targetId && section !== 'home') {
                                 let targetSection = document.getElementById(targetId);
                                 if (targetSection) {
                                     // For favorites and community, ensure they're created if missing or empty
@@ -2032,7 +2066,8 @@
                                     
                                     console.log('Direct DOM manipulation: showing', targetId);
                                     navigationExecuted = true;
-                                } else {
+                                } else if (section !== 'home') {
+                                    // Don't try to create home-section (it doesn't exist)
                                     console.log('Target section not found:', targetId, '- attempting to create...');
                                     // Try to create the section by calling the function
                                     if (targetId === 'favorites-section') {
