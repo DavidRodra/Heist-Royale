@@ -1984,18 +1984,18 @@
                                     targetSection.style.visibility = 'visible';
                                     targetSection.style.opacity = '1';
                                     
-                                    // For favorites and community, ensure proper styling
+                                    // For favorites and community, ensure proper styling with extra top padding on mobile
                                     if (targetId === 'favorites-section' || targetId === 'community-section') {
                                         const isMobile = window.innerWidth <= 768;
                                         if (targetId === 'favorites-section') {
                                             if (isMobile) {
-                                                targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 15px !important; position: relative !important; width: 100% !important;';
+                                                targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 60px 15px 20px 15px !important; position: relative !important; width: 100% !important;';
                                             } else {
                                                 targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 20px !important; position: relative !important; width: 100% !important;';
                                             }
                                         } else if (targetId === 'community-section') {
                                             if (isMobile) {
-                                                targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px 15px !important; position: relative !important; width: 100% !important;';
+                                                targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 60px 15px 20px 15px !important; position: relative !important; width: 100% !important;';
                                             } else {
                                                 targetSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px !important; position: relative !important; width: 100% !important;';
                                             }
@@ -2032,7 +2032,7 @@
                                                 newSection.className = 'section';
                                                 const isMobile = window.innerWidth <= 768;
                                                 if (isMobile) {
-                                                    newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 15px !important; position: relative !important; width: 100% !important;';
+                                                    newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 60px 15px 20px 15px !important; position: relative !important; width: 100% !important;';
                                                 } else {
                                                     newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; padding: 20px !important; position: relative !important; width: 100% !important;';
                                                 }
@@ -2070,7 +2070,7 @@
                                                 newSection.className = 'section';
                                                 const isMobile = window.innerWidth <= 768;
                                                 if (isMobile) {
-                                                    newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px 15px !important; position: relative !important; width: 100% !important;';
+                                                    newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 60px 15px 20px 15px !important; position: relative !important; width: 100% !important;';
                                                 } else {
                                                     newSection.style.cssText = 'display: block !important; visibility: visible !important; opacity: 1 !important; background: #0A091E !important; padding: 20px !important; position: relative !important; width: 100% !important;';
                                                 }

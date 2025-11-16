@@ -635,6 +635,29 @@ body::before {
     padding-top: 0 !important;
 }
 
+/* Mobile: Add extra top spacing to prevent overlap with sidebar logo */
+@media (max-width: 768px) {
+    #favorites-section,
+    #community-section {
+        padding-top: 60px !important; /* Extra space to clear sidebar logo */
+        margin-top: 0 !important;
+    }
+    
+    #favorites-section .section-header,
+    #community-section .section-header {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        position: relative;
+        z-index: 10;
+    }
+    
+    /* Ensure sidebar is hidden on mobile when showing sections */
+    .sidebar {
+        transform: translateX(-100%) !important;
+        left: -280px !important;
+    }
+}
+
 .section-header h2 {
     font-size: 20px;
     font-weight: bold;
